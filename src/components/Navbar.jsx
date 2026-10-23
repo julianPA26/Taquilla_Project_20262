@@ -3,11 +3,11 @@ import Icono from "./Icono.jsx";
 import "./Navbar.css";
 
 const DESTINOS = {
-  explorar: "/explorar",
-  conciertos: "/conciertos",
-  teatro: "/teatro",
-  deportes: "/deportes",
-  festivales: "/festivales",
+  explorar: "#explorar",
+  conciertos: "#conciertos",
+  teatro: "#teatro",
+  deportes: "#deportes",
+  festivales: "#festivales",
 };
 
 export default function Navbar({

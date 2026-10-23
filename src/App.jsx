@@ -2,6 +2,7 @@ import { useTextos } from "./hooks/useTextos.js";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
+import PreferenciasCookies from "./components/PreferenciasCookies.jsx";
 
 function leerSeccion() {
   return window.location.hash.slice(1) || "explorar";
@@ -75,6 +76,12 @@ function App() {
             : "Este ejemplo carga los textos del menú desde la API"}
         </p>
       </main>
+
+      <footer className="pie-pagina">
+        <div className="contenedor">
+          <PreferenciasCookies />
+        </div>
+      </footer>
     </>
   );
 }
