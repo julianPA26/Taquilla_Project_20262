@@ -36,13 +36,11 @@ export default function Navbar({
     ([clave]) => DESTINOS[clave],
   );
 
-  // Clase del header: "is-abierto" cambia el navbar móvil a la hoja clara
   let claseNavbar = "navbar";
   if (abierto) {
     claseNavbar = "navbar is-abierto";
   }
 
-  // Etiquetas de las filas del menú móvil (si la API no las trae, se usa un respaldo)
   let respaldoIdioma = "Idioma";
   let respaldoAccesibilidad = "Accesibilidad";
   if (ingles) {
@@ -203,7 +201,6 @@ export default function Navbar({
               </a>
             )}
             <div className="navbar-ajustes">
-              {/* Móvil: fila "Idioma" con selector ES / EN */}
               <div className="navbar-fila">
                 <span className="navbar-fila-etiqueta">{etiquetaIdioma}</span>
                 <div
@@ -270,7 +267,6 @@ export default function Navbar({
                 >
                   {nav.botones.ingresar}
                 </a>
-                {/* Solo móvil */}
                 <a
                   className="navbar-accion navbar-crear"
                   href="#crear-cuenta"
