@@ -3,11 +3,11 @@ import Icono from "./Icono.jsx";
 import "./Navbar.css";
 
 const DESTINOS = {
-  explorar: "#explorar",
-  conciertos: "#conciertos",
-  teatro: "#teatro",
-  deportes: "#deportes",
-  festivales: "#festivales",
+  explorar: "/explorar",
+  conciertos: "/conciertos",
+  teatro: "/teatro",
+  deportes: "/deportes",
+  festivales: "/festivales",
 };
 
 export default function Navbar({
@@ -36,6 +36,23 @@ export default function Navbar({
     ([clave]) => DESTINOS[clave],
   );
 
+  // Clase del header: "is-abierto" cambia el navbar móvil a la hoja clara
+  let claseNavbar = "navbar";
+  if (abierto) {
+    claseNavbar = "navbar is-abierto";
+  }
+
+  // Etiquetas de las filas del menú móvil (si la API no las trae, se usa un respaldo)
+  let respaldoIdioma = "Idioma";
+  let respaldoAccesibilidad = "Accesibilidad";
+  if (ingles) {
+    respaldoIdioma = "Language";
+    respaldoAccesibilidad = "Accessibility";
+  }
+  const etiquetaIdioma = textos?.idioma?.tituloMovil ?? respaldoIdioma;
+  const etiquetaAccesibilidad =
+    textos?.menuMovil?.secciones?.accesibilidad ?? respaldoAccesibilidad;
+
   useEffect(() => {
     function cerrarConEscape(evento) {
       if (evento.key === "Escape" && abierto) {
@@ -61,7 +78,7 @@ export default function Navbar({
   }
 
   return (
-    <header className="navbar">
+    <header className={claseNavbar}>
       <nav
         className="navbar-interior"
         aria-label={nav?.aria.menu ?? "Navegación principal"}
@@ -147,6 +164,12 @@ export default function Navbar({
                     </a>
                   </li>
                 ))}
+                {/* Solo móvil: en escritorio este enlace va en las utilidades */}
+                <li className="navbar-enlace-movil">
+                  <a href="#vender" onClick={() => setAbierto(false)}>
+                    {nav.enlaces.venderEventos}
+                  </a>
+                </li>
               </ul>
               <form
                 className="navbar-buscador"
@@ -179,38 +202,83 @@ export default function Navbar({
                 {nav.enlaces.venderEventos}
               </a>
             )}
-            <label className="navbar-idioma">
-              <Icono nombre="idioma" />
-              <select
-                value={idioma}
-                onChange={(evento) => cambiarIdioma(evento.target.value)}
-                aria-label={nav?.aria.idioma ?? "Cambiar idioma"}
-              >
-                <option value="es">{textos?.idioma?.codigoEs ?? "ES"}</option>
-                <option value="en">{textos?.idioma?.codigoEn ?? "EN"}</option>
-              </select>
-              <Icono nombre="flechaAbajo" />
-            </label>
-            <button
-              className="navbar-icono navbar-accesibilidad"
-              type="button"
-              aria-label={
-                nav?.aria.accesibilidad ??
-                (ingles ? "Enlarge text" : "Aumentar texto")
-              }
-              aria-pressed={textoGrande}
-              onClick={alternarTexto}
-            >
-              <Icono nombre="accesibilidad" />
-            </button>
+            <div className="navbar-ajustes">
+              {/* Móvil: fila "Idioma" con selector ES / EN */}
+              <div className="navbar-fila">
+                <span className="navbar-fila-etiqueta">{etiquetaIdioma}</span>
+                <div
+                  className="navbar-idioma-movil"
+                  role="group"
+                  aria-label={nav?.aria.idioma ?? "Cambiar idioma"}
+                >
+                  <button
+                    type="button"
+                    aria-pressed={idioma === "es"}
+                    onClick={() => cambiarIdioma("es")}
+                  >
+                    {textos?.idioma?.codigoEs ?? "ES"}
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={idioma === "en"}
+                    onClick={() => cambiarIdioma("en")}
+                  >
+                    {textos?.idioma?.codigoEn ?? "EN"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Escritorio: selector desplegable de idioma */}
+              <label className="navbar-idioma">
+                <Icono nombre="idioma" />
+                <select
+                  value={idioma}
+                  onChange={(evento) => cambiarIdioma(evento.target.value)}
+                  aria-label={nav?.aria.idioma ?? "Cambiar idioma"}
+                >
+                  <option value="es">{textos?.idioma?.codigoEs ?? "ES"}</option>
+                  <option value="en">{textos?.idioma?.codigoEn ?? "EN"}</option>
+                </select>
+                <Icono nombre="flechaAbajo" />
+              </label>
+
+              <div className="navbar-fila">
+                <span className="navbar-fila-etiqueta">
+                  {etiquetaAccesibilidad}
+                </span>
+                <button
+                  className="navbar-icono navbar-accesibilidad"
+                  type="button"
+                  aria-label={
+                    nav?.aria.accesibilidad ??
+                    (ingles ? "Enlarge text" : "Aumentar texto")
+                  }
+                  aria-pressed={textoGrande}
+                  onClick={alternarTexto}
+                >
+                  <Icono nombre="accesibilidad" />
+                </button>
+              </div>
+            </div>
+
             {nav && (
-              <a
-                className="navbar-accion"
-                href="#ingresar"
-                onClick={() => setAbierto(false)}
-              >
-                {nav.botones.ingresar}
-              </a>
+              <div className="navbar-acciones">
+                <a
+                  className="navbar-accion"
+                  href="#ingresar"
+                  onClick={() => setAbierto(false)}
+                >
+                  {nav.botones.ingresar}
+                </a>
+                {/* Solo móvil */}
+                <a
+                  className="navbar-accion navbar-crear"
+                  href="#crear-cuenta"
+                  onClick={() => setAbierto(false)}
+                >
+                  {nav.botones.crearCuenta}
+                </a>
+              </div>
             )}
           </div>
         </div>
