@@ -1,0 +1,467 @@
+/* ==========================================================
+   Navbar de Taquilla
+   Móvil / tablet (< 1200px): barra oscura, como en Figma.
+   Escritorio (>= 1200px): barra clara.
+   Los colores salen de tokens.css a través de variables --nav-*,
+   así el modo oscuro y el claro comparten las mismas reglas.
+   ========================================================== */
+
+.navbar {
+  /* Tema por defecto: móvil (oscuro) */
+  --nav-alto: 56px;
+  --nav-fondo: var(--fondo-inverso);
+  --nav-texto: var(--texto-inverso);
+  --nav-texto-suave: var(--texto-inverso-suave);
+  --nav-placeholder: var(--texto-inverso-suave);
+  --nav-borde: var(--borde-inverso);
+  --nav-borde-fuerte: var(--borde-inverso);
+  --nav-hover: var(--fondo-inverso-2);
+  --nav-presionado: var(--fondo-inverso-presionado);
+  --nav-campo: var(--fondo-inverso-2);
+  --nav-campo-foco: var(--fondo-inverso-2);
+  --nav-foco: var(--texto-inverso);
+  --nav-boton-fondo: var(--texto-inverso);
+  --nav-boton-texto: var(--fondo-inverso);
+  --nav-boton-hover: var(--fondo-sutil);
+  --nav-boton-presionado: var(--fondo-presionado);
+  --nav-simbolo-fondo: var(--texto-inverso);
+  --nav-simbolo-texto: var(--fondo-inverso);
+
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  color: var(--nav-texto);
+  background: var(--nav-fondo);
+  border-bottom: 1px solid var(--nav-borde);
+  font-family: var(--fuente-instrument-sans);
+}
+
+.navbar-interior {
+  width: min(100% - 2rem, 80rem);
+  min-height: var(--nav-alto);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 var(--espacio-3);
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+.navbar button,
+.navbar input,
+.navbar select {
+  font: inherit;
+}
+
+.navbar button {
+  cursor: pointer;
+}
+
+.navbar :focus-visible {
+  outline: 3px solid var(--nav-foco);
+  outline-offset: 3px;
+}
+
+/* ---------- Marca ---------- */
+
+.navbar-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  color: var(--nav-texto);
+  /* titular-h3: 20px / 26px / 600 */
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  letter-spacing: -0.010em;
+  white-space: nowrap;
+}
+
+.navbar-simbolo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--espacio-8);
+  height: var(--espacio-8);
+  border-radius: var(--radio-md);
+  color: var(--nav-simbolo-texto);
+  background: var(--nav-simbolo-fondo);
+  font-size: 16px;
+}
+
+/* ---------- Acciones móviles (buscar, entradas, menú) ---------- */
+
+.navbar-movil-acciones {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.navbar-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--nav-texto);
+  background: transparent;
+}
+
+.navbar-icono svg {
+  flex-shrink: 0;
+}
+
+.navbar-icono:hover {
+  background: var(--nav-hover);
+}
+
+.navbar-icono:active,
+.navbar-icono[aria-pressed="true"] {
+  background: var(--nav-presionado);
+}
+
+.navbar-icono:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ---------- Panel desplegable ---------- */
+
+.navbar-panel {
+  display: none;
+  width: 100%;
+  max-height: calc(100dvh - var(--nav-alto));
+  overflow-y: auto;
+  padding-block: var(--espacio-4) var(--espacio-6);
+  border-top: 1px solid var(--nav-borde);
+}
+
+.navbar-panel.is-abierto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+/* ---------- Enlaces ---------- */
+
+.navbar-enlaces {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* cuerpo-p-fuerte: 14px / 20px / 500 */
+.navbar-enlaces a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--espacio-3);
+  border-radius: var(--radio-sm);
+  color: var(--nav-texto-suave);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.navbar-enlaces a:hover,
+.navbar-enlaces a[aria-current="page"] {
+  color: var(--nav-texto);
+  background: var(--nav-hover);
+}
+
+.navbar-enlaces a:active {
+  background: var(--nav-presionado);
+}
+
+/* ---------- Buscador ---------- */
+
+.navbar-buscador {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--nav-borde);
+  border-radius: var(--radio-completo);
+  background: var(--nav-campo);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.navbar-buscador:focus-within {
+  border-color: var(--nav-foco);
+  background: var(--nav-campo-foco);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nav-foco) 25%, transparent);
+}
+
+.navbar-buscador input:focus-visible {
+  outline: none;
+}
+
+.navbar-buscador button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--nav-texto-suave);
+  background: transparent;
+}
+
+.navbar-buscador input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 var(--espacio-3) 0 0;
+  border: 0;
+  border-radius: var(--radio-completo);
+  color: var(--nav-texto);
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.navbar-buscador input::placeholder {
+  color: var(--nav-placeholder);
+  opacity: 1;
+}
+
+/* ---------- Utilidades (Vende tus eventos, idioma, accesibilidad, ingresar) ---------- */
+
+.navbar-utilidades {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+/* Enlace de texto suelto: mismo gris que los enlaces del menú */
+.navbar-utilidades > a:not(.navbar-accion) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--nav-texto-suave);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navbar-utilidades > a:not(.navbar-accion):hover {
+  color: var(--nav-texto);
+}
+
+.navbar-idioma {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  border: 1px solid var(--nav-borde-fuerte);
+  border-radius: var(--radio-completo);
+  color: var(--nav-texto);
+}
+
+.navbar-idioma > svg:first-child {
+  position: absolute;
+  left: var(--espacio-3);
+  pointer-events: none;
+}
+
+.navbar-idioma > svg:last-child {
+  position: absolute;
+  right: var(--espacio-3);
+  color: var(--nav-texto-suave);
+  pointer-events: none;
+}
+
+.navbar-idioma:focus-within {
+  border-color: var(--nav-foco);
+  outline: 3px solid var(--nav-foco);
+  outline-offset: 3px;
+}
+
+.navbar-idioma select {
+  height: 100%;
+  padding: 0 34px 0 36px;
+  border: 0;
+  border-radius: var(--radio-completo);
+  color: var(--nav-texto);
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  appearance: none;
+  cursor: pointer;
+}
+
+.navbar-idioma select option {
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+}
+
+.navbar-idioma select:focus-visible {
+  outline: none;
+}
+
+.navbar-accesibilidad {
+  border-color: var(--nav-borde);
+}
+
+.navbar-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--espacio-2) var(--espacio-4);
+  border-radius: var(--radio-md);
+  color: var(--nav-boton-texto);
+  background: var(--nav-boton-fondo);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navbar-accion:hover {
+  color: var(--nav-boton-texto);
+  background: var(--nav-boton-hover);
+}
+
+.navbar-accion:active {
+  background: var(--nav-boton-presionado);
+}
+
+.navbar-estado {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--nav-texto-suave);
+}
+
+.navbar-estado p {
+  margin: 0 0 var(--espacio-2);
+}
+
+.navbar-estado button {
+  min-height: 44px;
+  padding: var(--espacio-2) var(--espacio-3);
+  border: 1px solid var(--nav-borde);
+  border-radius: var(--radio-sm);
+  color: var(--nav-texto);
+  background: var(--nav-fondo);
+}
+
+/* ==========================================================
+   Escritorio: barra clara, menú en línea
+   ========================================================== */
+
+@media (min-width: 1200px) {
+  .navbar {
+    --nav-alto: 72px;
+    --nav-fondo: var(--fondo-superficie);
+    --nav-texto: var(--texto-principal);
+    --nav-texto-suave: var(--texto-secundario);
+    --nav-placeholder: var(--texto-terciario);
+    --nav-borde: var(--borde-sutil);
+    --nav-borde-fuerte: var(--borde-fuerte);
+    --nav-hover: var(--fondo-sutil);
+    --nav-presionado: var(--fondo-presionado);
+    --nav-campo: var(--fondo-sutil);
+    --nav-campo-foco: var(--fondo-superficie);
+    --nav-foco: var(--marca-primario);
+    --nav-boton-fondo: var(--marca-primario);
+    --nav-boton-texto: var(--texto-inverso);
+    --nav-boton-hover: var(--marca-primario-hover);
+    --nav-boton-presionado: var(--marca-primario-presionado);
+    --nav-simbolo-fondo: var(--marca-primario);
+    --nav-simbolo-texto: var(--texto-inverso);
+  }
+
+  .navbar-interior {
+    flex-wrap: nowrap;
+    gap: var(--espacio-8);
+  }
+
+  .navbar-movil-acciones {
+    display: none;
+  }
+
+  .navbar-panel,
+  .navbar-panel.is-abierto {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--espacio-6);
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    border: 0;
+  }
+
+  /* Alturas de 40px en escritorio */
+  .navbar-idioma,
+  .navbar-icono,
+  .navbar-accion,
+  .navbar-buscador,
+  .navbar-buscador button,
+  .navbar-buscador input,
+  .navbar-utilidades > a:not(.navbar-accion) {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .navbar-accesibilidad,
+  .navbar-buscador button {
+    width: 40px;
+  }
+
+  /* Enlaces: sin fondo, solo cambia el color */
+  .navbar-enlaces {
+    flex-direction: row;
+    gap: var(--espacio-6);
+  }
+
+  .navbar-enlaces a {
+    min-height: 40px;
+    padding-inline: 0;
+    background: transparent;
+    white-space: nowrap;
+  }
+
+  .navbar-enlaces a:hover,
+  .navbar-enlaces a[aria-current="page"] {
+    background: transparent;
+  }
+
+  /* Buscador: píldora gris sin borde visible */
+  .navbar-buscador {
+    flex: 1;
+    max-width: 240px;
+    margin-left: auto;
+    border-color: transparent;
+  }
+
+  .navbar-buscador:focus-within {
+    border-color: var(--nav-foco);
+  }
+
+  .navbar-utilidades {
+    flex-wrap: nowrap;
+    gap: var(--espacio-4);
+    margin-left: auto;
+  }
+}
