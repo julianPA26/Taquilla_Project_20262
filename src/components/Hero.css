@@ -175,7 +175,7 @@
     width: 44px;
     height: 44px;
     border: 1px solid var(--borde-sutil);
-    border-radius: var(--radio-md);
+    border-radius: var(--radio-completo);
     color: var(--texto-principal);
     background: var(--fondo-sutil);
     text-decoration: none;
@@ -308,7 +308,6 @@
     white-space: nowrap;
 }
 
-/* ===== Tablet ===== */
 @media (min-width: 768px) {
     .hero-interior {
         padding-block: var(--espacio-12);
@@ -343,7 +342,6 @@
     }
 }
 
-/* ===== Escritorio ===== */
 @media (min-width: 1024px) {
     .hero-interior {
         grid-template-columns: minmax(0, 1fr) 28rem;

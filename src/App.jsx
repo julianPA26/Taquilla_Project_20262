@@ -17,11 +17,14 @@ function App() {
   const [consulta, setConsulta] = useState("");
   const [textoGrande, setTextoGrande] = useState(false);
   const datos = useTextos(idioma);
+  const [ciudadFiltro, setCiudadFiltro] = useState("");
+
 
   const ingles = idioma === "en";
   const titulo =
     datos.textos?.navbar.enlaces[activo] ??
     datos.textos?.navbar.botones[activo];
+
 
   //Va a sincronizar el estado del componente con el hash de la URL
   useEffect(() => {
@@ -44,10 +47,11 @@ function App() {
     };
   }, [textoGrande]);
 
-  function buscar(valor) {
+
+  function buscar(valor, ciudad = "") {
     setConsulta(valor);
+    setCiudadFiltro(ciudad);
     setActivo("explorar");
-    //window.history es el que da acceso al historial de la pestaña
     window.history.replaceState(null, "", "#explorar");
   }
 
