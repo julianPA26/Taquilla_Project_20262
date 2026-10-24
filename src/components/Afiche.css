@@ -1,0 +1,22 @@
+.afiche {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--afiche-1), var(--afiche-2));
+}
+
+/* Velo oscuro suave y dos círculos translúcidos, como en el diseño */
+.afiche::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 78% 22%, rgb(255 255 255 / 0.22) 0 28%, transparent 28.5%),
+        radial-gradient(circle at 18% 108%, rgb(255 255 255 / 0.12) 0 38%, transparent 38.5%),
+        rgb(20 20 20 / 0.28);
+}
+
+/* Lo que se ponga dentro queda por encima de los círculos */
+.afiche>* {
+    position: relative;
+}

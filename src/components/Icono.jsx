@@ -7,6 +7,11 @@ const ICONOS = {
   menu: { caja: 24, tamano: 20, trazos: <path d="M4 6h16M4 12h16M4 18h16" /> },
   cerrar: { caja: 24, tamano: 20, trazos: <path d="m6 6 12 12M6 18 18 6" /> },
   favoritos: { caja: 24, tamano: 20, trazos: <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /> },
+  check: { caja: 16, trazos: <path d="m3 8.5 3.5 3.5L13 4.5" /> },
+  ubicacion: { caja: 24, tamano: 16, trazos: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></> },
+  calendario: { caja: 24, tamano: 16, trazos: <><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></> },
+  filtros: { caja: 24, tamano: 20, trazos: <><path d="M3 6h9M18 6h3M3 12h3M12 12h9M3 18h11M20 18h1" /><circle cx="15" cy="6" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="17" cy="18" r="2" /></> },
+
 };
 
 export default function Icono({ nombre }) {

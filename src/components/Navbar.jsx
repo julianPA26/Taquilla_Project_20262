@@ -3,11 +3,8 @@ import Icono from "./Icono.jsx";
 import "./Navbar.css";
 
 const DESTINOS = {
+  inicio: "#inicio",
   explorar: "#explorar",
-  conciertos: "#conciertos",
-  teatro: "#teatro",
-  deportes: "#deportes",
-  festivales: "#festivales",
 };
 
 export default function Navbar({
@@ -19,37 +16,32 @@ export default function Navbar({
   cambiarIdioma,
   activo,
   onBuscar,
-  textoGrande,
-  alternarTexto,
 }) {
   const [abierto, setAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const botonMenu = useRef(null);
-  const campoBusqueda = useRef(null);
   const nav = textos?.navbar;
   const ingles = idioma === "en";
   const abrir =
-    textos?.menuMovil.abrir ?? (ingles ? "Open menu" : "Abrir menú");
+    textos?.menuMovil?.abrir ?? (ingles ? "Open menu" : "Abrir menú");
   const cerrar =
-    textos?.menuMovil.cerrar ?? (ingles ? "Close menu" : "Cerrar menú");
-  const enlaces = Object.entries(nav?.enlaces ?? {}).filter(
-    ([clave]) => DESTINOS[clave],
-  );
+    textos?.menuMovil?.cerrar ?? (ingles ? "Close menu" : "Cerrar menú");
+
+  // "Inicio" no está en navbar.enlaces de la API, se toma de componentes.migas
+  const enlaces = [
+    ["inicio", textos?.componentes?.migas?.inicio ?? (ingles ? "Home" : "Inicio")],
+    ["explorar", nav?.enlaces?.explorar ?? (ingles ? "Explore" : "Explorar")],
+  ];
 
   let claseNavbar = "navbar";
   if (abierto) {
     claseNavbar = "navbar is-abierto";
   }
 
-  let respaldoIdioma = "Idioma";
-  let respaldoAccesibilidad = "Accesibilidad";
-  if (ingles) {
-    respaldoIdioma = "Language";
-    respaldoAccesibilidad = "Accessibility";
-  }
-  const etiquetaIdioma = textos?.idioma?.tituloMovil ?? respaldoIdioma;
-  const etiquetaAccesibilidad =
-    textos?.menuMovil?.secciones?.accesibilidad ?? respaldoAccesibilidad;
+  const etiquetaIdioma =
+    textos?.idioma?.tituloMovil ?? (ingles ? "Language" : "Idioma");
+  const textoIngresar =
+    nav?.botones?.ingresar ?? (ingles ? "Log in" : "Ingresar");
 
   useEffect(() => {
     function cerrarConEscape(evento) {
@@ -61,11 +53,6 @@ export default function Navbar({
     document.addEventListener("keydown", cerrarConEscape);
     return () => document.removeEventListener("keydown", cerrarConEscape);
   }, [abierto]);
-
-  function abrirBusqueda() {
-    setAbierto(true);
-    requestAnimationFrame(() => campoBusqueda.current?.focus());
-  }
 
   function buscar(evento) {
     evento.preventDefault();
@@ -79,40 +66,37 @@ export default function Navbar({
     <header className={claseNavbar}>
       <nav
         className="navbar-interior"
-        aria-label={nav?.aria.menu ?? "Navegación principal"}
+        aria-label={nav?.aria?.menu ?? "Navegación principal"}
       >
         <a
           className="navbar-marca"
           href="#inicio"
-          aria-label={nav?.logo.aria ?? "Inicio"}
+          aria-label={nav?.logo?.aria ?? "Inicio"}
           onClick={() => setAbierto(false)}
         >
           <span className="navbar-simbolo" aria-hidden="true">
             <Icono nombre="ticket" />
           </span>
-          <span>{nav?.logo.texto ?? "taquilla"}</span>
+          <span>{nav?.logo?.texto ?? "taquilla"}</span>
         </a>
 
+        {/* Barra del móvil: buscar (lleva a Explorar), Ingresar y menú */}
         <div className="navbar-movil-acciones">
-          <button
-            type="button"
+          <a
             className="navbar-icono"
-            aria-label={nav?.buscador.aria ?? "Buscar"}
-            disabled={!nav}
-            onClick={abrirBusqueda}
+            href="#explorar"
+            aria-label={nav?.buscador?.aria ?? (ingles ? "Search events" : "Buscar eventos")}
+            onClick={() => setAbierto(false)}
           >
             <Icono nombre="buscar" />
-          </button>
-          {nav && (
-            <a
-              className="navbar-icono"
-              href="#mis-entradas"
-              aria-label={nav.enlaces.misEntradas}
-              onClick={() => setAbierto(false)}
-            >
-              <Icono nombre="ticket" />
-            </a>
-          )}
+          </a>
+          <a
+            className="navbar-movil-ingresar"
+            href="#ingresar"
+            onClick={() => setAbierto(false)}
+          >
+            {textoIngresar}
+          </a>
           <button
             ref={botonMenu}
             type="button"
@@ -162,12 +146,6 @@ export default function Navbar({
                     </a>
                   </li>
                 ))}
-                {/* Solo móvil: en escritorio este enlace va en las utilidades */}
-                <li className="navbar-enlace-movil">
-                  <a href="#vender" onClick={() => setAbierto(false)}>
-                    {nav.enlaces.venderEventos}
-                  </a>
-                </li>
               </ul>
               <form
                 className="navbar-buscador"
@@ -179,7 +157,6 @@ export default function Navbar({
                   <Icono nombre="buscar" />
                 </button>
                 <input
-                  ref={campoBusqueda}
                   type="search"
                   value={busqueda}
                   onChange={(evento) => setBusqueda(evento.target.value)}
@@ -191,22 +168,13 @@ export default function Navbar({
             </>
           )}
           <div className="navbar-utilidades">
-            {nav && (
-              <a
-                className="navbar-vender"
-                href="#vender"
-                onClick={() => setAbierto(false)}
-              >
-                {nav.enlaces.venderEventos}
-              </a>
-            )}
             <div className="navbar-ajustes">
               <div className="navbar-fila">
                 <span className="navbar-fila-etiqueta">{etiquetaIdioma}</span>
                 <div
                   className="navbar-idioma-movil"
                   role="group"
-                  aria-label={nav?.aria.idioma ?? "Cambiar idioma"}
+                  aria-label={nav?.aria?.idioma ?? "Cambiar idioma"}
                 >
                   <button
                     type="button"
@@ -224,51 +192,19 @@ export default function Navbar({
                   </button>
                 </div>
               </div>
-
-              {/* Escritorio: selector desplegable de idioma */}
-              <label className="navbar-idioma">
-                <Icono nombre="idioma" />
-                <select
-                  value={idioma}
-                  onChange={(evento) => cambiarIdioma(evento.target.value)}
-                  aria-label={nav?.aria.idioma ?? "Cambiar idioma"}
-                >
-                  <option value="es">{textos?.idioma?.codigoEs ?? "ES"}</option>
-                  <option value="en">{textos?.idioma?.codigoEn ?? "EN"}</option>
-                </select>
-                <Icono nombre="flechaAbajo" />
-              </label>
-
-              <div className="navbar-fila">
-                <span className="navbar-fila-etiqueta">
-                  {etiquetaAccesibilidad}
-                </span>
-                <button
-                  className="navbar-icono navbar-accesibilidad"
-                  type="button"
-                  aria-label={
-                    nav?.aria.accesibilidad ??
-                    (ingles ? "Enlarge text" : "Aumentar texto")
-                  }
-                  aria-pressed={textoGrande}
-                  onClick={alternarTexto}
-                >
-                  <Icono nombre="accesibilidad" />
-                </button>
-              </div>
             </div>
 
             {nav && (
               <div className="navbar-acciones">
                 <a
-                  className="navbar-accion"
+                  className="navbar-accion navbar-accion-contorno"
                   href="#ingresar"
                   onClick={() => setAbierto(false)}
                 >
                   {nav.botones.ingresar}
                 </a>
                 <a
-                  className="navbar-accion navbar-crear"
+                  className="navbar-accion"
                   href="#crear-cuenta"
                   onClick={() => setAbierto(false)}
                 >

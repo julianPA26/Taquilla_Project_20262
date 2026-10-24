@@ -3,6 +3,8 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import PreferenciasCookies from "./components/PreferenciasCookies.jsx";
+import Footer from "./components/Footer";
+import Inicio from "./pages/Inicio.jsx";
 
 function leerSeccion() {
   return window.location.hash.slice(1) || "explorar";
@@ -60,28 +62,14 @@ function App() {
         textoGrande={textoGrande}
         alternarTexto={() => setTextoGrande((valor) => !valor)}
       />
-      <main className="Contenedor demo-contenido">
-        <p>{ingles ? "English content" : "Contenido en español"}</p>
-        <h1>{titulo ?? (ingles ? "Navigation" : "Navegación")}</h1>
-        <p role="status">
-          {consulta
-            ? `${ingles ? "Search submitted" : "Búsqueda enviada"}: ${consulta}`
-            : ingles
-              ? "Select a link"
-              : "Selecciona un enlace"}
-        </p>
-        <p>
-          {ingles
-            ? "This example loads navigation texts"
-            : "Este ejemplo carga los textos del menú desde la API"}
-        </p>
+      <main>
+        {activo === "explorar" ? (
+          <p>Aquí irá Explorar</p>
+        ) : (
+          <Inicio textos={datos.textos} idioma={idioma} onBuscar={buscar} />
+        )}
       </main>
-
-      <footer className="pie-pagina">
-        <div className="contenedor">
-          <PreferenciasCookies />
-        </div>
-      </footer>
+      <Footer idioma={idioma} />
     </>
   );
 }
