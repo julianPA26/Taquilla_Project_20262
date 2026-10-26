@@ -1,6 +1,7 @@
 .cookies {
   color: #141414;
   font-family: var(--fuente-texto);
+  padding-top:auto;
 }
 
 .cookies-dialogo {
@@ -197,4 +198,8 @@ body:has(.cookies-dialogo[open]) {
 @media (prefers-reduced-motion: reduce) {
   .cookies button,
   .cookies-interruptor span { transition: none; }
+}
+.hola{
+  padding-left: auto;
+  margin-right: 200px;
 }

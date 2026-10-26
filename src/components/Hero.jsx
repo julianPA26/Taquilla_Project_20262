@@ -4,7 +4,6 @@ import Afiche from "./Afiche.jsx";
 import { formatearFechaCorta, formatearPrecio } from "../Utils/formato.js";
 import "./Hero.css";
 
-// Textos que el diseño usa y que la API no trae
 const LOCAL = {
     es: {
         subtitulo:
@@ -86,7 +85,6 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
 
                     <p className="hero-subtitulo">{local.subtitulo}</p>
 
-                    {/* Buscador de escritorio: tres campos */}
                     <form className="hero-buscador" role="search" onSubmit={enviar}>
                         <label className="hero-campo">
                             <Icono nombre="buscar" />
@@ -140,7 +138,6 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
                         </button>
                     </form>
 
-                    {/* Buscador de móvil: un solo campo con resumen y botón de filtros */}
                     <form className="hero-buscador-movil" role="search" onSubmit={enviar}>
                         <div className="hero-movil-campo">
                             <Icono nombre="buscar" />
@@ -178,7 +175,6 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
                     </p>
                 </div>
 
-                {/* Evento destacado: solo escritorio y tablet */}
                 <Afiche afiche={evento?.afiche} className="hero-afiche">
                     {evento && (
                         <article className="hero-destacado">

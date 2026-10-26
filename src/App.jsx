@@ -4,10 +4,10 @@ import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import PreferenciasCookies from "./components/PreferenciasCookies.jsx";
 import Footer from "./components/Footer";
-import Inicio from "./pages/Inicio.jsx";
+import Inicio from "./Pages/Inicio.jsx";
 
 function leerSeccion() {
-  return window.location.hash.slice(1) || "explorar";
+  return window.location.hash.slice(1) || "inicio";
 }
 
 function App() {

@@ -1,22 +1,39 @@
+import { useState } from "react";
 import { useApi } from "../hooks/useApi.js";
 import Hero from "../components/Hero.jsx";
+import Categorias from "../components/Categorias.jsx";
 
 export default function Inicio({ textos, idioma, onBuscar }) {
   const destacados = useApi("/eventos/destacados");
   const ciudades = useApi("/ciudades");
+  const categorias = useApi("/categorias");
+  // Categoría elegida ("todas" al inicio). Más adelante filtrará los destacados.
+  const [categoria, setCategoria] = useState("todas");
 
   const eventos = destacados.datos?.datos ?? [];
-  // El diseño muestra "Festival Niebla 2026"; si no está, se usa el primero de la lista
   const principal =
-    eventos.find((evento) => evento.slug === "festival-niebla-2026") ?? eventos[0];
+    eventos.find((evento) => evento.slug === "festival-niebla-2026") ?? eventos[1];
+    console.log("categorias:", categorias);
 
   return (
-    <Hero
-      textos={textos}
-      idioma={idioma}
-      evento={principal}
-      ciudades={ciudades.datos?.datos ?? []}
-      onBuscar={onBuscar}
-    />
+    <>
+      <Hero
+        textos={textos}
+        idioma={idioma}
+        evento={principal}
+        ciudades={ciudades.datos?.datos ?? []}
+        onBuscar={onBuscar}
+      />
+      <Categorias
+        textos={textos}
+        idioma={idioma}
+        categorias={categorias.datos?.datos}
+        cargando={categorias.cargando}
+        error={categorias.error}
+        recargar={categorias.recargar}
+        activa={categoria}
+        onElegir={setCategoria}
+      />
+    </>
   );
 }
