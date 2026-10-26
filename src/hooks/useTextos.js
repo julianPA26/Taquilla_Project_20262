@@ -1,7 +1,7 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 const API = "https://yanethm-taquilla-api.fly.dev/api/v1/textos"
-const CLAVES_MENU= ["explorar","conciertos","teatro","deportes","festivales", "misEntradas", "venderEventos"]
+const CLAVES_MENU = ["inicio", "explorar"];
 
 function validarTextos(datos) {
   const textos = datos?.textos;
@@ -23,7 +23,7 @@ function validarTextos(datos) {
     textos?.menuMovil?.cerrar,
   ];
 
-  if (!etiquetas.every((valor) => typeof valor === "string" && valor.trim())){
+  if (!etiquetas.every((valor) => typeof valor === "string" && valor.trim())) {
     /*
     "Inicio"      // Válido
     "  Inicio "   // Válido
@@ -63,13 +63,13 @@ export function useTextos(idioma) {
         if (vigente) setTextos(nuevosTextos);
       } catch (error) {
         if (vigente) {
-            console.error("Error al cargar los textos:", error);
-            setError(true);
+          console.error("Error al cargar los textos:", error);
+          setError(true);
         }
       } finally {
         clearTimeout(limite);
         if (vigente) setCargando(false);
-        }
+      }
     }
 
     cargarTextosNavbar();

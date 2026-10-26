@@ -1,0 +1,189 @@
+.tarjeta-evento {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-tarjeta);
+  font-family: var(--fuente-instrument-sans);
+}
+
+.tarjeta-evento :focus-visible {
+  outline: 3px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+
+/* ===== Afiche ===== */
+.tarjeta-afiche {
+  aspect-ratio: 4 / 3;
+}
+
+/* Aviso "Agotada" / "Últimas entradas" sobre el afiche */
+.tarjeta-afiche > .tarjeta-aviso {
+  position: absolute;
+  top: var(--espacio-3);
+  right: var(--espacio-3);
+  padding: 2px var(--espacio-2);
+  border-radius: var(--radio-sm);
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* ===== Contenido ===== */
+.tarjeta-cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4);
+}
+
+.tarjeta-categoria {
+  align-self: flex-start;
+  margin: 0;
+  padding: 2px var(--espacio-2);
+  border-radius: var(--radio-sm);
+  background: var(--fondo-sutil);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* titular-h4 (16px / 22px / 600) */
+.tarjeta-titulo {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.tarjeta-datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--texto-secundario);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.tarjeta-datos li {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.tarjeta-datos svg {
+  flex-shrink: 0;
+  color: var(--texto-terciario);
+}
+
+/* ===== Precio y botón ===== */
+.tarjeta-pie {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+  margin-top: auto;
+  padding-top: var(--espacio-3);
+}
+
+.tarjeta-precio {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.tarjeta-precio span {
+  color: var(--texto-terciario);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.tarjeta-precio strong {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.tarjeta-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding-inline: var(--espacio-4);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-md);
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.tarjeta-boton:hover {
+  background: var(--fondo-sutil);
+}
+
+a.tarjeta-boton:active {
+  background: var(--fondo-presionado);
+}
+
+/* Botón deshabilitado (evento agotado) */
+.tarjeta-boton[aria-disabled="true"] {
+  border-color: var(--borde-sutil);
+  color: var(--texto-terciario);
+  background: var(--fondo-sutil);
+  cursor: not-allowed;
+}
+
+/* El nombre del evento solo lo leen los lectores de pantalla */
+.tarjeta-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ===== Tarjeta de carga ===== */
+.tarjeta-esqueleto {
+  min-height: 20rem;
+  border-radius: var(--radio-lg);
+  background: var(--fondo-sutil);
+  animation: tarjeta-pulso 1.4s ease-in-out infinite;
+}
+
+@keyframes tarjeta-pulso {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-esqueleto {
+    animation: none;
+  }
+}
+
+/* En pantallas anchas el afiche es más bajo, como en el diseño web */
+@media (min-width: 768px) {
+  .tarjeta-afiche {
+    aspect-ratio: 3 / 2;
+  }
+}

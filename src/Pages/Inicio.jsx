@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useApi } from "../hooks/useApi.js";
 import Hero from "../components/Hero.jsx";
 import Categorias from "../components/Categorias.jsx";
+import Destacados from "../components/Destacados.jsx";
 
 export default function Inicio({ textos, idioma, onBuscar }) {
   const destacados = useApi("/eventos/destacados");
@@ -13,7 +14,7 @@ export default function Inicio({ textos, idioma, onBuscar }) {
   const eventos = destacados.datos?.datos ?? [];
   const principal =
     eventos.find((evento) => evento.slug === "festival-niebla-2026") ?? eventos[1];
-    console.log("categorias:", categorias);
+  console.log("categorias:", categorias);
 
   return (
     <>
@@ -33,6 +34,14 @@ export default function Inicio({ textos, idioma, onBuscar }) {
         recargar={categorias.recargar}
         activa={categoria}
         onElegir={setCategoria}
+      />
+      <Destacados
+        eventos={eventos}
+        cargando={destacados.cargando}
+        error={destacados.error}
+        recargar={destacados.recargar}
+        textos={textos}
+        idioma={idioma}
       />
     </>
   );

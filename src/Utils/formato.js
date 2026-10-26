@@ -5,6 +5,19 @@ export function formatearPrecio(valor) {
     }).format(valor);
     return `$${numero}`;
 }
+// "2026-11-21T01:00:00.000Z" -> "8:00 p. m." (hora de Colombia)
+export function formatearHora(fechaISO, idioma = "es") {
+    let codigoIdioma = "es-CO";
+    if (idioma === "en") {
+        codigoIdioma = "en-US";
+    }
+    return new Intl.DateTimeFormat(codigoIdioma, {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "America/Bogota",
+    }).format(new Date(fechaISO));
+}
 
 // "2026-11-21T01:00:00.000Z" -> "Vie 20 nov" (hora de Colombia)
 export function formatearFechaCorta(fechaISO, idioma = "es") {
