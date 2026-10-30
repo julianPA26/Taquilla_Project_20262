@@ -2,11 +2,10 @@ import TarjetaEvento from "./TarjetaEvento.jsx";
 import Icono from "./Icono.jsx";
 import "./Destacados.css";
 
-// Cuántas tarjetas grises se muestran mientras llega la respuesta de la API
+
 const CANTIDAD_ESQUELETOS = 4;
 
-// Textos de respaldo: se usan si la API de textos aún no respondió o no trae la clave.
-// "verTodos" no existe en la API, por eso siempre sale de aquí.
+
 const RESPALDO = {
     es: {
         titulo: "Destacados de la semana",
