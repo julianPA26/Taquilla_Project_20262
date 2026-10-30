@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import PreferenciasCookies from "./components/PreferenciasCookies.jsx";
 import Footer from "./components/Footer";
 import Inicio from "./Pages/Inicio.jsx";
+import Explorar from "./Pages/Explorar.jsx";
+
 
 function leerSeccion() {
   return window.location.hash.slice(1) || "inicio";
@@ -68,7 +70,12 @@ function App() {
       />
       <main>
         {activo === "explorar" ? (
-          <p>Aquí irá Explorar</p>
+          <Explorar
+            textos={datos.textos}
+            idioma={idioma}
+            consulta={consulta}
+            ciudadInicial={ciudadFiltro}
+          />
         ) : (
           <Inicio textos={datos.textos} idioma={idioma} onBuscar={buscar} />
         )}

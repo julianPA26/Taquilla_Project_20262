@@ -1,0 +1,65 @@
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-1);
+    margin-top: var(--espacio-8);
+    font-family: var(--fuente-instrument-sans);
+}
+
+.paginacion :focus-visible {
+    outline: 3px solid var(--marca-primario);
+    outline-offset: 3px;
+}
+
+.paginacion-lista {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.paginacion-boton {
+    display: grid;
+    place-items: center;
+    min-width: 40px;
+    height: 40px;
+    padding-inline: var(--espacio-2);
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-md);
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.paginacion-boton:hover:not(:disabled) {
+    background: var(--fondo-sutil);
+}
+
+.paginacion-boton:active:not(:disabled) {
+    background: var(--fondo-presionado);
+}
+
+.paginacion-boton[aria-current="page"] {
+    border-color: var(--marca-primario);
+    color: var(--texto-inverso);
+    background: var(--marca-primario);
+}
+
+.paginacion-boton:disabled {
+    color: var(--texto-terciario);
+    background: var(--fondo-sutil);
+    cursor: not-allowed;
+}
+
+.paginacion-puntos {
+    min-width: 24px;
+    color: var(--texto-terciario);
+    text-align: center;
+}

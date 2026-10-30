@@ -1,0 +1,419 @@
+.filtros {
+    color: var(--texto-principal);
+    font-family: var(--fuente-instrument-sans);
+}
+
+.filtros :focus-visible {
+    outline: 3px solid var(--marca-primario);
+    outline-offset: 3px;
+}
+
+.filtros {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: none;
+    flex-direction: column;
+    background: var(--fondo-superficie);
+}
+
+.filtros.is-abierto {
+    display: flex;
+}
+
+.filtros-encabezado {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-2);
+    padding: var(--espacio-3) var(--espacio-4);
+    border-bottom: 1px solid var(--borde-sutil);
+}
+
+.filtros-titulo {
+    margin: 0 auto 0 0;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    letter-spacing: -0.010em;
+}
+
+.filtros-limpiar {
+    min-height: 40px;
+    padding-inline: var(--espacio-2);
+    border: 0;
+    border-radius: var(--radio-sm);
+    color: var(--texto-secundario);
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filtros-limpiar:hover {
+    color: var(--texto-principal);
+    background: var(--fondo-sutil);
+}
+
+.filtros-cerrar {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50%;
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    cursor: pointer;
+}
+
+.filtros-cerrar:hover {
+    background: var(--fondo-sutil);
+}
+
+.filtros-cuerpo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--espacio-6);
+    padding: var(--espacio-4);
+    overflow-y: auto;
+}
+
+.filtros-grupo {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.filtros-grupo legend,
+.filtros-etiqueta {
+    display: block;
+    margin-bottom: var(--espacio-3);
+    padding: 0;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+}
+
+/* ===== Categoría: chips en móvil ===== */
+.filtros-categorias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2);
+}
+
+.filtros-categoria {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding-inline: var(--espacio-4);
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-completo);
+    background: var(--fondo-superficie);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* La casilla real queda invisible pero accesible */
+.filtros-categoria input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.filtros-categoria-cuenta {
+    display: none;
+}
+
+.filtros-categoria:has(input:checked) {
+    border-color: var(--marca-primario);
+    color: var(--texto-inverso);
+    background: var(--marca-primario);
+}
+
+.filtros-categoria:has(input:focus-visible) {
+    outline: 3px solid var(--marca-primario);
+    outline-offset: 3px;
+}
+
+/* ===== Fecha ===== */
+.filtros-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2);
+}
+
+.filtros-chip {
+    min-height: 40px;
+    padding-inline: var(--espacio-4);
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-completo);
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filtros-chip:hover {
+    background: var(--fondo-sutil);
+}
+
+.filtros-chip[aria-pressed="true"] {
+    border-color: var(--marca-primario);
+    color: var(--texto-inverso);
+    background: var(--marca-primario);
+}
+
+.filtros-fechas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-2);
+    margin-top: var(--espacio-3);
+}
+
+.filtros-fechas label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-1);
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.filtros-fechas input {
+    min-height: 40px;
+    padding-inline: var(--espacio-2);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: var(--radio-md);
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    font: inherit;
+    font-size: 14px;
+}
+
+/* ===== Ciudad ===== */
+.filtros-selector {
+    position: relative;
+}
+
+.filtros-selector select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 var(--espacio-8) 0 var(--espacio-3);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: var(--radio-md);
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.filtros-selector svg {
+    position: absolute;
+    top: 50%;
+    right: var(--espacio-3);
+    color: var(--texto-secundario);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.rango {
+    position: relative;
+    height: 24px;
+}
+
+.rango-pista {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 4px;
+    border-radius: var(--radio-completo);
+    background: var(--borde-sutil);
+    transform: translateY(-50%);
+}
+
+.rango-activo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: var(--radio-completo);
+    background: var(--marca-primario);
+}
+
+.rango input[type="range"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    pointer-events: none;
+    appearance: none;
+}
+
+.rango input[type="range"]::-webkit-slider-runnable-track {
+    background: transparent;
+}
+
+.rango input[type="range"]::-moz-range-track {
+    background: transparent;
+}
+
+.rango input[type="range"]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    border: 2px solid var(--marca-primario);
+    border-radius: 50%;
+    background: var(--fondo-superficie);
+    pointer-events: auto;
+    cursor: pointer;
+    appearance: none;
+}
+
+.rango input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--marca-primario);
+    border-radius: 50%;
+    background: var(--fondo-superficie);
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.rango input[type="range"]:disabled::-webkit-slider-thumb {
+    border-color: var(--borde-fuerte);
+    cursor: not-allowed;
+}
+
+.rango-valores {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--espacio-2);
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.filtros-pie {
+    padding: var(--espacio-4);
+    border-top: 1px solid var(--borde-sutil);
+}
+
+.filtros-ver {
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    border-radius: var(--radio-md);
+    color: var(--texto-inverso);
+    background: var(--marca-primario);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filtros-ver:hover {
+    background: var(--marca-primario-hover);
+}
+
+.filtros-ver:active {
+    background: var(--marca-primario-presionado);
+}
+
+@media (min-width: 1024px) {
+    .filtros {
+        position: sticky;
+        top: 88px;
+        z-index: auto;
+        display: flex;
+        align-self: start;
+        border: 1px solid var(--borde-sutil);
+        border-radius: var(--radio-lg);
+        box-shadow: var(--sombra-tarjeta);
+    }
+
+    .filtros-encabezado {
+        padding: var(--espacio-4);
+        border-bottom: 0;
+    }
+
+    .filtros-titulo {
+        font-size: 16px;
+        line-height: 22px;
+        letter-spacing: -0.005em;
+    }
+
+    .filtros-cerrar,
+    .filtros-pie {
+        display: none;
+    }
+
+    .filtros-cuerpo {
+        gap: var(--espacio-5, 20px);
+        padding: 0 var(--espacio-4) var(--espacio-4);
+        overflow: visible;
+    }
+
+    .filtros-categorias {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: var(--espacio-1);
+    }
+
+    .filtros-categoria {
+        min-height: 32px;
+        gap: var(--espacio-2);
+        padding-inline: 0;
+        border: 0;
+        border-radius: var(--radio-sm);
+        color: var(--texto-principal) !important;
+        background: transparent !important;
+        font-weight: 400;
+    }
+
+    .filtros-categoria input {
+        position: static;
+        width: 16px;
+        height: 16px;
+        opacity: 1;
+        accent-color: var(--marca-primario);
+    }
+
+    .filtros-categoria-nombre {
+        flex: 1;
+    }
+
+    .filtros-categoria-cuenta {
+        display: inline;
+        color: var(--texto-terciario);
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .filtros-chip {
+        min-height: 32px;
+        padding-inline: var(--espacio-3);
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .filtros-selector select {
+        min-height: 40px;
+    }
+}

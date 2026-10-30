@@ -18,6 +18,8 @@ const ICONOS = {
   comedia: { caja: 24, tamano: 20, trazos: <><circle cx="12" cy="12" r="9" /><path d="M8 14a5 5 0 0 0 8 0M9 9h.01M15 9h.01" /></> },
   familiares: { caja: 24, tamano: 20, trazos: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></> },
   flechaDerecha: { caja: 16, trazos: <path d="M3 8h10M9 4l4 4-4 4" /> },
+  flechaIzquierda: { caja: 16, trazos: <path d="M13 8H3m4-4L3 8l4 4" /> },
+  flechaDerecha: { caja: 16, trazos: <path d="M3 8h10m-4-4 4 4-4 4" /> },
 };
 
 export default function Icono({ nombre }) {
