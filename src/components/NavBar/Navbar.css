@@ -536,3 +536,31 @@
     gap: var(--espacio-3);
   }
 }
+
+.navbar-accesibilidad {
+  border-color: var(--borde-fuerte);
+}
+
+
+/* En el menú móvil el botón lleva borde más marcado */
+@media (max-width: 1199.98px) {
+  .navbar-fila .navbar-accesibilidad {
+    width: 40px;
+    height: 40px;
+    border-color: var(--borde-fuerte);
+  }
+}
+
+/* En escritorio queda antes del interruptor ES | EN, como en el Figma */
+@media (min-width: 1200px) {
+  .navbar-fila-accesibilidad {
+    order: -1;
+    border-color: var(--borde-fuerte);
+  }
+
+  .navbar-accesibilidad {
+    width: 40px;
+    height: 40px;
+  }
+  
+}

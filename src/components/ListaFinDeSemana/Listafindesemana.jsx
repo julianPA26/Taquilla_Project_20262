@@ -37,7 +37,7 @@ export default function ListaFinDeSemana({ textos, idioma, eventos, cargando, on
                 </div>
 
                 <ul className="finde-lista" aria-busy={cargando}>
-                    {(eventos ?? []).map((evento) => (
+                    {(eventos ?? []).slice(0, 3).map((evento) => (
                         <li key={evento.id}>
                             {/* El detalle no está en el sprint: el enlace solo cambia el # */}
                             <a className="finde-fila" href={`#evento-${evento.slug}`}>

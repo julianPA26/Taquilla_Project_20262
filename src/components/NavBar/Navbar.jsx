@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Icono from "../Icono/Icono.jsx";
 import "./Navbar.css";
-import logoNormal from "../assets/logos/logo-normal.svg";
+import logoNormal from "../../Assets/Logos/logo-normal.svg";
 
 const DESTINOS = {
-  inicio: "/inicio",
-  explorar: "/explorar",
+  inicio: "#inicio",
+  explorar: "#explorar",
 };
 
 export default function Navbar({
@@ -17,6 +17,8 @@ export default function Navbar({
   cambiarIdioma,
   activo,
   onBuscar,
+  textoGrande,
+  alternarTexto,
 }) {
   const [abierto, setAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
@@ -41,6 +43,9 @@ export default function Navbar({
 
   const etiquetaIdioma =
     textos?.idioma?.tituloMovil ?? (ingles ? "Language" : "Idioma");
+  const etiquetaAccesibilidad =
+    textos?.menuMovil?.secciones?.accesibilidad ??
+    (ingles ? "Accessibility" : "Accesibilidad");
   const textoIngresar =
     nav?.botones?.ingresar ?? (ingles ? "Log in" : "Ingresar");
 
@@ -75,10 +80,7 @@ export default function Navbar({
           aria-label={nav?.logo?.aria ?? "Inicio"}
           onClick={() => setAbierto(false)}
         >
-          <span className="navbar-simbolo" aria-hidden="true">
-            <Icono nombre="ticket" />
-          </span>
-          <span>{nav?.logo?.texto ?? "taquilla"}</span>
+          <img className="navbar-logo" src={logoNormal} alt="" width="109" height="32" />
         </a>
 
         {/* Barra del móvil: buscar (lleva a Explorar), Ingresar y menú */}
@@ -88,7 +90,6 @@ export default function Navbar({
             href="#explorar"
             aria-label={nav?.buscador?.aria ?? (ingles ? "Search events" : "Buscar eventos")}
             onClick={() => setAbierto(false)}
-            
           >
             <Icono nombre="buscar" />
           </a>
@@ -171,6 +172,7 @@ export default function Navbar({
           )}
           <div className="navbar-utilidades">
             <div className="navbar-ajustes">
+              {/* Fila de idioma */}
               <div className="navbar-fila">
                 <span className="navbar-fila-etiqueta">{etiquetaIdioma}</span>
                 <div
@@ -193,6 +195,20 @@ export default function Navbar({
                     {textos?.idioma?.codigoEn ?? "EN"}
                   </button>
                 </div>
+              </div>
+
+              {/* Fila de accesibilidad (aparte de la de idioma, no dentro) */}
+              <div className="navbar-fila navbar-fila-accesibilidad">
+                <span className="navbar-fila-etiqueta">{etiquetaAccesibilidad}</span>
+                <button
+                  className="navbar-icono navbar-accesibilidad"
+                  type="button"
+                  aria-label={ingles ? "Increase text size" : "Aumentar el tamaño del texto"}
+                  aria-pressed={textoGrande}
+                  onClick={alternarTexto}
+                >
+                  <Icono nombre="accesibilidad" />
+                </button>
               </div>
             </div>
 

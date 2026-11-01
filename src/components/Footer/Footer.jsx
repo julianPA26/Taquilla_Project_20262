@@ -1,89 +1,66 @@
-import Icono from "../Icono/Icono.jsx";
+import logoInverso from "../../assets/logos/logo-inverso.svg";
 import "./Footer.css";
 
-// Estos textos no están en la API de textos, por eso se escriben aquí (es y en)
-const TEXTOS = {
+// Textos de respaldo mientras llega la API. Tienen la misma forma que textos.footer.
+const RESPALDO = {
     es: {
-        aria: "Pie de página",
-        ariaLogo: "Taquilla, ir al inicio",
         lema: "Conciertos, teatro, deportes y festivales en un solo lugar. Explora eventos y consulta sus detalles.",
-        columnas: [
-            {
-                titulo: "Explora",
-                enlaces: [
-                    ["Inicio", "#inicio"],
-                    ["Explorar eventos", "#explorar"],
-                ],
-            },
-            {
-                titulo: "Tu cuenta",
-                enlaces: [
-                    ["Iniciar sesión", "#ingresar"],
-                    ["Crear cuenta", "#crear-cuenta"],
-                ],
-            },
-            {
-                titulo: "Legal",
-                enlaces: [["Términos de uso", "#"]],
-            },
-        ],
-        derechos: "Taquilla · Proyecto académico",
-        aviso: "Datos de ejemplo con fines académicos.",
+        columnas: {
+            explora: { titulo: "Explora", enlaces: { inicio: "Inicio", explorar: "Explorar eventos" } },
+            cuenta: { titulo: "Tu cuenta", enlaces: { ingresar: "Iniciar sesión", crearCuenta: "Crear cuenta" } },
+            legal: { titulo: "Legal", enlaces: { terminos: "Términos de uso", accesibilidad: "Accesibilidad" } },
+        },
+        legal: { derechos: "© {anio} Taquilla · Proyecto académico", nota: "Datos de ejemplo con fines académicos." },
     },
     en: {
-        aria: "Footer",
-        ariaLogo: "Taquilla, go to home",
         lema: "Concerts, theater, sports and festivals in one place. Explore events and check their details.",
-        columnas: [
-            {
-                titulo: "Explore",
-                enlaces: [
-                    ["Home", "#inicio"],
-                    ["Explore events", "#explorar"],
-                ],
-            },
-            {
-                titulo: "Your account",
-                enlaces: [
-                    ["Log in", "#ingresar"],
-                    ["Create account", "#crear-cuenta"],
-                ],
-            },
-            {
-                titulo: "Legal",
-                enlaces: [["Terms of use", "#"]],
-            },
-        ],
-        derechos: "Taquilla · Academic project",
-        aviso: "Sample data for academic purposes.",
+        columnas: {
+            explora: { titulo: "Explore", enlaces: { inicio: "Home", explorar: "Explore events" } },
+            cuenta: { titulo: "Your account", enlaces: { ingresar: "Log in", crearCuenta: "Sign up" } },
+            legal: { titulo: "Legal", enlaces: { terminos: "Terms of use", accesibilidad: "Accessibility" } },
+        },
+        legal: { derechos: "© {anio} Taquilla · Academic project", nota: "Sample data for academic purposes." },
     },
 };
 
-export default function Footer({ idioma }) {
-    const t = TEXTOS[idioma] ?? TEXTOS.es;
-    const anio = new Date().getFullYear();
+// A dónde lleva cada enlace (solo Inicio y Explorar existen en este sprint)
+const DESTINOS = {
+    inicio: "#inicio",
+    explorar: "#explorar",
+    ingresar: "#ingresar",
+    crearCuenta: "#crear-cuenta",
+    terminos: "#terminos",
+    accesibilidad: "#accesibilidad",
+};
+
+export default function Footer({ idioma, textos }) {
+    const ingles = idioma === "en";
+    // Si la API ya respondió se usan sus textos; si no, los de respaldo
+    const f = textos?.footer ?? RESPALDO[idioma] ?? RESPALDO.es;
+    const derechos = f.legal.derechos.replace("{anio}", new Date().getFullYear());
 
     return (
         <footer className="footer">
             <div className="footer-interior">
                 <div className="footer-presentacion">
-                    <a className="footer-marca" href="#inicio" aria-label={t.ariaLogo}>
-                        <span className="footer-simbolo" aria-hidden="true">
-                            <Icono nombre="ticket" />
-                        </span>
-                        <span>taquilla</span>
+                    <a
+                        className="footer-marca"
+                        href="#inicio"
+                        aria-label={textos?.navbar?.logo?.aria ?? (ingles ? "Taquilla, go to home" : "Taquilla, ir al inicio")}
+                    >
+                        <img className="footer-logo" src={logoInverso} alt="" width="109" height="32" />
                     </a>
-                    <p className="footer-lema">{t.lema}</p>
+                    <p className="footer-lema">{f.lema}</p>
                 </div>
 
-                <nav className="footer-columnas" aria-label={t.aria}>
-                    {t.columnas.map((columna) => (
-                        <div className="footer-columna" key={columna.titulo}>
+                <nav className="footer-columnas" aria-label={ingles ? "Footer" : "Pie de página"}>
+                    {Object.entries(f.columnas).map(([clave, columna]) => (
+                        <div className="footer-columna" key={clave}>
                             <h2 className="footer-titulo">{columna.titulo}</h2>
                             <ul className="footer-lista">
-                                {columna.enlaces.map(([texto, destino]) => (
-                                    <li key={texto}>
-                                        <a href={destino}>{texto}</a>
+                                {Object.entries(columna.enlaces).map(([enlace, texto]) => (
+                                    <li key={enlace}>
+                                        <a href={DESTINOS[enlace] ?? "#"}>{texto}</a>
                                     </li>
                                 ))}
                             </ul>
@@ -93,10 +70,8 @@ export default function Footer({ idioma }) {
             </div>
 
             <div className="footer-base">
-                <p>
-                    © {anio} {t.derechos}
-                </p>
-                <p>{t.aviso}</p>
+                <p>{derechos}</p>
+                <p>{f.legal.nota}</p>
             </div>
         </footer>
     );

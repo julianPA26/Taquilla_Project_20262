@@ -121,7 +121,7 @@ function App() {
         )}
       </main>
 
-      <Footer idioma={idioma} />
+      <Footer idioma={idioma} textos={datos.textos} />
     </>
   );
 }
