@@ -1,4 +1,4 @@
-import Icono from "./Icono.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./Footer.css";
 
 // Estos textos no están en la API de textos, por eso se escriben aquí (es y en)

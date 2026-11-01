@@ -1,0 +1,188 @@
+.seccion {
+    color: var(--texto-principal);
+    font-family: var(--fuente-instrument-sans);
+}
+
+.seccion :focus-visible {
+    outline: 3px solid var(--marca-primario);
+    outline-offset: 3px;
+}
+
+.seccion-interior {
+    width: min(100% - 2rem, 80rem);
+    margin-inline: auto;
+    padding-block: var(--espacio-4) var(--espacio-6);
+}
+
+/* ===== Encabezado ===== */
+.seccion-encabezado {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--espacio-4);
+    margin-bottom: var(--espacio-4);
+}
+
+/* titular-h3 (20px / 26px / 600) */
+.seccion-titulo {
+    margin: 0;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    letter-spacing: -0.010em;
+}
+
+.seccion-titulo-web {
+    display: none;
+}
+
+.seccion-subtitulo {
+    display: none;
+    margin: var(--espacio-1) 0 0;
+    color: var(--texto-secundario);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.seccion-ver-todos {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    min-height: 40px;
+    padding-inline: var(--espacio-2);
+    border-radius: var(--radio-sm);
+    color: var(--texto-principal);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.seccion-ver-todos:hover {
+    background: var(--fondo-sutil);
+}
+
+.seccion-ver-todos:active {
+    background: var(--fondo-presionado);
+}
+
+/* ===== Móvil: carrusel con scroll dentro de la fila ===== */
+.seccion-lista {
+    display: flex;
+    gap: var(--espacio-3);
+    margin: 0;
+    padding: 0 0 var(--espacio-2);
+    overflow-x: auto;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+}
+
+.seccion-lista>li {
+    flex: 0 0 min(80%, 18rem);
+    scroll-snap-align: start;
+}
+
+/* Algunas secciones solo existen en escritorio (Próximamente) */
+.seccion-solo-escritorio {
+    display: none;
+}
+
+/* ===== Mensajes de vacío y error ===== */
+.seccion-estado-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.seccion-mensaje {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espacio-3);
+    padding: var(--espacio-4);
+    border: 1px dashed var(--borde-fuerte);
+    border-radius: var(--radio-lg);
+    background: var(--fondo-superficie);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.seccion-mensaje p {
+    margin: 0;
+}
+
+.seccion-mensaje button {
+    min-height: 40px;
+    padding-inline: var(--espacio-4);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: var(--radio-md);
+    color: var(--texto-principal);
+    background: var(--fondo-superficie);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.seccion-mensaje button:hover {
+    background: var(--fondo-sutil);
+}
+
+.seccion-mensaje-error {
+    border-style: solid;
+    border-color: var(--estado-error);
+    background: var(--estado-error-suave);
+}
+
+/* ===== Tablet: 2 columnas ===== */
+@media (min-width: 768px) {
+    .seccion-interior {
+        padding-block: var(--espacio-6) var(--espacio-8);
+    }
+
+    .seccion-titulo-web {
+        display: inline;
+    }
+
+    .seccion-titulo-movil {
+        display: none;
+    }
+
+    .seccion-subtitulo {
+        display: block;
+    }
+
+    .seccion-solo-escritorio {
+        display: block;
+    }
+
+    .seccion-lista {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: visible;
+        padding-bottom: 0;
+    }
+
+    .seccion-lista>li {
+        flex: none;
+    }
+
+    /* Solo se muestran 4 tarjetas, como en el diseño */
+    .seccion-lista>li:nth-child(n + 5) {
+        display: none;
+    }
+}
+
+/* ===== Escritorio: 4 columnas ===== */
+@media (min-width: 1024px) {
+    .seccion-lista {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--espacio-4);
+    }
+}

@@ -1,5 +1,5 @@
-import TarjetaEvento from "./TarjetaEvento.jsx";
-import Icono from "./Icono.jsx";
+import TarjetaEvento from "../EventCards/TarjetaEvento.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./Destacados.css";
 
 

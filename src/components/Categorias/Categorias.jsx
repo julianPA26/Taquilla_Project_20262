@@ -1,4 +1,4 @@
-import Icono from "./Icono.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./Categorias.css";
 
 const CANTIDAD = 6;

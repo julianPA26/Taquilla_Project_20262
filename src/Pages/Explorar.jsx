@@ -3,10 +3,10 @@ import { useApi } from "../hooks/useApi.js";
 import { useEventos } from "../hooks/useEvento.js";
 import { filtrarEventos, limitesDePrecio } from "../Utils/filtros.js";
 import { formatearPrecio } from "../Utils/formato.js";
-import Icono from "../components/Icono.jsx";
-import TarjetaEvento from "../components/TarjetaEvento.jsx";
-import FiltrosExplorar from "../components/FiltrosExplorar.jsx";
-import Paginacion from "../components/Paginacion.jsx";
+import Icono from "../components/Icono/Icono.jsx";
+import TarjetaEvento from "../components/EventCards/TarjetaEvento.jsx";
+import FiltrosExplorar from "../components/FiltrosExplorar/FiltrosExplorar.jsx";
+import Paginacion from "../components/Pagination/Paginacion.jsx";
 import "./Explorar.css";
 
 const POR_PAGINA = 9;

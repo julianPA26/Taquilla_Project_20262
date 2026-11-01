@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from "react";
-import Icono from "./Icono.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./PreferenciasCookies.css";
 
 const CLAVE = "taquilla-consentimiento";

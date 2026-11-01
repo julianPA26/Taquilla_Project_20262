@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import Icono from "./Icono.jsx";
-import { formatearPrecio } from "../Utils/formato.js";
-import { PASO_PRECIO } from "../Utils/filtros.js";
+import Icono from "../Icono/Icono.jsx";
+import { formatearPrecio } from "../../Utils/formato.js";
+import { PASO_PRECIO } from "../../Utils/filtros.js";
 import "./FiltrosExplorar.css";
 
 const CATEGORIAS_BASE = ["conciertos", "teatro", "deportes", "festivales", "comedia", "familiares"];

@@ -1,4 +1,4 @@
-import Icono from "./Icono.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./Paginacion.css";
 
 // Devuelve algo como [1, "…a", 4, 5, 6, "…b", 12]: siempre la primera, la última y las cercanas
@@ -32,7 +32,7 @@ export default function Paginacion({ textos, idioma, pagina, totalPaginas, onCam
                 disabled={pagina === 1}
                 onClick={() => onCambiar(pagina - 1)}
             >
-                <Icono nombre="flechaIzquierda" />
+                <Icono nombre="chevronIzquierda"/>
             </button>
 
             <ul className="paginacion-lista">
@@ -68,7 +68,7 @@ export default function Paginacion({ textos, idioma, pagina, totalPaginas, onCam
                 disabled={pagina === totalPaginas}
                 onClick={() => onCambiar(pagina + 1)}
             >
-                <Icono nombre="flechaDerecha" />
+                <Icono nombre="chevronDerecha" />
             </button>
         </nav>
     );

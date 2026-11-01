@@ -24,6 +24,7 @@ export function rangoDeFecha(tipo) {
     const hoy = diaBogota(new Date());
     const [anio, mes, dia] = hoy.split("-").map(Number);
     const base = new Date(Date.UTC(anio, mes - 1, dia));
+    const diaSemana = base.getUTCDay(); // 0 = domingo ... 6 = sábado
 
     if (tipo === "hoy") return [hoy, hoy];
 

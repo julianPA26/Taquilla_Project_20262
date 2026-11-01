@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Icono from "./Icono.jsx";
-import Afiche from "./Afiche.jsx";
-import { formatearFechaCorta, formatearPrecio } from "../Utils/formato.js";
+import Icono from "../Icono/Icono.jsx";
+import Afiche from "../Afiche/Afiche.jsx";
+import { formatearFechaCorta, formatearPrecio } from "../../Utils/formato.js";
 import "./Hero.css";
 
 const LOCAL = {
@@ -175,7 +175,7 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
                     </p>
                 </div>
 
-                <Afiche afiche={evento?.afiche} className="hero-afiche">
+                <Afiche afiche={evento?.afiche} className="hero-afiche" alineacion="xMaxYMid">
                     {evento && (
                         <article className="hero-destacado">
                             <p className="hero-insignia">

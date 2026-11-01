@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import Icono from "./Icono.jsx";
+import Icono from "../Icono/Icono.jsx";
 import "./Navbar.css";
+import logoNormal from "../assets/logos/logo-normal.svg";
 
 const DESTINOS = {
-  inicio: "#inicio",
-  explorar: "#explorar",
+  inicio: "/inicio",
+  explorar: "/explorar",
 };
 
 export default function Navbar({
@@ -87,6 +88,7 @@ export default function Navbar({
             href="#explorar"
             aria-label={nav?.buscador?.aria ?? (ingles ? "Search events" : "Buscar eventos")}
             onClick={() => setAbierto(false)}
+            
           >
             <Icono nombre="buscar" />
           </a>

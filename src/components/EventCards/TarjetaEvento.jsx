@@ -1,6 +1,6 @@
-import Afiche from "./Afiche.jsx";
-import Icono from "./Icono.jsx";
-import { formatearFechaCorta, formatearHora, formatearPrecio } from "../Utils/formato.js";
+import Afiche from "../Afiche/Afiche.jsx";
+import Icono from "../Icono/Icono.jsx";
+import { formatearFechaCorta, formatearHora, formatearPrecio } from "../../Utils/formato.js";
 import "./TarjetaEvento.css";
 
 // Tarjeta de un evento. Se usa en Inicio (Destacados, Próximamente) y en Explorar.
