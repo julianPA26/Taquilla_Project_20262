@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AccessibilityPanel.css';
 
 export const AccessibilityPanel = ({ onClose }) => {
-    const [fontSize, setFontSize] = useState(100);
-    const [toggles, setToggles] = useState({
-        altoContraste: false,
-        reducirMovimiento: false,
-        subrayarEnlaces: false,
-        espaciadoLectura: false,
+    // Cargar estado inicial desde localStorage si existe
+    const [fontSize, setFontSize] = useState(() => {
+        const guardado = localStorage.getItem('accesibilidad-font-size');
+        return guardado ? Number(guardado) : 100;
     });
+
+    const [toggles, setToggles] = useState(() => {
+        const guardado = localStorage.getItem('accesibilidad-toggles');
+        return guardado ? JSON.parse(guardado) : {
+            altoContraste: false,
+            reducirMovimiento: false,
+            subrayarEnlaces: false,
+            espaciadoLectura: false,
+        };
+    });
+
+    // APLICAR CAMBIOS EN TODA LA PÁGINA
+    useEffect(() => {
+        const root = document.documentElement;
+
+        // 1. Tamaño del texto global
+        root.style.fontSize = `${fontSize}%`;
+
+        // 2. Alternar clases CSS globales según los interruptores
+        root.classList.toggle('high-contrast', toggles.altoContraste);
+        root.classList.toggle('reduce-motion', toggles.reducirMovimiento);
+        root.classList.toggle('underline-links', toggles.subrayarEnlaces);
+        root.classList.toggle('reading-spacing', toggles.espaciadoLectura);
+
+        // 3. Persistir opciones en el navegador
+        localStorage.setItem('accesibilidad-font-size', fontSize);
+        localStorage.setItem('accesibilidad-toggles', JSON.stringify(toggles));
+    }, [fontSize, toggles]);
 
     const handleToggle = (key) => {
         setToggles(prev => ({ ...prev, [key]: !prev[key] }));
@@ -42,7 +68,7 @@ export const AccessibilityPanel = ({ onClose }) => {
                 <div className="ap-text-control">
                     <button
                         className="ap-text-btn cuerpo-m-fuerte"
-                        onClick={() => setFontSize(prev => Math.max(prev - 10, 50))}
+                        onClick={() => setFontSize(prev => Math.max(prev - 5, 85))}
                         aria-label="Disminuir tamaño de texto"
                     >
                         -
@@ -50,7 +76,7 @@ export const AccessibilityPanel = ({ onClose }) => {
                     <span className="ap-text-indicator cuerpo-m-fuerte">A</span>
                     <button
                         className="ap-text-btn cuerpo-m-fuerte"
-                        onClick={() => setFontSize(prev => Math.min(prev + 10, 200))}
+                        onClick={() => setFontSize(prev => Math.min(prev + 5, 125))}
                         aria-label="Aumentar tamaño de texto"
                     >
                         +
@@ -93,7 +119,7 @@ export const AccessibilityPanel = ({ onClose }) => {
 
             {/* Pie del panel */}
             <div className="ap-footer-actions">
-                <a href="/declaracion-accesibilidad" className="ap-link detalle-nota-fuerte">
+                <a href="#declaracion-accesibilidad" className="ap-link detalle-nota-fuerte">
                     Declaración de accesibilidad
                 </a>
                 <button className="ap-reset-btn detalle-nota-fuerte" onClick={handleReset}>
@@ -104,7 +130,6 @@ export const AccessibilityPanel = ({ onClose }) => {
     );
 };
 
-// Subcomponente para los interruptores usando las clases de tokens
 const ToggleOption = ({ title, description, isActive, onToggle }) => (
     <div className="ap-toggle-item">
         <div className="ap-toggle-text">

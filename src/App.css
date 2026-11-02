@@ -25,3 +25,38 @@
    .saltar-contenido:focus {
        left: 8px;
    }
+
+   /* 1. Alto Contraste */
+   html.high-contrast {
+       filter: contrast(180%);
+       background-color: #000000 !important;
+       color: #ffffff !important;
+   }
+
+   html.high-contrast img,
+   html.high-contrast svg {
+       filter: contrast(100%);
+       /* Evita deformar imágenes */
+   }
+
+   /* 2. Reducir Movimiento */
+   html.reduce-motion *,
+   html.reduce-motion *::before,
+   html.reduce-motion *::after {
+       animation: none !important;
+       transition: none !important;
+       scroll-behavior: auto !important;
+   }
+
+   /* 3. Subrayar Enlaces */
+   html.underline-links a {
+       text-decoration: underline !important;
+       text-underline-offset: 4px;
+   }
+
+   /* 4. Espaciado de Lectura */
+   html.reading-spacing * {
+       line-height: 1.8 !important;
+       letter-spacing: 0.06em !important;
+       word-spacing: 0.12em !important;
+   }
