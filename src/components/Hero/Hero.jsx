@@ -175,7 +175,7 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
                     </p>
                 </div>
 
-                <Afiche afiche={evento?.afiche} className="hero-afiche" alineacion="xMaxYMid">
+                <Afiche evento={evento} paleta={4} alto={274} alineacion="xMaxYMin" className="hero-afiche">
                     {evento && (
                         <article className="hero-destacado">
                             <p className="hero-insignia">

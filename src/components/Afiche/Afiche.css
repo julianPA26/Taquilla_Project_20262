@@ -1,7 +1,6 @@
 .afiche {
   position: relative;
   overflow: hidden;
-  /* Crea su propio "nivel" para que el dibujo quede detrás del contenido */
   isolation: isolate;
   background: var(--fondo-inverso-2);
 }

@@ -28,7 +28,7 @@ export default function TarjetaEvento({ evento, textos, idioma }) {
 
   return (
     <article className="tarjeta-evento">
-      <Afiche afiche={evento.afiche} className="tarjeta-afiche">
+      <Afiche evento={evento} className="tarjeta-afiche">
         {aviso && <span className="tarjeta-aviso">{aviso}</span>}
       </Afiche>
 

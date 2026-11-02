@@ -4,6 +4,24 @@
        flex-direction: column;
    }
 
-   .sitio > main {
+   .sitio>main {
        flex: 1;
+   }
+
+   .saltar-contenido {
+       position: absolute;
+       top: 8px;
+       left: -9999px;
+       z-index: 100;
+       padding: 8px 16px;
+       border-radius: 8px;
+       color: var(--texto-inverso);
+       background: var(--marca-primario);
+       font-size: 14px;
+       font-weight: 500;
+       text-decoration: none;
+   }
+
+   .saltar-contenido:focus {
+       left: 8px;
    }

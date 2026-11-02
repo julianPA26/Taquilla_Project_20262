@@ -41,7 +41,7 @@ export default function ListaFinDeSemana({ textos, idioma, eventos, cargando, on
                         <li key={evento.id}>
                             {/* El detalle no está en el sprint: el enlace solo cambia el # */}
                             <a className="finde-fila" href={`#evento-${evento.slug}`}>
-                                <Afiche afiche={evento.afiche} className="finde-miniatura" />
+                                <Afiche evento={evento} className="finde-miniatura" />
                                 <span className="finde-texto">
                                     <span className="finde-nombre">{evento.titulo}</span>
                                     <span className="finde-fecha">
