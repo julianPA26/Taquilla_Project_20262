@@ -88,7 +88,7 @@
     border: 1px solid var(--borde-sutil);
     border-radius: var(--radio-md);
     color: var(--texto-secundario);
-    background: var(--fondo-superficie);
+    background: var(--fondo-sutil);
 }
 
 .explorar-campo:focus-within {

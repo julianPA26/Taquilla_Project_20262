@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Icono from "../Icono/Icono.jsx";
 import "./Navbar.css";
 import logoNormal from "../../Assets/Logos/logo-normal.svg";
+import logoInverso from "../../Assets/Logos/logo-inverso.svg";
 
 const DESTINOS = {
   inicio: "#inicio",

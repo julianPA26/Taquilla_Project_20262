@@ -38,7 +38,6 @@
   outline-offset: 3px;
 }
 
-
 .navbar-marca {
   display: inline-flex;
   align-items: center;
@@ -63,7 +62,6 @@
   background: var(--marca-primario);
   font-size: 16px;
 }
-
 
 .navbar-movil-acciones {
   display: flex;
@@ -120,7 +118,6 @@
   background: var(--fondo-sutil);
 }
 
-
 .navbar-panel {
   display: none;
   width: 100%;
@@ -135,7 +132,6 @@
   flex-direction: column;
   gap: var(--espacio-6);
 }
-
 
 .navbar-enlaces {
   display: flex;
@@ -171,7 +167,6 @@
 .navbar-enlaces a:active {
   background: var(--fondo-presionado);
 }
-
 
 .navbar-buscador {
   display: flex;
@@ -227,7 +222,6 @@
   opacity: 1;
 }
 
-
 .navbar-utilidades {
   display: flex;
   flex-wrap: wrap;
@@ -244,7 +238,6 @@
 .navbar-fila-etiqueta {
   display: none;
 }
-
 
 .navbar-idioma-movil {
   display: inline-flex;
@@ -308,7 +301,6 @@
   background: var(--marca-primario-presionado);
 }
 
-/* Botón con borde (Ingresar en escritorio) */
 .navbar-accion-contorno {
   color: var(--texto-principal);
   background: var(--fondo-superficie);
@@ -324,8 +316,6 @@
   background: var(--fondo-presionado);
 }
 
-
-/* ===== Estados de carga y error ===== */
 .navbar-estado {
   margin: 0;
   font-size: 14px;
@@ -346,10 +336,7 @@
   background: var(--fondo-superficie);
 }
 
-
 @media (max-width: 1199.98px) {
-
-  /* Con el menú abierto solo queda la X en la barra */
   .navbar.is-abierto .navbar-movil-acciones> :not(:last-child) {
     display: none;
   }
@@ -361,16 +348,36 @@
   }
 
   .navbar-enlaces {
-    gap: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
   }
 
   .navbar-enlaces a {
+    display: flex;
+    align-items: center;
     min-height: 48px;
-    padding-inline: var(--espacio-2);
+    padding-inline: var(--espacio-4);
+    border-radius: var(--radio-md);
     color: var(--texto-principal);
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
+    transition: background-color 0.2s ease, font-weight 0.2s ease;
+  }
+
+  .navbar-enlaces a[aria-current="page"] {
+    font-weight: 600;
+  }
+
+  .navbar-enlaces a[aria-current="page"]::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 18px;
+    background-color: var(--marca-primario);
+    border-radius: var(--radio-completo);
+    margin-right: var(--espacio-2);
   }
 
   .navbar-buscador {
@@ -410,7 +417,7 @@
 
   .navbar-idioma-movil {
     padding: 2px;
-    border: 0;
+    order: 1px solid var(--marca-primario);
     background: var(--fondo-sutil);
   }
 
@@ -463,7 +470,6 @@
     background: var(--fondo-presionado);
   }
 }
-
 
 @media (min-width: 1200px) {
   .navbar-interior {
@@ -518,6 +524,10 @@
     white-space: nowrap;
   }
 
+  .navbar-enlaces a[aria-current="page"]::before {
+    display: none;
+  }
+
   .navbar-enlaces a:hover,
   .navbar-enlaces a:active,
   .navbar-enlaces a[aria-current="page"] {
@@ -541,7 +551,6 @@
   border-color: var(--borde-fuerte);
 }
 
-
 @media (max-width: 1199.98px) {
   .navbar-fila .navbar-accesibilidad {
     width: 40px;
@@ -559,5 +568,4 @@
     width: 40px;
     height: 40px;
   }
-
 }
