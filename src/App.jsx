@@ -6,7 +6,9 @@ import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
 import { AccessibilityPanel } from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
-import ModalEvento from "./components/ModalEvent/ModalEvent.jsx"; 
+import ModalEvento from "./components/ModalEvent/ModalEvent.jsx";
+import ModalAuth from "./components/ModalAuth/ModalAuth.jsx"; 
+import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
 
 const VISTAS = ["inicio", "explorar"];
 
@@ -22,6 +24,9 @@ function App() {
 
   // ESTADO PARA EL EVENTO SELECCIONADO PARA EL MODAL
   const [eventoModal, setEventoModal] = useState(null);
+
+  // 2. ESTADO PARA EL MODAL DE AUTENTICACIÓN
+  const [authModal, setAuthModal] = useState({ abierto: false, modo: "ingresar" });
 
   const datos = useTextos(idioma);
 
@@ -76,12 +81,17 @@ function App() {
   const abrirAccesibilidad = () => setPanelAccesibilidadAbierto(true);
   const cerrarAccesibilidad = () => setPanelAccesibilidadAbierto(false);
 
+  // FUNCIONES PARA ABRIR Y CERRAR EL MODAL DE INICIAR SESIÓN / CREAR CUENTA
+  const abrirAuth = (modo) => setAuthModal({ abierto: true, modo });
+  const cerrarAuth = () => setAuthModal((prev) => ({ ...prev, abierto: false }));
+
   return (
     <>
       <a className="saltar-contenido" href="#contenido" onClick={saltarAlContenido}>
         {ingles ? "Skip to content" : "Saltar al contenido"}
       </a>
 
+      {/* 3. PROP onAbrirAuth AGREGADA AL NAVBAR */}
       <Navbar
         {...datos}
         idioma={idioma}
@@ -89,6 +99,7 @@ function App() {
         activo={activo}
         onBuscar={buscar}
         onAbrirAccesibilidad={abrirAccesibilidad}
+        onAbrirAuth={abrirAuth}
       />
 
       <main id="contenido" tabIndex={-1}>
@@ -116,6 +127,7 @@ function App() {
         idioma={idioma}
         textos={datos.textos}
         onAbrirAccesibilidad={abrirAccesibilidad}
+        onAbrirAuth={abrirAuth}
       />
 
       {/* Modal de Accesibilidad */}
@@ -141,7 +153,6 @@ function App() {
         </div>
       )}
 
-      {/* Modal de Detalles del Evento */}
       {eventoModal && (
         <ModalEvento
           evento={eventoModal}
@@ -150,6 +161,16 @@ function App() {
           onClose={() => setEventoModal(null)}
         />
       )}
+
+      
+      <ModalAuth
+        abierto={authModal.abierto}
+        modo={authModal.modo}
+        idioma={idioma}
+        onClose={cerrarAuth}
+      />
+      
+      <AvisoCookies idioma={idioma} />
     </>
   );
 }

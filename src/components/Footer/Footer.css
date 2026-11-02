@@ -134,3 +134,23 @@
         justify-content: space-between;
     }
 }
+
+.footer-base .cookies {
+    margin-top: var(--espacio-2);
+}
+
+.footer-base .cookies-boton {
+    background: transparent;
+    border: none;
+    color: var(--texto-inverso-suave);
+    font-family: var(--fuente-instrument-sans);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.footer-base .cookies-boton:hover {
+    color: var(--texto-inverso);
+}

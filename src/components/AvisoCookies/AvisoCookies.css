@@ -1,0 +1,93 @@
+.aviso-cookies {
+    position: fixed;
+    bottom: var(--espacio-6);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: calc(100% - (var(--espacio-4) * 2));
+    max-width: 900px;
+    box-sizing: border-box;
+}
+
+.aviso-cookies-interior {
+    background-color: var(--fondo-superficie);
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-xl);
+    padding: var(--espacio-6);
+    box-shadow: var(--sombra-flotante);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+}
+
+.aviso-cookies-texto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-1);
+}
+
+.aviso-cookies-titulo {
+    color: var(--texto-principal);
+    margin: 0;
+}
+
+.aviso-cookies-descripcion {
+    color: var(--texto-secundario);
+    margin: 0;
+}
+
+.aviso-cookies-acciones {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-3);
+    justify-content: flex-end;
+}
+
+.aviso-cookies-boton {
+    border-radius: var(--radio-md);
+    padding: var(--espacio-2) var(--espacio-6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+/* Botón secundario "Rechazar" */
+.aviso-cookies-secundario {
+    background-color: transparent;
+    color: var(--texto-principal);
+    border: 1px solid var(--borde-fuerte);
+}
+
+.aviso-cookies-secundario:hover {
+    background-color: var(--fondo-sutil);
+}
+
+/* Botón primario "Aceptar" */
+.aviso-cookies-primario {
+    background-color: var(--marca-primario);
+    color: var(--texto-inverso);
+    border: 1px solid var(--marca-primario);
+}
+
+.aviso-cookies-primario:hover {
+    background-color: var(--marca-primario-hover);
+}
+
+.aviso-cookies-primario:active {
+    background-color: var(--marca-primario-presionado);
+}
+
+/* Disposición horizontal para pantallas de escritorio */
+@media (min-width: 768px) {
+    .aviso-cookies-interior {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--espacio-6) var(--espacio-8);
+    }
+
+    .aviso-cookies-texto {
+        flex: 1;
+        max-width: 620px;
+    }
+}

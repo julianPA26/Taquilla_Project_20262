@@ -18,6 +18,7 @@ export default function Navbar({
   activo,
   onBuscar,
   onAbrirAccesibilidad,
+  onAbrirAuth,
 }) {
   const [abierto, setAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
@@ -95,7 +96,11 @@ export default function Navbar({
           <a
             className="navbar-movil-ingresar"
             href="#ingresar"
-            onClick={() => setAbierto(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              setAbierto(false);
+              onAbrirAuth("ingresar");
+            }}
           >
             {textoIngresar}
           </a>
@@ -196,7 +201,7 @@ export default function Navbar({
                 </div>
               </div>
 
-              {/* Fila de accesibilidad (aparte de la de idioma, no dentro) */}
+              {/* Fila de accesibilidad */}
               <div className="navbar-fila navbar-fila-accesibilidad">
                 <span className="navbar-fila-etiqueta">{etiquetaAccesibilidad}</span>
                 <button
@@ -205,7 +210,7 @@ export default function Navbar({
                   aria-label={ingles ? "Open accessibility panel" : "Abrir panel de accesibilidad"}
                   onClick={() => {
                     onAbrirAccesibilidad();
-                    setAbierto(false); // Cierra el menú móvil al abrir el panel
+                    setAbierto(false);
                   }}
                 >
                   <Icono nombre="accesibilidad" />
@@ -218,14 +223,22 @@ export default function Navbar({
                 <a
                   className="navbar-accion navbar-accion-contorno"
                   href="#ingresar"
-                  onClick={() => setAbierto(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAbierto(false);
+                    onAbrirAuth("ingresar");
+                  }}
                 >
                   {nav.botones.ingresar}
                 </a>
                 <a
                   className="navbar-accion"
                   href="#crear-cuenta"
-                  onClick={() => setAbierto(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAbierto(false);
+                    onAbrirAuth("crearCuenta");
+                  }}
                 >
                   {nav.botones.crearCuenta}
                 </a>

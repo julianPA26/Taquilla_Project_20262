@@ -60,3 +60,10 @@
        letter-spacing: 0.06em !important;
        word-spacing: 0.12em !important;
    }
+
+   button,
+   input,
+   select,
+   textarea {
+       font-family: inherit;
+   }

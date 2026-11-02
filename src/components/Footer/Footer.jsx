@@ -1,7 +1,7 @@
 import logoInverso from "../../assets/logos/logo-inverso.svg";
+import PreferenciasCookies from "../Cookies/PreferenciasCookies.jsx"; 
 import "./Footer.css";
 
-// Textos de respaldo mientras llega la API. Tienen la misma forma que textos.footer.
 const RESPALDO = {
     es: {
         lema: "Conciertos, teatro, deportes y festivales en un solo lugar. Explora eventos y consulta sus detalles.",
@@ -23,7 +23,6 @@ const RESPALDO = {
     },
 };
 
-// A dónde lleva cada enlace (solo Inicio y Explorar existen en este sprint)
 const DESTINOS = {
     inicio: "#inicio",
     explorar: "#explorar",
@@ -33,9 +32,8 @@ const DESTINOS = {
     accesibilidad: "#accesibilidad",
 };
 
-export default function Footer({ idioma, textos, onAbrirAccesibilidad }) {
+export default function Footer({ idioma, textos, onAbrirAccesibilidad, onAbrirAuth }) {
     const ingles = idioma === "en";
-    // Si la API ya respondió se usan sus textos; si no, los de respaldo
     const f = textos?.footer ?? RESPALDO[idioma] ?? RESPALDO.es;
     const derechos = f.legal.derechos.replace("{anio}", new Date().getFullYear());
 
@@ -65,7 +63,27 @@ export default function Footer({ idioma, textos, onAbrirAccesibilidad }) {
                                                 href="#accesibilidad"
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    onAbrirAccesibilidad();
+                                                    onAbrirAccesibilidad?.();
+                                                }}
+                                            >
+                                                {texto}
+                                            </a>
+                                        ) : enlace === "ingresar" ? (
+                                            <a
+                                                href="#ingresar"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    onAbrirAuth?.("ingresar");
+                                                }}
+                                            >
+                                                {texto}
+                                            </a>
+                                        ) : enlace === "crearCuenta" ? (
+                                            <a
+                                                href="#crear-cuenta"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    onAbrirAuth?.("crearCuenta");
                                                 }}
                                             >
                                                 {texto}
@@ -84,6 +102,7 @@ export default function Footer({ idioma, textos, onAbrirAccesibilidad }) {
             <div className="footer-base">
                 <p>{derechos}</p>
                 <p>{f.legal.nota}</p>
+                <PreferenciasCookies />
             </div>
         </footer>
     );
