@@ -9,11 +9,20 @@
   background: var(--fondo-superficie);
   box-shadow: var(--sombra-tarjeta);
   font-family: var(--fuente-instrument-sans);
+  /* Transición suave para la elevación de la tarjeta */
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .tarjeta-evento :focus-visible {
   outline: 3px solid var(--marca-primario);
   outline-offset: 3px;
+}
+
+/* Elevación/sombra suave al pasar el mouse sobre la tarjeta */
+.tarjeta-evento:hover {
+  border-color: var(--borde-fuerte);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 /* ===== Afiche ===== */
@@ -22,7 +31,7 @@
 }
 
 /* Aviso "Agotada" / "Últimas entradas" sobre el afiche */
-.tarjeta-afiche > .tarjeta-aviso {
+.tarjeta-afiche>.tarjeta-aviso {
   position: absolute;
   top: var(--espacio-3);
   right: var(--espacio-3);
@@ -55,7 +64,6 @@
   font-weight: 500;
 }
 
-/* titular-h4 (16px / 22px / 600) */
 .tarjeta-titulo {
   margin: 0;
   font-size: 16px;
@@ -115,6 +123,7 @@
   font-weight: 600;
 }
 
+/* Botón estado base (contorno) */
 .tarjeta-boton {
   display: inline-flex;
   align-items: center;
@@ -126,21 +135,27 @@
   border-radius: var(--radio-md);
   color: var(--texto-principal);
   background: var(--fondo-superficie);
+  font-family: inherit;
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-
+  /* Transición fluida para el cambio de color */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-a.tarjeta-boton:hover {
-  background: var(--fondo-sutil);
+/* Cambio a estado relleno negro al pasar el mouse por la tarjeta O por el botón */
+.tarjeta-evento:hover .tarjeta-boton:not([aria-disabled="true"]),
+.tarjeta-boton:not([aria-disabled="true"]):hover {
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario);
 }
 
-a.tarjeta-boton:active {
-  background: var(--fondo-presionado);
+.tarjeta-boton:not([aria-disabled="true"]):active {
+  background: var(--marca-primario-presionado, #333333);
 }
 
 /* Botón deshabilitado (evento agotado) */
@@ -178,12 +193,16 @@ a.tarjeta-boton:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tarjeta-esqueleto {
+
+  .tarjeta-esqueleto,
+  .tarjeta-evento,
+  .tarjeta-boton {
     animation: none;
+    transition: none;
   }
 }
 
-/* En pantallas anchas el afiche es más bajo, como en el diseño web */
+/* Ajuste de aspecto según tamaño de pantalla */
 @media (min-width: 768px) {
   .tarjeta-afiche {
     aspect-ratio: 3 / 2;
