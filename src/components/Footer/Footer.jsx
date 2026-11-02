@@ -33,7 +33,7 @@ const DESTINOS = {
     accesibilidad: "#accesibilidad",
 };
 
-export default function Footer({ idioma, textos }) {
+export default function Footer({ idioma, textos, onAbrirAccesibilidad }) {
     const ingles = idioma === "en";
     // Si la API ya respondió se usan sus textos; si no, los de respaldo
     const f = textos?.footer ?? RESPALDO[idioma] ?? RESPALDO.es;
@@ -60,7 +60,19 @@ export default function Footer({ idioma, textos }) {
                             <ul className="footer-lista">
                                 {Object.entries(columna.enlaces).map(([enlace, texto]) => (
                                     <li key={enlace}>
-                                        <a href={DESTINOS[enlace] ?? "#"}>{texto}</a>
+                                        {enlace === "accesibilidad" ? (
+                                            <a
+                                                href="#accesibilidad"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    onAbrirAccesibilidad();
+                                                }}
+                                            >
+                                                {texto}
+                                            </a>
+                                        ) : (
+                                            <a href={DESTINOS[enlace] ?? "#"}>{texto}</a>
+                                        )}
                                     </li>
                                 ))}
                             </ul>

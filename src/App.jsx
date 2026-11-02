@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
+import  {AccessibilityPanel}  from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
 
 // Las únicas vistas que existen en este sprint
 const VISTAS = ["inicio", "explorar"];
 
-// Lee la vista del # de la dirección. Si el # es de otra cosa (#evento-..., #ingresar...)
-// se queda en la vista que ya estaba.
 function leerVista(actual = "inicio") {
   const hash = window.location.hash.slice(1);
   return VISTAS.includes(hash) ? hash : actual;
@@ -20,7 +19,10 @@ function App() {
   // Idioma por defecto español
   const [idioma, setIdioma] = useState("es");
   const [activo, setActivo] = useState(() => leerVista());
-  const [textoGrande, setTextoGrande] = useState(false);
+
+  // ESTADO PARA EL PANEL DE ACCESIBILIDAD
+  const [panelAccesibilidadAbierto, setPanelAccesibilidadAbierto] = useState(false);
+
   const datos = useTextos(idioma);
 
   // Lo que se lleva a Explorar desde el buscador, "Ver todos" o las categorías
@@ -30,11 +32,10 @@ function App() {
 
   const ingles = idioma === "en";
 
-  // Sincroniza la vista con el # de la dirección (botones atrás/adelante y enlaces del navbar)
+  // Sincroniza la vista con el # de la dirección
   useEffect(() => {
     function actualizar() {
       const hash = window.location.hash.slice(1);
-      // Los enlaces a #evento-..., #ingresar, etc. no cambian de vista ni borran los filtros
       if (!VISTAS.includes(hash)) return;
       setActivo(hash);
       setConsulta("");
@@ -63,14 +64,6 @@ function App() {
     window.scrollTo({ top: 0 });
   }, [activo]);
 
-  // Aumento de texto (si el navbar tiene ese botón)
-  useEffect(() => {
-    document.documentElement.style.fontSize = textoGrande ? "112%" : "";
-    return () => {
-      document.documentElement.style.fontSize = "";
-    };
-  }, [textoGrande]);
-
   // Lleva a Explorar con una búsqueda, una ciudad o una categoría ya elegidas
   function buscar(valor = "", ciudad = "", categoria = "") {
     setConsulta(valor);
@@ -86,6 +79,10 @@ function App() {
     document.getElementById("contenido")?.focus();
   }
 
+  // Abrir y cerrar el panel de accesibilidad
+  const abrirAccesibilidad = () => setPanelAccesibilidadAbierto(true);
+  const cerrarAccesibilidad = () => setPanelAccesibilidadAbierto(false);
+
   return (
     <>
       <a className="saltar-contenido" href="#contenido" onClick={saltarAlContenido}>
@@ -98,8 +95,7 @@ function App() {
         cambiarIdioma={setIdioma}
         activo={activo}
         onBuscar={buscar}
-        textoGrande={textoGrande}
-        alternarTexto={() => setTextoGrande((valor) => !valor)}
+        onAbrirAccesibilidad={abrirAccesibilidad}
       />
 
       <main id="contenido" tabIndex={-1}>
@@ -121,7 +117,35 @@ function App() {
         )}
       </main>
 
-      <Footer idioma={idioma} textos={datos.textos} />
+      <Footer
+        idioma={idioma}
+        textos={datos.textos}
+        onAbrirAccesibilidad={abrirAccesibilidad}
+      />
+
+      {/* Renderizado flotante/modal del panel de accesibilidad */}
+      {panelAccesibilidadAbierto && (
+        <div
+          className="overlay-accesibilidad"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}
+          onClick={cerrarAccesibilidad}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <AccessibilityPanel onClose={cerrarAccesibilidad} />
+          </div>
+        </div>
+      )}
     </>
   );
 }

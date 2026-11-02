@@ -1,0 +1,201 @@
+/* Contenedor principal usando variables de tokens.css */
+.accessibility-panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    height: 576px;
+    background-color: var(--fondo-superficie);
+    /*[cite: 17] */
+    border: 1px solid var(--borde-sutil);
+    /*[cite: 17] */
+    border-radius: var(--radio-xl);
+    /*[cite: 17] */
+    padding: var(--espacio-6);
+    /*[cite: 17] */
+    gap: 20px;
+    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.18);
+    color: var(--texto-principal);
+    /*[cite: 17] */
+    position: relative;
+}
+
+/* Encabezado */
+.ap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ap-title {
+    margin: 0;
+}
+
+.ap-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espacio-1);
+    /*[cite: 17] */
+    border-radius: var(--radio-sm);
+    /*[cite: 17] */
+}
+
+.ap-close-btn:hover {
+    background-color: var(--fondo-sutil);
+    /*[cite: 17] */
+}
+
+/* Control de tamaño de texto */
+.ap-section-title {
+    margin: 0 0 var(--espacio-3) 0;
+    /*[cite: 17] */
+}
+
+.ap-text-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--fondo-sutil);
+    /*[cite: 17] */
+    border-radius: var(--radio-md);
+    /*[cite: 17] */
+    padding: var(--espacio-1);
+    /*[cite: 17] */
+}
+
+.ap-text-btn {
+    background: none;
+    border: none;
+    width: 40px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radio-sm);
+    /*[cite: 17] */
+    color: var(--texto-principal);
+    /*[cite: 17] */
+}
+
+.ap-text-btn:hover {
+    background-color: var(--fondo-presionado);
+    /*[cite: 17] */
+}
+
+/* Lista de interruptores */
+.ap-toggles-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+    /*[cite: 17] */
+}
+
+.ap-toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espacio-3);
+    /*[cite: 17] */
+}
+
+.ap-toggle-text {
+    flex: 1;
+}
+
+.ap-toggle-title {
+    margin: 0 0 var(--espacio-1) 0;
+    /*[cite: 17] */
+    color: var(--texto-principal);
+    /*[cite: 17] */
+}
+
+.ap-toggle-desc {
+    margin: 0;
+    color: var(--texto-terciario);
+    /*[cite: 17] */
+}
+
+/* Estilos del Toggle Switch */
+.ap-toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background-color: var(--borde-fuerte);
+    /*[cite: 17] */
+    border-radius: var(--radio-completo);
+    /*[cite: 17] */
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.ap-toggle-switch.active {
+    background-color: var(--estado-exito);
+    /*[cite: 17] */
+}
+
+.ap-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--fondo-superficie);
+    /*[cite: 17] */
+    border-radius: var(--radio-completo);
+    /*[cite: 17] */
+    transition: transform 0.3s ease;
+    box-shadow: var(--sombra-tarjeta);
+    /*[cite: 17] */
+}
+
+.ap-toggle-switch.active .ap-toggle-thumb {
+    transform: translateX(20px);
+}
+
+/* Nota informativa */
+.ap-footer-note {
+    margin: 0;
+    color: var(--texto-terciario);
+    /*[cite: 17] */
+}
+
+/* Pie (Acciones) */
+.ap-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.ap-link {
+    color: var(--texto-principal);
+    /*[cite: 17] */
+    text-decoration: underline;
+}
+
+.ap-reset-btn {
+    padding: var(--espacio-2) var(--espacio-4);
+    /*[cite: 17] */
+    background-color: var(--fondo-superficie);
+    /*[cite: 17] */
+    border: 1px solid var(--borde-sutil);
+    /*[cite: 17] */
+    border-radius: var(--radio-md);
+    /*[cite: 17] */
+    cursor: pointer;
+    color: var(--texto-principal);
+    /*[cite: 17] */
+}
+
+.ap-reset-btn:hover {
+    background-color: var(--fondo-sutil);
+    /*[cite: 17] */
+}

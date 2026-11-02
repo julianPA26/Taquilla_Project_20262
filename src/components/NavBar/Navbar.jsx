@@ -17,8 +17,7 @@ export default function Navbar({
   cambiarIdioma,
   activo,
   onBuscar,
-  textoGrande,
-  alternarTexto,
+  onAbrirAccesibilidad,
 }) {
   const [abierto, setAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
@@ -203,9 +202,11 @@ export default function Navbar({
                 <button
                   className="navbar-icono navbar-accesibilidad"
                   type="button"
-                  aria-label={ingles ? "Increase text size" : "Aumentar el tamaño del texto"}
-                  aria-pressed={textoGrande}
-                  onClick={alternarTexto}
+                  aria-label={ingles ? "Open accessibility panel" : "Abrir panel de accesibilidad"}
+                  onClick={() => {
+                    onAbrirAccesibilidad();
+                    setAbierto(false); // Cierra el menú móvil al abrir el panel
+                  }}
                 >
                   <Icono nombre="accesibilidad" />
                 </button>
