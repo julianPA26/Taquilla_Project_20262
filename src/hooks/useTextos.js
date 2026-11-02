@@ -1,38 +1,47 @@
 import { useEffect, useState } from "react";
+import { pedirJson } from "../api/cliente.js";
 
-const API = "https://yanethm-taquilla-api.fly.dev/api/v1/textos"
-const CLAVES_MENU = ["inicio", "explorar"];
+// Textos que el Navbar lee SIN valor de respaldo: si faltan, el Navbar se rompería.
+// Cada uno es una "ruta" dentro del objeto textos. Para agregar o quitar uno, se edita esta lista.
+const RUTAS_OBLIGATORIAS = [
+  "navbar.logo.texto",
+  "navbar.logo.aria",
+  "navbar.enlaces.explorar",
+  "navbar.buscador.placeholder",
+  "navbar.buscador.aria",
+  "navbar.botones.ingresar",
+  "navbar.botones.crearCuenta",
+  "navbar.usuario.menu",
+  "navbar.usuario.panel",
+  "navbar.usuario.cerrarSesion",
+  "navbar.aria.idioma",
+  "navbar.aria.accesibilidad",
+];
+
+// Entra a un objeto siguiendo una ruta escrita como texto: ("navbar.logo.texto") -> objeto.navbar.logo.texto
+function obtenerPorRuta(objeto, ruta) {
+  let actual = objeto;
+  for (const clave of ruta.split(".")) {
+    if (actual === null || actual === undefined) {
+      return undefined;
+    }
+    actual = actual[clave];
+  }
+  return actual;
+}
 
 function validarTextos(datos) {
   const textos = datos?.textos;
-  const nav = textos?.navbar;
-  const etiquetas = [
-    nav?.logo?.texto,
-    nav?.logo?.aria,
-    ...CLAVES_MENU.map((clave) => nav?.enlaces?.[clave]),
-    nav?.buscador?.placeholder,
-    nav?.buscador?.aria,
-    nav?.botones?.ingresar,
-    nav?.botones?.crearCuenta,
-    nav?.usuario?.menu,
-    nav?.usuario?.panel,
-    nav?.usuario?.cerrarSesion,
-    nav?.aria?.idioma,
-    nav?.aria?.accesibilidad,
-    textos?.menuMovil?.abrir,
-    textos?.menuMovil?.cerrar,
-  ];
 
-  if (!etiquetas.every((valor) => typeof valor === "string" && valor.trim())) {
-    /*
-    "Inicio"      // Válido
-    "  Inicio "   // Válido
-    ""            // Inválido
-    "   "         // Inválido
-    undefined     // Inválido
-    42            // Inválido
-    */
-    throw new Error("La respuesta no contiene los textos del navbar.");
+  // Un valor es válido solo si es texto con contenido (no "", no "   ", no undefined, no número)
+  const faltantes = RUTAS_OBLIGATORIAS.filter((ruta) => {
+    const valor = obtenerPorRuta(textos, ruta);
+    return !(typeof valor === "string" && valor.trim());
+  });
+
+  if (faltantes.length > 0) {
+    // El mensaje dice EXACTAMENTE qué clave cambió la API: se ve en la consola (F12)
+    throw new Error(`Faltan textos del navbar en la API: ${faltantes.join(", ")}`);
   }
   return textos;
 }
@@ -51,28 +60,27 @@ export function useTextos(idioma) {
     setError(false);
     setTextos(null);
 
-    async function cargarTextosNavbar() {
+    async function cargarTextos() {
       try {
-        const respuesta = await fetch(`${API}?idioma=${idioma}`, {
-          signal: controlador.signal,
-        });
-        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-        //Si si respondio los datos correctamente
-        const datos = await respuesta.json();
+        const datos = await pedirJson(`/textos?idioma=${idioma}`, controlador.signal);
         const nuevosTextos = validarTextos(datos);
-        if (vigente) setTextos(nuevosTextos);
-      } catch (error) {
         if (vigente) {
-          console.error("Error al cargar los textos:", error);
+          setTextos(nuevosTextos);
+        }
+      } catch (errorConsulta) {
+        if (vigente) {
+          console.error("Error al cargar los textos:", errorConsulta);
           setError(true);
         }
       } finally {
         clearTimeout(limite);
-        if (vigente) setCargando(false);
+        if (vigente) {
+          setCargando(false);
+        }
       }
     }
 
-    cargarTextosNavbar();
+    cargarTextos();
     return () => {
       vigente = false;
       clearTimeout(limite);

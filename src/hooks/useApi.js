@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { pedirJson } from "../Api/cliente.js";
 
-const BASE = "https://yanethm-taquilla-api.fly.dev/api/v1";
-
-// Pide una ruta de la API (por ejemplo "/eventos/destacados") y devuelve su estado.
-// Sirve para cualquier endpoint: destacados, ciudades, categorías, eventos con filtros...
-export function useApi(ruta) {
+// Pide una ruta de la API y devuelve su estado: { datos, cargando, error, recargar }.
+// "transformar" es opcional: una función que arregla la respuesta antes de guardarla
+// (por ejemplo normalizarRespuestaEventos). Debe ser una función definida FUERA del
+// componente para que no cambie en cada render.
+export function useApi(ruta, transformar) {
     const [datos, setDatos] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(false);
@@ -19,12 +20,14 @@ export function useApi(ruta) {
 
         async function cargar() {
             try {
-                const respuesta = await fetch(`${BASE}${ruta}`, {
-                    signal: controlador.signal,
-                });
-                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-                const json = await respuesta.json();
-                if (vigente) setDatos(json);
+                const json = await pedirJson(ruta, controlador.signal);
+                let resultado = json;
+                if (transformar) {
+                    resultado = transformar(json);
+                }
+                if (vigente) {
+                    setDatos(resultado);
+                }
             } catch (errorConsulta) {
                 if (vigente) {
                     console.error("Error al pedir datos a la API:", errorConsulta);
@@ -32,7 +35,9 @@ export function useApi(ruta) {
                 }
             } finally {
                 clearTimeout(limite);
-                if (vigente) setCargando(false);
+                if (vigente) {
+                    setCargando(false);
+                }
             }
         }
 
@@ -42,6 +47,7 @@ export function useApi(ruta) {
             clearTimeout(limite);
             controlador.abort();
         };
+        // "transformar" no va en las dependencias a propósito: es una función fija del módulo.
     }, [ruta, intento]);
 
     return {

@@ -13,11 +13,17 @@ const POR_PAGINA = 9;
 const CIUDAD_POR_DEFECTO = "Manizales";
 const CANTIDAD_ESQUELETOS = 6;
 
-function filtrosIniciales(consulta, ciudad) {
+// Arma el objeto de filtros. La ciudad llega ya decidida: "" significa "todas las ciudades".
+function filtrosIniciales(consulta, ciudad, categoria) {
+    let categorias = [];
+    if (categoria) {
+        categorias = [categoria];
+    }
+
     return {
         q: consulta ?? "",
-        categorias: [],
-        ciudad: ciudad || CIUDAD_POR_DEFECTO,
+        categorias,
+        ciudad: ciudad ?? "",
         fecha: "",
         desde: "",
         hasta: "",
@@ -26,14 +32,24 @@ function filtrosIniciales(consulta, ciudad) {
     };
 }
 
-export default function Explorar({ textos, idioma, consulta, ciudadInicial, onVerEvento }) {
+export default function Explorar({
+    textos,
+    idioma,
+    consulta,
+    ciudadInicial,
+    categoriaInicial,
+    onVerEvento,
+}) {
     const ingles = idioma === "en";
     const t = textos?.paginas?.explorar;
     const nombres = textos?.general?.categorias;
     const estados = textos?.estados;
 
     const [orden, setOrden] = useState("fecha");
-    const [filtros, setFiltros] = useState(() => filtrosIniciales(consulta, ciudadInicial));
+    // Al entrar por primera vez: si no viene ciudad, se usa la de por defecto (Manizales)
+    const [filtros, setFiltros] = useState(() =>
+        filtrosIniciales(consulta, ciudadInicial || CIUDAD_POR_DEFECTO, categoriaInicial),
+    );
     const [pagina, setPagina] = useState(1);
     const [panelAbierto, setPanelAbierto] = useState(false);
 
@@ -43,13 +59,22 @@ export default function Explorar({ textos, idioma, consulta, ciudadInicial, onVe
 
     // Si llega una búsqueda nueva desde el navbar o el inicio, se aplica aquí
     useEffect(() => {
-        setFiltros((actuales) => ({
-            ...actuales,
-            q: consulta ?? "",
-            ciudad: ciudadInicial || actuales.ciudad,
-        }));
+        setFiltros((actuales) => {
+            // Si la búsqueda trae categoría se aplica; si no, se conservan las que ya había
+            let categorias = actuales.categorias;
+            if (categoriaInicial) {
+                categorias = [categoriaInicial];
+            }
+
+            return {
+                ...actuales,
+                q: consulta ?? "",
+                ciudad: ciudadInicial || actuales.ciudad,
+                categorias,
+            };
+        });
         setPagina(1);
-    }, [consulta, ciudadInicial]);
+    }, [consulta, ciudadInicial, categoriaInicial]);
 
     const limites = useMemo(() => limitesDePrecio(todos.eventos), [todos.eventos]);
     const filtrados = useMemo(
@@ -67,7 +92,8 @@ export default function Explorar({ textos, idioma, consulta, ciudadInicial, onVe
     }
 
     function limpiar() {
-        setFiltros(filtrosIniciales("", ""));
+        // Ciudad "" = todas las ciudades; sin categorías, sin texto, sin fechas ni precio
+        setFiltros(filtrosIniciales("", "", ""));
         setPagina(1);
     }
 

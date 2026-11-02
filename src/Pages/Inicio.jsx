@@ -6,6 +6,7 @@ import SeccionEventos from "../components/SeccionEventos/SeccionEventos.jsx";
 import ListaFinDeSemana from "../components/ListaFinDeSemana/Listafindesemana.jsx";
 import { useEventos } from "../hooks/useEvento.js";
 import { filtrarEventos, limitesDePrecio } from "../Utils/filtros.js";
+import { normalizarRespuestaEventos } from "../Api/Adaptadores.js";
 
 const CIUDAD_POR_DEFECTO = "Manizales";
 
@@ -30,7 +31,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria ,
   // Categoría elegida en los chips del móvil: filtra los destacados
   const [categoria, setCategoria] = useState("todas");
 
-  const destacados = useApi("/eventos/destacados");
+  const destacados = useApi("/eventos/destacados", normalizarRespuestaEventos);
   const ciudades = useApi("/ciudades");
   const categorias = useApi("/categorias");
   // Todos los eventos ordenados por fecha (para "Este fin de semana" y "Próximamente")

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import { pedirJson } from "../api/cliente.js";
+import { normalizarRespuestaEventos } from "../Api/Adaptadores.js";
 
-const BASE = "https://yanethm-taquilla-api.fly.dev/api/v1";
 const POR_PAGINA = 50;
 
 // Trae TODOS los eventos (pidiendo cada página de la API) ya ordenados por `orden`
 // ("fecha", "precio" o "popularidad"). Los filtros y la paginación de la pantalla
-// se hacen después, en el navegador, porque el diseño tiene filtros (varias categorías,
-// fechas, rango de precio) que la API no ofrece.
+// se hacen después, en el navegador.
 export function useEventos(orden) {
     const [eventos, setEventos] = useState([]);
     const [cargando, setCargando] = useState(true);
@@ -21,12 +21,12 @@ export function useEventos(orden) {
         setError(false);
 
         async function pedirPagina(pagina) {
-            const respuesta = await fetch(
-                `${BASE}/eventos?orden=${orden}&porPagina=${POR_PAGINA}&pagina=${pagina}`,
-                { signal: controlador.signal },
+            const json = await pedirJson(
+                `/eventos?orden=${orden}&porPagina=${POR_PAGINA}&pagina=${pagina}`,
+                controlador.signal,
             );
-            if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-            return respuesta.json();
+            // Cada evento pasa por el adaptador apenas llega
+            return normalizarRespuestaEventos(json);
         }
 
         async function cargar() {
@@ -37,14 +37,16 @@ export function useEventos(orden) {
 
                 if (paginas > 1) {
                     const restantes = await Promise.all(
-                        Array.from({ length: paginas - 1 }, (_, i) => pedirPagina(i + 2)),
+                        Array.from({ length: paginas - 1 }, (_, indice) => pedirPagina(indice + 2)),
                     );
                     restantes.forEach((pagina) => {
                         todos = todos.concat(pagina.datos ?? []);
                     });
                 }
 
-                if (vigente) setEventos(todos);
+                if (vigente) {
+                    setEventos(todos);
+                }
             } catch (errorConsulta) {
                 if (vigente) {
                     console.error("Error al cargar los eventos:", errorConsulta);
@@ -52,7 +54,9 @@ export function useEventos(orden) {
                 }
             } finally {
                 clearTimeout(limite);
-                if (vigente) setCargando(false);
+                if (vigente) {
+                    setCargando(false);
+                }
             }
         }
 
