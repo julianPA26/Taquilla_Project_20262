@@ -20,6 +20,7 @@ export default function SeccionEventos({
     idioma,
     onVerTodos,
     soloEscritorio = false,
+    onVerEvento,
 }) {
     const ingles = idioma === "en";
     const lista = (eventos ?? []).slice(0, MAXIMO_TARJETAS);
@@ -69,7 +70,7 @@ export default function SeccionEventos({
             <ul className="seccion-lista">
                 {lista.map((evento) => (
                     <li key={evento.id}>
-                        <TarjetaEvento evento={evento} textos={textos} idioma={idioma} />
+                        <TarjetaEvento evento={evento} textos={textos} idioma={idioma}  onVerEvento={onVerEvento}/>
                     </li>
                 ))}
             </ul>

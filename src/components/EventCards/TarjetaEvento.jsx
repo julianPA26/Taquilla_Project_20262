@@ -3,8 +3,7 @@ import Icono from "../Icono/Icono.jsx";
 import { formatearFechaCorta, formatearHora, formatearPrecio } from "../../Utils/formato.js";
 import "./TarjetaEvento.css";
 
-// Tarjeta de un evento. Se usa en Inicio (Destacados, Próximamente) y en Explorar.
-export default function TarjetaEvento({ evento, textos, idioma }) {
+export default function TarjetaEvento({ evento, textos, idioma, onVerEvento }) {
   const ingles = idioma === "en";
   const etiquetas = textos?.componentes?.etiquetas;
   const disponibilidad = etiquetas?.disponibilidad;
@@ -58,11 +57,14 @@ export default function TarjetaEvento({ evento, textos, idioma }) {
               {aviso}
             </span>
           ) : (
-            // El detalle del evento no está en este sprint: el enlace solo cambia el #
-            <a className="tarjeta-boton" href={`#evento-${evento.slug}`}>
+            <button
+              type="button"
+              className="tarjeta-boton"
+              onClick={() => onVerEvento?.(evento)}
+            >
               {verEvento}
               <span className="tarjeta-oculto"> · {evento.titulo}</span>
-            </a>
+            </button>
           )}
         </div>
       </div>

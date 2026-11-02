@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
-import  {AccessibilityPanel}  from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
+import { AccessibilityPanel } from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
+import ModalEvento from "./components/ModalEvent/ModalEvent.jsx"; 
 
-// Las únicas vistas que existen en este sprint
 const VISTAS = ["inicio", "explorar"];
 
 function leerVista(actual = "inicio") {
@@ -16,23 +16,21 @@ function leerVista(actual = "inicio") {
 }
 
 function App() {
-  // Idioma por defecto español
   const [idioma, setIdioma] = useState("es");
   const [activo, setActivo] = useState(() => leerVista());
-
-  // ESTADO PARA EL PANEL DE ACCESIBILIDAD
   const [panelAccesibilidadAbierto, setPanelAccesibilidadAbierto] = useState(false);
+
+  // ESTADO PARA EL EVENTO SELECCIONADO PARA EL MODAL
+  const [eventoModal, setEventoModal] = useState(null);
 
   const datos = useTextos(idioma);
 
-  // Lo que se lleva a Explorar desde el buscador, "Ver todos" o las categorías
   const [consulta, setConsulta] = useState("");
   const [ciudadFiltro, setCiudadFiltro] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("");
 
   const ingles = idioma === "en";
 
-  // Sincroniza la vista con el # de la dirección
   useEffect(() => {
     function actualizar() {
       const hash = window.location.hash.slice(1);
@@ -46,7 +44,6 @@ function App() {
     return () => window.removeEventListener("hashchange", actualizar);
   }, []);
 
-  // Idioma y título de la pestaña
   useEffect(() => {
     document.documentElement.lang = idioma;
   }, [idioma]);
@@ -59,12 +56,10 @@ function App() {
     document.title = `Taquilla · ${nombre}`;
   }, [activo, ingles]);
 
-  // Al cambiar de vista se vuelve arriba
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [activo]);
 
-  // Lleva a Explorar con una búsqueda, una ciudad o una categoría ya elegidas
   function buscar(valor = "", ciudad = "", categoria = "") {
     setConsulta(valor);
     setCiudadFiltro(ciudad);
@@ -73,13 +68,11 @@ function App() {
     window.history.replaceState(null, "", "#explorar");
   }
 
-  // Enlace "Saltar al contenido" para quien navega con teclado
   function saltarAlContenido(evento) {
     evento.preventDefault();
     document.getElementById("contenido")?.focus();
   }
 
-  // Abrir y cerrar el panel de accesibilidad
   const abrirAccesibilidad = () => setPanelAccesibilidadAbierto(true);
   const cerrarAccesibilidad = () => setPanelAccesibilidadAbierto(false);
 
@@ -106,6 +99,7 @@ function App() {
             consulta={consulta}
             ciudadInicial={ciudadFiltro}
             categoriaInicial={categoriaFiltro}
+            onVerEvento={(evento) => setEventoModal(evento)}
           />
         ) : (
           <Inicio
@@ -113,6 +107,7 @@ function App() {
             idioma={idioma}
             onBuscar={buscar}
             onExplorarCategoria={(id) => buscar("", "", id)}
+            onVerEvento={(evento) => setEventoModal(evento)}
           />
         )}
       </main>
@@ -123,10 +118,9 @@ function App() {
         onAbrirAccesibilidad={abrirAccesibilidad}
       />
 
-      {/* Renderizado flotante/modal del panel de accesibilidad */}
+      {/* Modal de Accesibilidad */}
       {panelAccesibilidadAbierto && (
         <div
-          className="overlay-accesibilidad"
           style={{
             position: 'fixed',
             top: 0,
@@ -145,6 +139,16 @@ function App() {
             <AccessibilityPanel onClose={cerrarAccesibilidad} />
           </div>
         </div>
+      )}
+
+      {/* Modal de Detalles del Evento */}
+      {eventoModal && (
+        <ModalEvento
+          evento={eventoModal}
+          textos={datos.textos}
+          idioma={idioma}
+          onClose={() => setEventoModal(null)}
+        />
       )}
     </>
   );

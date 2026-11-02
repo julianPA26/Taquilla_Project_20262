@@ -27,7 +27,8 @@ const LOCAL = {
     },
 };
 
-export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
+// 1. RECIBIMOS LA PROP onVerEvento AQUÍ
+export default function Hero({ textos, idioma, evento, ciudades, onBuscar, onVerEvento }) {
     const local = LOCAL[idioma] ?? LOCAL.es;
     const ingles = idioma === "en";
     const inicio = textos?.paginas?.inicio;
@@ -191,11 +192,16 @@ export default function Hero({ textos, idioma, evento, ciudades, onBuscar }) {
                                         {desde ?? (ingles ? "From" : "Desde")} {formatearPrecio(evento.precioDesde)}
                                     </p>
                                 </div>
-                                {/* Por ahora no hay vista de detalle en el sprint: el enlace no lleva a otra página */}
-                                <a className="hero-ver" href="#">
+                                {/* 2. CAMBIAMOS EL ENLACE A UN BOTÓN QUE EJECUTA onVerEvento(evento) */}
+                                <button
+                                    type="button"
+                                    className="hero-ver"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => onVerEvento?.(evento)}
+                                >
                                     {local.verEvento}
                                     <span className="hero-ver-oculto"> · {evento.titulo}</span>
-                                </a>
+                                </button>
                             </div>
                         </article>
                     )}

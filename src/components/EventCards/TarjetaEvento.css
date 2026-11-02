@@ -131,6 +131,8 @@
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
+
 }
 
 a.tarjeta-boton:hover {

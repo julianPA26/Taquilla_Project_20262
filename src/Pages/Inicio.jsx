@@ -21,7 +21,7 @@ const SIN_FILTROS = {
   precioMax: null,
 };
 
-export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria }) {
+export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria , onVerEvento }) {
   const ingles = idioma === "en";
   const textosInicio = textos?.paginas?.inicio;
 
@@ -78,6 +78,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria }
         ciudad={ciudad}
         onCiudad={setCiudad}
         onBuscar={onBuscar}
+        onVerEvento={onVerEvento}
       />
 
       <Categorias
@@ -109,6 +110,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria }
         textos={textos}
         idioma={idioma}
         onVerTodos={() => onBuscar?.()}
+        onVerEvento={onVerEvento}
       />
 
       <ListaFinDeSemana
@@ -117,6 +119,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria }
         eventos={eventosFinDeSemana}
         cargando={todos.cargando}
         onVerTodos={() => onBuscar?.()}
+        onVerEvento={onVerEvento}
       />
 
       <SeccionEventos
@@ -131,6 +134,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria }
         idioma={idioma}
         soloEscritorio
         onVerTodos={() => onBuscar?.("", ciudad)}
+        onVerEvento={onVerEvento}
       />
     </>
   );

@@ -4,7 +4,7 @@ import { formatearFechaCorta, formatearHora, formatearPrecio } from "../../Utils
 import "./Listafindesemana.css";
 
 // Lista compacta de eventos con miniatura. Solo se ve en móvil.
-export default function ListaFinDeSemana({ textos, idioma, eventos, cargando, onVerTodos }) {
+export default function ListaFinDeSemana({ textos, idioma, eventos, cargando, onVerTodos , onVerEvento}) {
     const ingles = idioma === "en";
     const titulo =
         textos?.paginas?.inicio?.filtrosMovil?.finDeSemana ?? (ingles ? "This weekend" : "Este fin de semana");

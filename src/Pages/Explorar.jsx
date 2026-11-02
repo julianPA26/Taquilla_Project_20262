@@ -26,7 +26,7 @@ function filtrosIniciales(consulta, ciudad) {
     };
 }
 
-export default function Explorar({ textos, idioma, consulta, ciudadInicial }) {
+export default function Explorar({ textos, idioma, consulta, ciudadInicial, onVerEvento }) {
     const ingles = idioma === "en";
     const t = textos?.paginas?.explorar;
     const nombres = textos?.general?.categorias;
@@ -184,7 +184,7 @@ export default function Explorar({ textos, idioma, consulta, ciudadInicial }) {
                 <ul className="explorar-lista">
                     {visibles.map((evento) => (
                         <li key={evento.id}>
-                            <TarjetaEvento evento={evento} textos={textos} idioma={idioma} />
+                            <TarjetaEvento evento={evento} textos={textos} idioma={idioma} onVerEvento={onVerEvento} />
                         </li>
                     ))}
                 </ul>
