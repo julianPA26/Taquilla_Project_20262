@@ -1,4 +1,4 @@
-import logoInverso from "../../assets/logos/logo-inverso.svg";
+import logoInverso from "../../Assets/Logos/logo-inverso.svg";
 import PreferenciasCookies from "../Cookies/PreferenciasCookies.jsx"; 
 import "./Footer.css";
 

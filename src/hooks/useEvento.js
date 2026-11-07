@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { pedirJson } from "../api/cliente.js";
+import { pedirJson } from "../Api/Cliente.js";
 import { normalizarRespuestaEventos } from "../Api/Adaptadores.js";
 
 const POR_PAGINA = 50;

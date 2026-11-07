@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { pedirJson } from "../Api/cliente.js";
+import { pedirJson } from "../Api/Cliente.js";
 
 // Pide una ruta de la API y devuelve su estado: { datos, cargando, error, recargar }.
 // "transformar" es opcional: una función que arregla la respuesta antes de guardarla
