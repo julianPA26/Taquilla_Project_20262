@@ -1,6 +1,6 @@
 import { useTextos } from "./hooks/useTextos.js";
 import "./App.css";
-import Navbar from "./components/Navbar/Navbar.jsx";
+import Navbar from "./components/NavBar/Navbar.jsx";
 import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
