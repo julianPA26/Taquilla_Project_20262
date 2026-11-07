@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { pedirJson } from "../api/cliente.js";
+import { pedirJson } from "../Api/Cliente.js";
 
 // Textos que el Navbar lee SIN valor de respaldo: si faltan, el Navbar se rompería.
 // Cada uno es una "ruta" dentro del objeto textos. Para agregar o quitar uno, se edita esta lista.
