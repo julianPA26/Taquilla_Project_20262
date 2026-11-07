@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AccessibilityPanel.css';
 
-export const AccessibilityPanel = ({ onClose }) => {
+export default function AccessibilityPanel ({ onClose }){
     // Cargar estado inicial desde localStorage si existe
     const [fontSize, setFontSize] = useState(() => {
         const guardado = localStorage.getItem('accesibilidad-font-size');

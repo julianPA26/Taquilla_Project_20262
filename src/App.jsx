@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
-import { AccessibilityPanel } from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
+import  AccessibilityPanel  from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
 import ModalEvento from "./components/ModalEvent/ModalEvent.jsx";
 import ModalAuth from "./components/ModalAuth/ModalAuth.jsx"; 
 import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
