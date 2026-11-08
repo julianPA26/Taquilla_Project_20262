@@ -47,7 +47,7 @@
   font-size: 20px;
   line-height: 26px;
   font-weight: 600;
-  letter-spacing: -0.010em;
+  letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
@@ -178,7 +178,9 @@
   border: 1px solid transparent;
   border-radius: var(--radio-completo);
   background: var(--fondo-sutil);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .navbar-buscador:focus-within {
@@ -337,7 +339,7 @@
 }
 
 @media (max-width: 1199.98px) {
-  .navbar.is-abierto .navbar-movil-acciones> :not(:last-child) {
+  .navbar.is-abierto .navbar-movil-acciones > :not(:last-child) {
     display: none;
   }
 
@@ -363,7 +365,9 @@
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
-    transition: background-color 0.2s ease, font-weight 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      font-weight 0.2s ease;
   }
 
   .navbar-enlaces a[aria-current="page"] {
@@ -567,5 +571,68 @@
   .navbar-accesibilidad {
     width: 40px;
     height: 40px;
+  }
+}
+
+/* ===== Navbar móvil (Figma: 60px, relleno 20 / 12, borde inferior 1px) ===== */
+.navbar-logo-inverso {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-interior {
+    width: 100%;
+    min-height: 60px;
+    padding-inline: calc(var(--espacio-4) + var(--espacio-1)) var(--espacio-3);
+    /* 20px | 12px */
+  }
+
+  .navbar-marca,
+  .navbar-movil-acciones {
+    min-height: 60px;
+  }
+
+  /* El panel abierto también mide 60px de barra, y su relleno derecho
+     se completa (12 + 8 = 20) para que quede simétrico con el izquierdo */
+  .navbar-panel {
+    max-height: calc(100dvh - 60px);
+  }
+
+  .navbar-panel.is-abierto {
+    height: calc(100dvh - 60px);
+    padding-right: var(--espacio-2);
+  }
+
+  /* Tono oscuro: solo en Inicio y con el menú cerrado */
+  .navbar.navbar-oscuro:not(.is-abierto) {
+    color: var(--texto-inverso);
+    background: var(--fondo-inverso);
+    border-bottom-color: var(--borde-inverso);
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-logo-normal {
+    display: none;
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-logo-inverso {
+    display: inline;
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-icono,
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-movil-ingresar {
+    color: var(--texto-inverso);
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-icono:hover,
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-movil-ingresar:hover {
+    background: var(--fondo-inverso-2);
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) .navbar-icono:active {
+    background: var(--fondo-inverso-presionado);
+  }
+
+  .navbar.navbar-oscuro:not(.is-abierto) :focus-visible {
+    outline-color: var(--texto-inverso);
   }
 }

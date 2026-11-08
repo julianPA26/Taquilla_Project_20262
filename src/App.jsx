@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
-import  AccessibilityPanel  from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
+import AccessibilityPanel from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
 import ModalEvento from "./components/ModalEvent/ModalEvent.jsx";
-import ModalAuth from "./components/ModalAuth/ModalAuth.jsx"; 
+import ModalAuth from "./components/ModalAuth/ModalAuth.jsx";
 import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
 
 const VISTAS = ["inicio", "explorar"];
@@ -33,6 +33,7 @@ function App() {
   const [consulta, setConsulta] = useState("");
   const [ciudadFiltro, setCiudadFiltro] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("");
+  const [fechaFiltro, setFechaFiltro] = useState("");
 
   const ingles = idioma === "en";
 
@@ -44,6 +45,7 @@ function App() {
       setConsulta("");
       setCiudadFiltro("");
       setCategoriaFiltro("");
+      setFechaFiltro("");
     }
     window.addEventListener("hashchange", actualizar);
     return () => window.removeEventListener("hashchange", actualizar);
@@ -55,9 +57,7 @@ function App() {
 
   useEffect(() => {
     const nombre =
-      activo === "explorar"
-        ? ingles ? "Explore" : "Explorar"
-        : ingles ? "Home" : "Inicio";
+      activo === "explorar" ? (ingles ? "Explore" : "Explorar") : ingles ? "Home" : "Inicio";
     document.title = `Taquilla · ${nombre}`;
   }, [activo, ingles]);
 
@@ -65,10 +65,12 @@ function App() {
     window.scrollTo({ top: 0 });
   }, [activo]);
 
-  function buscar(valor = "", ciudad = "", categoria = "") {
+  // fecha: "hoy", "finde", "mes" o "" (cualquier fecha). Son los mismos valores del filtro de Explorar.
+  function buscar(valor = "", ciudad = "", categoria = "", fecha = "") {
     setConsulta(valor);
     setCiudadFiltro(ciudad);
     setCategoriaFiltro(categoria);
+    setFechaFiltro(fecha);
     setActivo("explorar");
     window.history.replaceState(null, "", "#explorar");
   }
@@ -110,6 +112,7 @@ function App() {
             consulta={consulta}
             ciudadInicial={ciudadFiltro}
             categoriaInicial={categoriaFiltro}
+            fechaInicial={fechaFiltro}
             onVerEvento={(evento) => setEventoModal(evento)}
           />
         ) : (
@@ -134,16 +137,16 @@ function App() {
       {panelAccesibilidadAbierto && (
         <div
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
           }}
           onClick={cerrarAccesibilidad}
         >
@@ -162,14 +165,13 @@ function App() {
         />
       )}
 
-      
       <ModalAuth
         abierto={authModal.abierto}
         modo={authModal.modo}
         idioma={idioma}
         onClose={cerrarAuth}
       />
-      
+
       <AvisoCookies idioma={idioma} />
     </>
   );

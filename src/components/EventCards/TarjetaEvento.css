@@ -10,7 +10,10 @@
   box-shadow: var(--sombra-tarjeta);
   font-family: var(--fuente-instrument-sans);
   /* Transición suave para la elevación de la tarjeta */
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .tarjeta-evento :focus-visible {
@@ -31,7 +34,7 @@
 }
 
 /* Aviso "Agotada" / "Últimas entradas" sobre el afiche */
-.tarjeta-afiche>.tarjeta-aviso {
+.tarjeta-afiche > .tarjeta-aviso {
   position: absolute;
   top: var(--espacio-3);
   right: var(--espacio-3);
@@ -143,27 +146,36 @@
   white-space: nowrap;
   cursor: pointer;
   /* Transición fluida para el cambio de color */
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-/* Cambio a estado relleno negro al pasar el mouse por la tarjeta O por el botón */
-.tarjeta-evento:hover .tarjeta-boton:not([aria-disabled="true"]),
-.tarjeta-boton:not([aria-disabled="true"]):hover {
+.tarjeta-evento:hover .tarjeta-boton:not([aria-disabled="true"]) {
   background: var(--marca-primario);
   color: var(--texto-inverso);
   border-color: var(--marca-primario);
 }
 
-.tarjeta-boton:not([aria-disabled="true"]):active {
-  background: var(--marca-primario-presionado, #333333);
+.tarjeta-evento .tarjeta-boton:not([aria-disabled="true"]):hover,
+.tarjeta-evento .tarjeta-boton:not([aria-disabled="true"]):focus-visible {
+  background: var(--marca-primario-hover);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario-hover);
 }
 
 /* Botón deshabilitado (evento agotado) */
-.tarjeta-boton[aria-disabled="true"] {
-  border-color: var(--borde-sutil);
-  color: var(--texto-terciario);
-  background: var(--fondo-sutil);
-  cursor: not-allowed;
+.tarjeta-evento .tarjeta-boton:not([aria-disabled="true"]):hover,
+.tarjeta-evento .tarjeta-boton:not([aria-disabled="true"]):focus-visible {
+  background: var(--marca-primario-hover);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario-hover);
+}
+.tarjeta-evento .tarjeta-boton:not([aria-disabled="true"]):active {
+  background: var(--marca-primario-presionado);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario-presionado);
 }
 
 /* El nombre del evento solo lo leen los lectores de pantalla */
@@ -193,7 +205,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .tarjeta-esqueleto,
   .tarjeta-evento,
   .tarjeta-boton {

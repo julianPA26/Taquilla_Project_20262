@@ -1,108 +1,135 @@
-# Taquilla — Frontend
+# Taquilla · Sprint 1
 
-Aplicación web para descubrir y explorar eventos (conciertos, teatro, deportes, festivales, comedia y más). Proyecto académico construido con **React 19 + Vite**, a partir de un diseño en Figma y consumiendo una API propia.
+Interfaz web y móvil (diseño responsivo) de **Taquilla**, una plataforma para descubrir conciertos, teatro, deportes y festivales. Es un proyecto académico: replica el diseño de Figma entregado en clase y consume una API de prueba.
 
-> Datos de ejemplo con fines académicos.
+> No es una aplicación móvil nativa: son dos tamaños de la misma interfaz, revisados entre **360 px y 1440 px**.
 
-##  Funcionalidades
+## Qué incluye este sprint
 
-- **Inicio**: banner principal con buscador y selector de ciudad, categorías, *Destacados de la semana*, *Este fin de semana* (móvil) y *Próximamente en {ciudad}*.
-- **Explorar**: filtros por categoría (varias a la vez), fecha (hoy, fin de semana, mes o rango), ciudad y rango de precio; orden por fecha, precio o popularidad; chips de filtros activos y paginación.
-- **Navbar responsive** con menú móvil, buscador y cambio de idioma.
-- **Idiomas**: español e inglés (los textos vienen de la API).
-- **Modal de detalle de evento** y modal de **iniciar sesión / crear cuenta**.
-- **Accesibilidad**: enlace "Saltar al contenido", foco gestionado, etiquetas ARIA y panel de accesibilidad.
-- **Aviso y preferencias de cookies** (se guardan en `localStorage`).
+- **Inicio:** encabezado con buscador, evento destacado, categorías, "Destacados de la semana", "Este fin de semana" (solo móvil) y "Próximamente en {ciudad}".
+- **Explorar:** buscador, filtros (categorías, fecha, ciudad y rango de precio), chips de filtros activos, orden, paginación y los estados de carga, error y sin resultados.
+- **Navbar y menú móvil** con los enlaces Inicio y Explorar, selector de idioma ES | EN, botón de accesibilidad y botones de Ingresar y Crear cuenta.
+- **Pie de página** con enlaces y enlace a la declaración de accesibilidad.
+- **Panel de accesibilidad**, **aviso y preferencias de cookies**, y diálogos de detalle de evento y de ingresar o crear cuenta.
+- **Español e inglés:** todos los textos vienen de la API según el idioma elegido.
+- **Accesibilidad básica:** enlace "Saltar al contenido", HTML semántico, etiquetas accesibles, foco visible y navegación con teclado.
 
 ## Tecnologías
 
-- [React 19](https://react.dev/)
-- [Vite](https://vite.dev/)
-- CSS puro con **variables de diseño** (`tokens.css`) tomadas del Figma
-- API REST: `https://yanethm-taquilla-api.fly.dev/api/v1` ([contrato](https://yanethm-taquilla-api.fly.dev/docs/contrato))
+| Herramienta            | Versión                              |
+| ---------------------- | ------------------------------------ |
+| React                  | 19                                   |
+| Vite                   | 8                                    |
+| JavaScript (JSX) y CSS | sin librerías de estilos ni de rutas |
 
-##  Cómo ejecutarlo
+## Requisitos
 
-Requisitos: [Node.js](https://nodejs.org/) 18 o superior.
+- **Node.js 20.19 o superior** (se recomienda la versión LTS actual). Incluye `npm`.
+- **Git**, para clonar el repositorio.
+- Conexión a internet: los textos y los eventos se piden a una API pública.
+
+Para comprobar que los tienes:
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/julianPA26/Taquilla_Project_20262.git
-cd Taquilla_Project_20262
-
-# 2. Instalar dependencias
-npm install
-
-# 3. Levantar el servidor de desarrollo
-npm run dev
+node --version
+npm --version
+git --version
 ```
 
-Abre la dirección que muestra la terminal (normalmente `http://localhost:5173`).
+## Instalación y ejecución
+
+1. **Clona el repositorio** y entra a la carpeta:
+
+   ```bash
+   git clone https://github.com/julianPA26/Taquilla_Project_20262.git
+   cd Taquilla_Project_20262.git
+   ```
+
+2. **Instala las dependencias:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Inicia el servidor de desarrollo:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Abre en el navegador** la dirección que aparece en la terminal, normalmente <http://localhost:5173>.
+
+Para detener el servidor, presiona `Ctrl + C` en la terminal.
+
+### Scripts disponibles
+
+| Comando           | Qué hace                                                    |
+| ----------------- | ----------------------------------------------------------- |
+| `npm run dev`     | Inicia el servidor de desarrollo con recarga automática     |
+| `npm run build`   | Genera la versión de producción en la carpeta `dist/`       |
+| `npm run preview` | Sirve la versión de `dist/` para probarla antes de publicar |
+
+## Datos y API
+
+La aplicación **no tiene backend propio**: usa la API de prueba de la asignatura.
+
+- **Dirección base:** `https://yanethm-taquilla-api.fly.dev/api/v1`
+- **Rutas que usa:**
+  - `GET /textos?idioma=es|en`: todos los textos de la interfaz.
+  - `GET /eventos/destacados`: eventos del Inicio.
+  - `GET /eventos?orden=...&porPagina=...&pagina=...`: catálogo completo (Explorar y secciones del Inicio).
+  - `GET /categorias` y `GET /ciudades`: filtros y conteos.
+
+Notas importantes:
+
+- Si la API lleva un rato sin uso, se apaga: **la primera carga puede tardar unos segundos**. Si ves un mensaje de error, usa el botón _Reintentar_ o recarga la página.
+- Los datos son de prueba y se reinician cuando la API se reinicia.
+- Los filtros de Explorar (varias categorías, fecha, precio) se aplican en el navegador, porque la API solo filtra por una categoría, ciudad, texto y orden.
 
 ## Estructura del proyecto
 
-```
+```text
 src/
-├── main.jsx                 # Punto de entrada: carga estilos y monta <App />
-├── App.jsx                  # Vista activa (hash), idioma, búsqueda y modales
+├── main.jsx               Punto de entrada: carga los estilos y dibuja <App />
+├── App.jsx                Elige la vista (Inicio o Explorar) según el # de la dirección
 ├── App.css
-├── api/
-│   ├── cliente.js           # URL base de la API y función pedirJson
-│   └── adaptadores.js       # Traduce los eventos de la API al formato interno
-├── hooks/
-│   ├── useTextos.js         # Textos de la interfaz según el idioma
-│   ├── useApi.js            # Hook genérico para cualquier endpoint
-│   └── useEvento.js         # Trae todos los eventos (todas las páginas)
-├── Utils/
-│   ├── filtros.js           # Filtrado de eventos en el navegador
-│   ├── formato.js           # Precio, fecha y hora (zona America/Bogota)
-│   └── paleta.js            # Colores de los afiches
-├── Pages/
-│   ├── Inicio.jsx
-│   ├── Explorar.jsx
-│   └── Explorar.css
-├── components/              # Una carpeta por componente (.jsx + .css)
-│   ├── NavBar/  Footer/  Hero/  Categorias/
-│   ├── SeccionEventos/  ListaFinDeSemana/  EventCards/
-│   ├── FiltrosExplorar/  Pagination/
-│   ├── Afiche/  Icono/
-│   ├── ModalEvent/  ModalAuth/
-│   ├── AccessibilityPanel/
-│   └── AvisoCookies/  Cookies/
-├── Assets/Logos/
-└── styles/
-    ├── tokens.css           # Variables de diseño (colores, espacios, tipografía)
-    └── global.css           # Reset y estilos base
+├── Assets/Logos/          Logo normal e inverso (SVG oficiales del diseño)
+├── Pages/                 Inicio.jsx y Explorar.jsx
+├── hooks/                 useTextos (textos), useApi (cualquier ruta), useEvento (catálogo)
+├── Utils/                 filtros.js, formato.js (precios y fechas), paleta.js (colores de afiches)
+├── styles/                tokens.css (tokens de diseño del Figma) y global.css
+└── components/            Un componente por carpeta, con su .jsx y su .css
+    ├── NavBar, Footer, Hero, Categorias, SeccionEventos, ListaFinDeSemana
+    ├── EventCards (tarjeta de evento), Afiche, Icono
+    ├── FiltrosExplorar, Pagination
+    └── AccessibilityPanel, AvisoCookies, Cookies, ModalAuth, ModalEvent
 ```
 
-## Cómo funciona
+### Cómo se navega
 
-1. **Navegación por hash**: `App.jsx` lee `#inicio` o `#explorar` y muestra la página correspondiente, sin librería de rutas.
-2. **Datos**: los hooks (`useTextos`, `useApi`, `useEventos`) piden información a la API, manejan carga, error, reintento y cancelación de peticiones.
-3. **Filtrado en el navegador**: la API no ofrece todos los filtros del diseño (varias categorías, rango de precio, fechas), así que `useEventos` descarga todos los eventos y `filtrarEventos` los filtra localmente.
-4. **Capa adaptadora**: `adaptadores.js` convierte cada evento de la API al formato que usan los componentes. Si la API cambia un nombre de campo, solo se ajusta ese archivo.
-5. **Estilos con tokens**: todos los componentes usan variables de `tokens.css` para mantener el diseño consistente con Figma.
+No se usa librería de rutas. La vista activa se guarda según el `#` de la dirección: `#inicio` y `#explorar`. Los enlaces a pantallas que no existen en este sprint (por ejemplo, el detalle de un evento) abren diálogos o no cambian de vista.
 
+### Estilos
 
-##  Entregas
+Los colores, espacios, radios, sombras y tipografía salen de `src/styles/tokens.css`, exportado del Figma con los mismos nombres de variable (`--fondo-pagina`, `--marca-primario`, `--espacio-4`...). La fuente es **Instrument Sans** (Google Fonts).
 
-El proyecto se divide en tres sprints:
+## Problemas frecuentes
 
-- [x] **Sprint 1**: páginas Inicio y Explorar
-- [ ] **Sprint 2**
-- [ ] **Sprint 3**
+| Problema                                       | Solución                                                                                                                                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm: command not found`                       | Instala Node.js desde <https://nodejs.org> y abre una terminal nueva                                                                                   |
+| El puerto 5173 está ocupado                    | Vite usará el siguiente libre (5174...); abre la dirección que muestre la terminal                                                                     |
+| La página queda con "Cargando…" o con un error | La API puede estar despertando: espera unos segundos y usa _Reintentar_                                                                                |
+| Falla un `import` con un error de mayúsculas   | En Linux y en la mayoría de servicios de publicación importan las mayúsculas: el nombre del archivo debe coincidir **exactamente** con el del `import` |
 
-##  Flujo de trabajo con Git
+## Enlace publicado
 
-Las funcionalidades se desarrollan en ramas `feature/...` (por ejemplo `feature/explorar`) y luego se integran a `main`.
+**Sitio:** https://taquilla-project-20262.vercel.app
 
-```bash
-git checkout -b feature/nombre-de-la-funcionalidad
-git add .
-git commit -m "Descripción del cambio"
-git push -u origin feature/nombre-de-la-funcionalidad
-```
+## Autor
 
-##  Autor
+**Nombre:** Juliàn Santiago Parra Arias · Proyecto académico, Frontend
 
-Proyecto desarrollado por **Julián Santiago Parra** como trabajo académico.
+## Uso de inteligencia artificial
+
+Se usó un asistente de IA durante el desarrollo. El detalle (para qué, qué se aceptó, qué estaba mal y cómo se corrigió) está en [`IA.md`](./IA.md).

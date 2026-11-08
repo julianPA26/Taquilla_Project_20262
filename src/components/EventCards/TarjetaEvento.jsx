@@ -8,8 +8,7 @@ export default function TarjetaEvento({ evento, textos, idioma, onVerEvento }) {
   const etiquetas = textos?.componentes?.etiquetas;
   const disponibilidad = etiquetas?.disponibilidad;
 
-  const categoria =
-    textos?.general?.categorias?.singular?.[evento.categoria] ?? evento.categoria;
+  const categoria = textos?.general?.categorias?.singular?.[evento.categoria] ?? evento.categoria;
   const desde = textos?.componentes?.precio?.desde ?? (ingles ? "From" : "Desde");
   const verEvento = ingles ? "View event" : "Ver evento";
 
@@ -57,11 +56,7 @@ export default function TarjetaEvento({ evento, textos, idioma, onVerEvento }) {
               {aviso}
             </span>
           ) : (
-            <button
-              type="button"
-              className="tarjeta-boton"
-              onClick={() => onVerEvento?.(evento)}
-            >
+            <button type="button" className="tarjeta-boton" onClick={() => onVerEvento?.(evento)}>
               {verEvento}
               <span className="tarjeta-oculto"> · {evento.titulo}</span>
             </button>

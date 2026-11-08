@@ -22,7 +22,7 @@ const SIN_FILTROS = {
   precioMax: null,
 };
 
-export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria , onVerEvento }) {
+export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, onVerEvento }) {
   const ingles = idioma === "en";
   const textosInicio = textos?.paginas?.inicio;
 
@@ -63,7 +63,8 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria ,
 
   // Textos: la clave en la API es "proximos" (no "proximamente")
   const plantillaTitulo =
-    textosInicio?.proximos?.titulo ?? (ingles ? "Coming soon in {ciudad}" : "Próximamente en {ciudad}");
+    textosInicio?.proximos?.titulo ??
+    (ingles ? "Coming soon in {ciudad}" : "Próximamente en {ciudad}");
   const tituloProximamente = plantillaTitulo.replace("{ciudad}", ciudad);
   const subtituloProximamente =
     textosInicio?.proximos?.subtitulo ??
@@ -96,7 +97,10 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria ,
 
       <SeccionEventos
         id="destacados"
-        titulo={textosInicio?.destacados?.titulo ?? (ingles ? "Featured this week" : "Destacados de la semana")}
+        titulo={
+          textosInicio?.destacados?.titulo ??
+          (ingles ? "Featured this week" : "Destacados de la semana")
+        }
         tituloMovil={textosInicio?.filtrosMovil?.destacados ?? (ingles ? "Featured" : "Destacados")}
         subtitulo={
           textosInicio?.destacados?.subtitulo ??

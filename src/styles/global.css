@@ -1,63 +1,62 @@
-
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: var(--fuente-instrument-sans);
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 400;
-    color: var(--texto-principal);
-    background: var(--fondo-pagina);
+  margin: 0;
+  font-family: var(--fuente-instrument-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--texto-principal);
+  background: var(--fondo-pagina);
 }
 
 h1,
 h2,
 h3,
 h4 {
-    margin: 0;
-    font-family: var(--fuente-instrument-sans);
-    font-weight: 600;
-    overflow-wrap: anywhere;
+  margin: 0;
+  font-family: var(--fuente-instrument-sans);
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 h1 {
-    font-size: 34px;
-    line-height: 40px;
-    letter-spacing: -0.020em;
+  font-size: 34px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
 }
 
 h2 {
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: -0.015em;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.015em;
 }
 
 h3 {
-    font-size: 20px;
-    line-height: 26px;
-    letter-spacing: -0.010em;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: -0.01em;
 }
 
 h4 {
-    font-size: 16px;
-    line-height: 22px;
-    letter-spacing: -0.005em;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.005em;
 }
 
 a {
-    color: var(--texto-marca);
+  color: var(--texto-marca);
 }
 
 a:hover {
-    color: var(--marca-primario-hover);
+  color: var(--marca-primario-hover);
 }
 
 .contenedor {
-    width: min(100% - var(--espacio-8), 80rem);
-    margin-inline: auto;
+  width: min(100% - var(--espacio-8), 80rem);
+  margin-inline: auto;
 }

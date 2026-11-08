@@ -1,164 +1,164 @@
 /* Contenedor principal usando variables de tokens.css */
 .accessibility-panel {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    width: 360px;
-    height: 576px;
-    background-color: var(--fondo-superficie);
-    border: 1px solid var(--borde-sutil);
-    border-radius: var(--radio-xl);
-    padding: var(--espacio-6);
-    gap: 20px;
-    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.18);
-    color: var(--texto-principal);
-    position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  height: 576px;
+  background-color: var(--fondo-superficie);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-6);
+  gap: 20px;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.18);
+  color: var(--texto-principal);
+  position: relative;
 }
 
 /* Encabezado */
 .ap-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .ap-title {
-    margin: 0;
+  margin: 0;
 }
 
 .ap-close-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--espacio-1);
-    border-radius: var(--radio-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-1);
+  border-radius: var(--radio-sm);
 }
 
 .ap-close-btn:hover {
-    background-color: var(--fondo-sutil);
+  background-color: var(--fondo-sutil);
 }
 
 .ap-section-title {
-    margin: 0 0 var(--espacio-3) 0;
+  margin: 0 0 var(--espacio-3) 0;
 }
 
 .ap-text-control {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--fondo-sutil);
-    border-radius: var(--radio-md);
-    padding: var(--espacio-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--fondo-sutil);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-1);
 }
 
 .ap-text-btn {
-    background: none;
-    border: none;
-    width: 40px;
-    height: 32px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radio-sm);
-    color: var(--texto-principal);
+  background: none;
+  border: none;
+  width: 40px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radio-sm);
+  color: var(--texto-principal);
 }
 
 .ap-text-btn:hover {
-    background-color: var(--fondo-presionado);
+  background-color: var(--fondo-presionado);
 }
 
 .ap-toggles-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacio-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
 }
 
 .ap-toggle-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--espacio-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-3);
 }
 
 .ap-toggle-text {
-    flex: 1;
+  flex: 1;
 }
 
 .ap-toggle-title {
-    margin: 0 0 var(--espacio-1) 0;
-    color: var(--texto-principal);
+  margin: 0 0 var(--espacio-1) 0;
+  color: var(--texto-principal);
 }
 
 .ap-toggle-desc {
-    margin: 0;
-    color: var(--texto-terciario);
+  margin: 0;
+  color: var(--texto-terciario);
 }
 
 /* Estilos del Toggle Switch */
 .ap-toggle-switch {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    background-color: var(--borde-fuerte);
-    border-radius: var(--radio-completo);
-    border: none;
-    cursor: pointer;
-    padding: 2px;
-    transition: background-color 0.3s ease;
-    flex-shrink: 0;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: var(--borde-fuerte);
+  border-radius: var(--radio-completo);
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
 }
 
 .ap-toggle-switch.active {
-    background-color: var(--estado-exito);
+  background-color: var(--estado-exito);
 }
 
 .ap-toggle-thumb {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background-color: var(--fondo-superficie);
-    border-radius: var(--radio-completo);
-    transition: transform 0.3s ease;
-    box-shadow: var(--sombra-tarjeta);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--fondo-superficie);
+  border-radius: var(--radio-completo);
+  transition: transform 0.3s ease;
+  box-shadow: var(--sombra-tarjeta);
 }
 
 .ap-toggle-switch.active .ap-toggle-thumb {
-    transform: translateX(20px);
+  transform: translateX(20px);
 }
 
 .ap-footer-note {
-    margin: 0;
-    color: var(--texto-terciario);
+  margin: 0;
+  color: var(--texto-terciario);
 }
 
 /* Pie (Acciones) */
 .ap-footer-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
 }
 
 .ap-link {
-    color: var(--texto-principal);
-    text-decoration: underline;
+  color: var(--texto-principal);
+  text-decoration: underline;
 }
 
 .ap-reset-btn {
-    padding: var(--espacio-2) var(--espacio-4);
-    background-color: var(--fondo-superficie);
-    border: 1px solid var(--borde-sutil);
-    border-radius: var(--radio-md);
-    cursor: pointer;
-    color: var(--texto-principal);
+  padding: var(--espacio-2) var(--espacio-4);
+  background-color: var(--fondo-superficie);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  color: var(--texto-principal);
 }
 
 .ap-reset-btn:hover {
-    background-color: var(--fondo-sutil);
+  background-color: var(--fondo-sutil);
 }

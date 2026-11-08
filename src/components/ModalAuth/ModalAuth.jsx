@@ -54,11 +54,7 @@ export default function ModalAuth({ abierto, modo, onClose, idioma }) {
             : "El acceso a cuentas aún no está disponible. Puedes explorar el catálogo público sin iniciar sesión."}
         </p>
 
-        <button
-          type="button"
-          className="modal-auth-boton cuerpo-m-fuerte"
-          onClick={onClose}
-        >
+        <button type="button" className="modal-auth-boton cuerpo-m-fuerte" onClick={onClose}>
           {ingles ? "Keep exploring" : "Seguir explorando"}
         </button>
       </div>

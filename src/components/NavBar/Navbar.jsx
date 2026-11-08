@@ -26,10 +26,8 @@ export default function Navbar({
   const botonMenu = useRef(null);
   const nav = textos?.navbar;
   const ingles = idioma === "en";
-  const abrir =
-    textos?.menuMovil?.abrir ?? (ingles ? "Open menu" : "Abrir menú");
-  const cerrar =
-    textos?.menuMovil?.cerrar ?? (ingles ? "Close menu" : "Cerrar menú");
+  const abrir = textos?.menuMovil?.abrir ?? (ingles ? "Open menu" : "Abrir menú");
+  const cerrar = textos?.menuMovil?.cerrar ?? (ingles ? "Close menu" : "Cerrar menú");
 
   // "Inicio" no está en navbar.enlaces de la API, se toma de componentes.migas
   const enlaces = [
@@ -41,14 +39,14 @@ export default function Navbar({
   if (abierto) {
     claseNavbar = "navbar is-abierto";
   }
+  if (activo === "inicio") {
+    claseNavbar = `${claseNavbar} navbar-oscuro`;
+  }
 
-  const etiquetaIdioma =
-    textos?.idioma?.tituloMovil ?? (ingles ? "Language" : "Idioma");
+  const etiquetaIdioma = textos?.idioma?.tituloMovil ?? (ingles ? "Language" : "Idioma");
   const etiquetaAccesibilidad =
-    textos?.menuMovil?.secciones?.accesibilidad ??
-    (ingles ? "Accessibility" : "Accesibilidad");
-  const textoIngresar =
-    nav?.botones?.ingresar ?? (ingles ? "Log in" : "Ingresar");
+    textos?.menuMovil?.secciones?.accesibilidad ?? (ingles ? "Accessibility" : "Accesibilidad");
+  const textoIngresar = nav?.botones?.ingresar ?? (ingles ? "Log in" : "Ingresar");
 
   useEffect(() => {
     function cerrarConEscape(evento) {
@@ -71,17 +69,27 @@ export default function Navbar({
 
   return (
     <header className={claseNavbar}>
-      <nav
-        className="navbar-interior"
-        aria-label={nav?.aria?.menu ?? "Navegación principal"}
-      >
+      <nav className="navbar-interior" aria-label={nav?.aria?.menu ?? "Navegación principal"}>
         <a
           className="navbar-marca"
           href="#inicio"
           aria-label={nav?.logo?.aria ?? "Inicio"}
           onClick={() => setAbierto(false)}
         >
-          <img className="navbar-logo" src={logoNormal} alt="" width="109" height="32" />
+          <img
+            className="navbar-logo navbar-logo-normal"
+            src={logoNormal}
+            alt=""
+            width="109"
+            height="32"
+          />
+          <img
+            className="navbar-logo navbar-logo-inverso"
+            src={logoInverso}
+            alt=""
+            width="109"
+            height="32"
+          />
         </a>
 
         {/* Barra del móvil: buscar (lleva a Explorar), Ingresar y menú */}
@@ -130,11 +138,7 @@ export default function Navbar({
           )}
           {error && (
             <div className="navbar-estado" role="alert">
-              <p>
-                {ingles
-                  ? "Navigation could not be loaded."
-                  : "No pudimos cargar el menú."}
-              </p>
+              <p>{ingles ? "Navigation could not be loaded." : "No pudimos cargar el menú."}</p>
               <button type="button" onClick={recargar}>
                 {ingles ? "Try again" : "Reintentar"}
               </button>

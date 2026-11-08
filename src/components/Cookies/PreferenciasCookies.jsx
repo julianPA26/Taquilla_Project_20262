@@ -4,10 +4,30 @@ import "./PreferenciasCookies.css";
 
 const CLAVE = "taquilla-consentimiento";
 const CATEGORIAS = [
-  { id: "necesarias", titulo: "Necesarias", descripcion: "Sesión, carrito, reserva de asientos y seguridad.", cookies: "sesion · carrito · csrf" },
-  { id: "preferencias", titulo: "Preferencias", descripcion: "Idioma, ciudad y opciones de accesibilidad.", cookies: "idioma · ciudad · accesibilidad" },
-  { id: "analiticas", titulo: "Analíticas", descripcion: "Medición anónima de visitas para mejorar el sitio.", cookies: "medicion" },
-  { id: "marketing", titulo: "Marketing", descripcion: "Recomendaciones de eventos en otros sitios.", cookies: "campanas" },
+  {
+    id: "necesarias",
+    titulo: "Necesarias",
+    descripcion: "Sesión, carrito, reserva de asientos y seguridad.",
+    cookies: "sesion · carrito · csrf",
+  },
+  {
+    id: "preferencias",
+    titulo: "Preferencias",
+    descripcion: "Idioma, ciudad y opciones de accesibilidad.",
+    cookies: "idioma · ciudad · accesibilidad",
+  },
+  {
+    id: "analiticas",
+    titulo: "Analíticas",
+    descripcion: "Medición anónima de visitas para mejorar el sitio.",
+    cookies: "medicion",
+  },
+  {
+    id: "marketing",
+    titulo: "Marketing",
+    descripcion: "Recomendaciones de eventos en otros sitios.",
+    cookies: "campanas",
+  },
 ];
 
 function crearSeleccion(activar = false) {
@@ -17,7 +37,9 @@ function crearSeleccion(activar = false) {
 function leerSeleccion() {
   try {
     const guardada = JSON.parse(localStorage.getItem(CLAVE));
-    return Object.fromEntries(CATEGORIAS.map(({ id }) => [id, id === "necesarias" || guardada?.[id] === true]));
+    return Object.fromEntries(
+      CATEGORIAS.map(({ id }) => [id, id === "necesarias" || guardada?.[id] === true]),
+    );
   } catch {
     return crearSeleccion();
   }
@@ -56,7 +78,9 @@ export default function PreferenciasCookies({ onGuardar }) {
       <button ref={disparador} className="cookies-boton" type="button" onClick={abrir}>
         Preferencias de cookies
       </button>
-      <span className="cookies-confirmacion" role="status">{mensaje}</span>
+      <span className="cookies-confirmacion" role="status">
+        {mensaje}
+      </span>
       <dialog
         ref={dialogo}
         className="cookies-dialogo"
@@ -67,7 +91,12 @@ export default function PreferenciasCookies({ onGuardar }) {
         <div className="cookies-contenido">
           <header className="cookies-encabezado">
             <h2 id={`${id}-titulo`}>Preferencias de cookies</h2>
-            <button className="cookies-cerrar" type="button" aria-label="Cerrar preferencias de cookies" onClick={() => dialogo.current.close()}>
+            <button
+              className="cookies-cerrar"
+              type="button"
+              aria-label="Cerrar preferencias de cookies"
+              onClick={() => dialogo.current.close()}
+            >
               <Icono nombre="cerrar" />
             </button>
           </header>
@@ -75,7 +104,11 @@ export default function PreferenciasCookies({ onGuardar }) {
             Elige qué cookies permites. Puedes cambiarlo cuando quieras desde el pie de página.
           </p>
           {CATEGORIAS.map(({ id: categoria, titulo, descripcion, cookies }) => (
-            <section className="cookies-categoria" key={categoria} aria-labelledby={`${id}-${categoria}`}>
+            <section
+              className="cookies-categoria"
+              key={categoria}
+              aria-labelledby={`${id}-${categoria}`}
+            >
               <div className="cookies-detalle">
                 <h3 id={`${id}-${categoria}`}>{titulo}</h3>
                 <p id={`${id}-${categoria}-descripcion`}>{descripcion}</p>
@@ -90,7 +123,9 @@ export default function PreferenciasCookies({ onGuardar }) {
                   aria-labelledby={`${id}-${categoria}`}
                   aria-describedby={`${id}-${categoria}-descripcion`}
                   disabled={categoria === "necesarias"}
-                  onClick={() => setSeleccion((actual) => ({ ...actual, [categoria]: !actual[categoria] }))}
+                  onClick={() =>
+                    setSeleccion((actual) => ({ ...actual, [categoria]: !actual[categoria] }))
+                  }
                 >
                   <span />
                 </button>
@@ -98,11 +133,33 @@ export default function PreferenciasCookies({ onGuardar }) {
               </div>
             </section>
           ))}
-          {error && <p className="cookies-error" role="alert">{error}</p>}
+          {error && (
+            <p className="cookies-error" role="alert">
+              {error}
+            </p>
+          )}
           <footer className="cookies-acciones">
-            <button className="cookies-boton cookies-boton-primario" type="button" onClick={() => guardar(seleccion)}>Guardar selección</button>
-            <button className="cookies-boton" type="button" onClick={() => guardar(crearSeleccion())}>Rechazar opcionales</button>
-            <button className="cookies-boton" type="button" onClick={() => guardar(crearSeleccion(true))}>Aceptar todas</button>
+            <button
+              className="cookies-boton cookies-boton-primario"
+              type="button"
+              onClick={() => guardar(seleccion)}
+            >
+              Guardar selección
+            </button>
+            <button
+              className="cookies-boton"
+              type="button"
+              onClick={() => guardar(crearSeleccion())}
+            >
+              Rechazar opcionales
+            </button>
+            <button
+              className="cookies-boton"
+              type="button"
+              onClick={() => guardar(crearSeleccion(true))}
+            >
+              Aceptar todas
+            </button>
           </footer>
         </div>
       </dialog>
