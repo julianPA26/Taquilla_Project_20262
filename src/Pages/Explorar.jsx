@@ -85,6 +85,23 @@ export default function Explorar({
     [todos.eventos, filtros, limites],
   );
 
+  // Cuántos eventos hay por categoría con los demás filtros ya aplicados
+  // (ciudad, texto, fecha y precio), sin contar el filtro de categorías
+  const conteosPorCategoria = useMemo(() => {
+    const sinFiltroDeCategoria = filtrarEventos(
+      todos.eventos,
+      { ...filtros, categorias: [] },
+      limites,
+    );
+
+    const conteos = {};
+    sinFiltroDeCategoria.forEach((evento) => {
+      const cantidadActual = conteos[evento.categoria] ?? 0;
+      conteos[evento.categoria] = cantidadActual + 1;
+    });
+    return conteos;
+  }, [todos.eventos, filtros, limites]);
+
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
   const paginaActual = Math.min(pagina, totalPaginas);
   const visibles = filtrados.slice((paginaActual - 1) * POR_PAGINA, paginaActual * POR_PAGINA);
@@ -311,6 +328,7 @@ export default function Explorar({
             filtros={filtros}
             categorias={categorias.datos?.datos}
             ciudades={ciudades.datos?.datos}
+            conteos={todos.eventos.length > 0 ? conteosPorCategoria : null}
             limites={limites}
             totalResultados={cantidad}
             abierto={panelAbierto}

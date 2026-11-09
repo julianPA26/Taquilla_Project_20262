@@ -336,21 +336,30 @@
   background: var(--marca-primario-presionado);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .filtros {
     position: sticky;
     top: 88px;
     z-index: auto;
     display: flex;
     align-self: start;
+    flex-shrink: 0;
+    width: 288px;
+    gap: var(--espacio-6);
+    padding: var(--espacio-6);
     border: 1px solid var(--borde-sutil);
     border-radius: var(--radio-lg);
     box-shadow: var(--sombra-tarjeta);
   }
 
   .filtros-encabezado {
-    padding: var(--espacio-4);
+    padding: 0;
     border-bottom: 0;
+  }
+
+  .filtros-cerrar,
+  .filtros-pie {
+    display: none;
   }
 
   .filtros-titulo {
@@ -359,14 +368,9 @@
     letter-spacing: -0.005em;
   }
 
-  .filtros-cerrar,
-  .filtros-pie {
-    display: none;
-  }
-
   .filtros-cuerpo {
-    gap: var(--espacio-5, 20px);
-    padding: 0 var(--espacio-4) var(--espacio-4);
+    gap: var(--espacio-6);
+    padding: 0;
     overflow: visible;
   }
 

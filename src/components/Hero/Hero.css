@@ -349,19 +349,20 @@
 
 @media (min-width: 1024px) {
   .hero-interior {
-    grid-template-columns: minmax(0, 1fr) 28rem;
+    grid-template-columns: minmax(0, 1fr) 30rem; 
     align-items: center;
     gap: var(--espacio-16);
-    padding-block: var(--espacio-16);
+    padding-block: 72px; 
   }
 
+  .hero-afiche {
+    min-height: 440px; 
+  }
   .hero-titulo {
     font-size: 52px;
     line-height: 56px;
     letter-spacing: -0.025em;
   }
 
-  .hero-afiche {
-    min-height: 27rem;
-  }
+
 }

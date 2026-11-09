@@ -51,6 +51,18 @@
   color: var(--texto-inverso);
   background: var(--marca-primario);
 }
+/* Página actual: el hover y el clic oscurecen el botón en vez de aclararlo */
+.paginacion-boton[aria-current="page"]:hover:not(:disabled) {
+    border-color: var(--marca-primario-hover);
+    color: var(--texto-inverso);
+    background: var(--marca-primario-hover);
+}
+
+.paginacion-boton[aria-current="page"]:active:not(:disabled) {
+    border-color: var(--marca-primario-presionado);
+    color: var(--texto-inverso);
+    background: var(--marca-primario-presionado);
+}
 
 .paginacion-boton:disabled {
   color: var(--texto-terciario);

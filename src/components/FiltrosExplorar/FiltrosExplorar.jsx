@@ -31,6 +31,7 @@ export default function FiltrosExplorar({
   filtros,
   categorias,
   ciudades,
+  conteos,
   limites,
   totalResultados,
   abierto,
@@ -81,6 +82,15 @@ export default function FiltrosExplorar({
   const amplitud = Math.max(maximo - minimo, 1);
   const inicioPista = ((valorMinimo - minimo) / amplitud) * 100;
   const finPista = ((valorMaximo - minimo) / amplitud) * 100;
+
+  // Número que se muestra junto a cada categoría: el calculado con los filtros activos
+  // o, mientras los eventos cargan, el total que trae la API
+  function cantidadDe(categoria) {
+    if (conteos) {
+      return conteos[categoria.id] ?? 0;
+    }
+    return categoria.eventos;
+  }
 
   function alternarCategoria(id) {
     const activas = filtros.categorias.includes(id)
@@ -143,8 +153,8 @@ export default function FiltrosExplorar({
                 <span className="filtros-categoria-nombre">
                   {nombres?.[categoria.id] ?? categoria.nombre}
                 </span>
-                {categoria.eventos != null && (
-                  <span className="filtros-categoria-cuenta">{categoria.eventos}</span>
+                {cantidadDe(categoria) != null && (
+                  <span className="filtros-categoria-cuenta">{cantidadDe(categoria)}</span>
                 )}
               </label>
             ))}
