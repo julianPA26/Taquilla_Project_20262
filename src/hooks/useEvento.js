@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pedirJson } from "../Api/Cliente.js";
+import { RUTAS } from "../Api/Rutas.js";
 import { normalizarRespuestaEventos } from "../Api/Adaptadores.js";
 
 const POR_PAGINA = 50;
@@ -22,7 +23,7 @@ export function useEventos(orden) {
 
     async function pedirPagina(pagina) {
       const json = await pedirJson(
-        `/eventos?orden=${orden}&porPagina=${POR_PAGINA}&pagina=${pagina}`,
+        RUTAS.eventos({ orden, porPagina: POR_PAGINA, pagina }),
         controlador.signal,
       );
       // Cada evento pasa por el adaptador apenas llega

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pedirJson } from "../Api/Cliente.js";
+import { RUTAS } from "../Api/Rutas.js";
 
 // Textos que el Navbar lee SIN valor de respaldo: si faltan, el Navbar se rompería.
 // Cada uno es una "ruta" dentro del objeto textos. Para agregar o quitar uno, se edita esta lista.
@@ -62,7 +63,7 @@ export function useTextos(idioma) {
 
     async function cargarTextos() {
       try {
-        const datos = await pedirJson(`/textos?idioma=${idioma}`, controlador.signal);
+        const datos = await pedirJson(RUTAS.textos(idioma), controlador.signal);
         const nuevosTextos = validarTextos(datos);
         if (vigente) {
           setTextos(nuevosTextos);

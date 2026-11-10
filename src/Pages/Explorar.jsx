@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useApi } from "../hooks/useApi.js";
 import { useEventos } from "../hooks/useEvento.js";
+import { RUTAS } from "../Api/Rutas.js";
 import { filtrarEventos, limitesDePrecio } from "../Utils/filtros.js";
 import { formatearPrecio } from "../Utils/formato.js";
 import Icono from "../components/Icono/Icono.jsx";
@@ -55,8 +56,8 @@ export default function Explorar({
   const [panelAbierto, setPanelAbierto] = useState(false);
 
   const todos = useEventos(orden);
-  const categorias = useApi("/categorias");
-  const ciudades = useApi("/ciudades");
+  const categorias = useApi(RUTAS.categorias);
+  const ciudades = useApi(RUTAS.ciudades);
 
   // Si llega una búsqueda nueva desde el navbar o el inicio, se aplica aquí
   useEffect(() => {
