@@ -19,6 +19,51 @@ const RUTAS_OBLIGATORIAS = [
   "navbar.aria.accesibilidad",
 ];
 
+// Textos que usan el Hero, el aviso de cookies y el footer. Ya no tienen valor de respaldo
+// en el código, así que si la API cambia una de estas claves, la consola (F12) dice
+// exactamente cuál falta. No se lanza error: la página sigue funcionando y solo ese texto queda vacío.
+const RUTAS_SIN_RESPALDO = [
+  "paginas.inicio.hero.titulo",
+  "paginas.inicio.hero.subtitulo",
+  "paginas.inicio.hero.etiquetas.temporada",
+  "paginas.inicio.hero.buscador.etiquetas.que",
+  "paginas.inicio.hero.buscador.etiquetas.donde",
+  "paginas.inicio.hero.buscador.etiquetas.cuando",
+  "paginas.inicio.hero.buscador.placeholders.que",
+  "paginas.inicio.hero.buscador.placeholders.cuando",
+  "paginas.inicio.hero.buscador.placeholders.movil",
+  "paginas.inicio.hero.buscador.resumenMovil",
+  "paginas.inicio.hero.buscador.populares",
+  "paginas.inicio.hero.buscador.botones.buscar",
+  "paginas.inicio.hero.destacado.etiqueta",
+  "paginas.inicio.hero.destacado.desde",
+  "paginas.inicio.hero.destacado.botones.verEvento",
+  "paginas.explorar.filtros.titulo",
+  "paginas.explorar.filtros.fecha.hoy",
+  "paginas.explorar.filtros.fecha.finDeSemana",
+  "paginas.explorar.filtros.fecha.mes",
+  "general.categorias.conciertos",
+  "general.categorias.teatro",
+  "general.categorias.deportes",
+  "general.categorias.festivales",
+  "cookies.banner.titulo",
+  "cookies.banner.texto",
+  "cookies.banner.botones.rechazar",
+  "cookies.banner.botones.aceptar",
+  "footer.lema",
+  "footer.columnas.explora.titulo",
+  "footer.columnas.explora.enlaces.inicio",
+  "footer.columnas.explora.enlaces.explorar",
+  "footer.columnas.cuenta.titulo",
+  "footer.columnas.cuenta.enlaces.ingresar",
+  "footer.columnas.cuenta.enlaces.crearCuenta",
+  "footer.columnas.legal.titulo",
+  "footer.columnas.legal.enlaces.terminos",
+  "footer.columnas.legal.enlaces.accesibilidad",
+  "footer.legal.derechos",
+  "footer.legal.nota",
+];
+
 // Entra a un objeto siguiendo una ruta escrita como texto: ("navbar.logo.texto") -> objeto.navbar.logo.texto
 function obtenerPorRuta(objeto, ruta) {
   let actual = objeto;
@@ -31,19 +76,35 @@ function obtenerPorRuta(objeto, ruta) {
   return actual;
 }
 
+// Un valor es válido solo si es texto con contenido (no "", no "   ", no undefined, no número)
+function esTextoValido(valor) {
+  return typeof valor === "string" && valor.trim() !== "";
+}
+
+// Avisa en la consola de las claves del Hero, las cookies y el footer que la API no mandó
+function avisarTextosFaltantes(textos) {
+  const faltantes = RUTAS_SIN_RESPALDO.filter(
+    (ruta) => !esTextoValido(obtenerPorRuta(textos, ruta)),
+  );
+
+  if (faltantes.length > 0) {
+    console.error(`Faltan textos en la API (Hero, cookies o footer): ${faltantes.join(", ")}`);
+  }
+}
+
 function validarTextos(datos) {
   const textos = datos?.textos;
 
-  // Un valor es válido solo si es texto con contenido (no "", no "   ", no undefined, no número)
   const faltantes = RUTAS_OBLIGATORIAS.filter((ruta) => {
-    const valor = obtenerPorRuta(textos, ruta);
-    return !(typeof valor === "string" && valor.trim());
+    return !esTextoValido(obtenerPorRuta(textos, ruta));
   });
 
   if (faltantes.length > 0) {
     // El mensaje dice EXACTAMENTE qué clave cambió la API: se ve en la consola (F12)
     throw new Error(`Faltan textos del navbar en la API: ${faltantes.join(", ")}`);
   }
+
+  avisarTextosFaltantes(textos);
   return textos;
 }
 

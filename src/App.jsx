@@ -9,6 +9,7 @@ import AccessibilityPanel from "./components/AccessibilityPanel/AccessibilityPan
 import ModalEvento from "./components/ModalEvent/ModalEvent.jsx";
 import ModalAuth from "./components/ModalAuth/ModalAuth.jsx";
 import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
+import { leerIdiomaGuardado, guardarIdioma } from "./Utils/preferencias.js";
 
 const VISTAS = ["inicio", "explorar"];
 
@@ -18,7 +19,7 @@ function leerVista(actual = "inicio") {
 }
 
 function App() {
-  const [idioma, setIdioma] = useState("es");
+  const [idioma, setIdioma] = useState(leerIdiomaGuardado);
   const [activo, setActivo] = useState(() => leerVista());
   const [panelAccesibilidadAbierto, setPanelAccesibilidadAbierto] = useState(false);
 
@@ -53,6 +54,10 @@ function App() {
 
   useEffect(() => {
     document.documentElement.lang = idioma;
+  }, [idioma]);
+
+  useEffect(() => {
+    guardarIdioma(idioma);
   }, [idioma]);
 
   useEffect(() => {
@@ -172,7 +177,7 @@ function App() {
         onClose={cerrarAuth}
       />
 
-      <AvisoCookies idioma={idioma} />
+      <AvisoCookies textos={datos.textos} idioma={idioma}/>
     </>
   );
 }

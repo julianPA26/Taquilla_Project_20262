@@ -1,6 +1,6 @@
 // TODAS las rutas de la API están escritas aquí y en ningún otro archivo.
 // Si la API renombra una ruta, se cambia la línea correspondiente AQUÍ y nada más.
-// (El dominio y la versión, "/api/v1", viven en Cliente.js.)
+// (El dominio y la versión, "/api/v1", viven en .env)
 
 // Arma "?clave=valor&clave=valor" usando solo los parámetros que tienen valor.
 // encodeURIComponent convierte "Bogotá" en "Bogot%C3%A1" para que viaje bien en la URL.

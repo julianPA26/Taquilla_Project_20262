@@ -40,11 +40,9 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
   const limites = limitesDePrecio(todos.eventos);
 
   const eventosDestacados = destacados.datos?.datos ?? [];
-  // El diseño muestra "Festival Niebla 2026" en el hero
-  const principal =
-    eventosDestacados.find((evento) => evento.slug === "festival-niebla-2026") ??
-    eventosDestacados[1] ??
-    eventosDestacados[0];
+  // El Hero muestra el primer evento destacado que manda la API, sin depender de un slug fijo.
+  // Si la API no manda destacados, queda undefined y el Hero simplemente no dibuja la tarjeta.
+  const principal = eventosDestacados[0];
 
   const destacadosVisibles =
     categoria === "todas"

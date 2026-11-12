@@ -1,43 +1,7 @@
 import logoInverso from "../../Assets/Logos/logo-inverso.svg";
-import PreferenciasCookies from "../Cookies/PreferenciasCookies.jsx";
 import "./Footer.css";
 
-const RESPALDO = {
-  es: {
-    lema: "Conciertos, teatro, deportes y festivales en un solo lugar. Explora eventos y consulta sus detalles.",
-    columnas: {
-      explora: { titulo: "Explora", enlaces: { inicio: "Inicio", explorar: "Explorar eventos" } },
-      cuenta: {
-        titulo: "Tu cuenta",
-        enlaces: { ingresar: "Iniciar sesión", crearCuenta: "Crear cuenta" },
-      },
-      legal: {
-        titulo: "Legal",
-        enlaces: { terminos: "Términos de uso", accesibilidad: "Accesibilidad" },
-      },
-    },
-    legal: {
-      derechos: "© {anio} Taquilla · Proyecto académico",
-      nota: "Datos de ejemplo con fines académicos.",
-    },
-  },
-  en: {
-    lema: "Concerts, theater, sports and festivals in one place. Explore events and check their details.",
-    columnas: {
-      explora: { titulo: "Explore", enlaces: { inicio: "Home", explorar: "Explore events" } },
-      cuenta: { titulo: "Your account", enlaces: { ingresar: "Log in", crearCuenta: "Sign up" } },
-      legal: {
-        titulo: "Legal",
-        enlaces: { terminos: "Terms of use", accesibilidad: "Accessibility" },
-      },
-    },
-    legal: {
-      derechos: "© {anio} Taquilla · Academic project",
-      nota: "Sample data for academic purposes.",
-    },
-  },
-};
-
+// Destinos de los enlaces (son direcciones de la app, no textos).
 const DESTINOS = {
   inicio: "#inicio",
   explorar: "#explorar",
@@ -47,34 +11,34 @@ const DESTINOS = {
   accesibilidad: "#accesibilidad",
 };
 
-export default function Footer({ idioma, textos, onAbrirAccesibilidad, onAbrirAuth }) {
-  const ingles = idioma === "en";
-  const f = textos?.footer ?? RESPALDO[idioma] ?? RESPALDO.es;
-  const derechos = f.legal.derechos.replace("{anio}", new Date().getFullYear());
+// TODOS los textos salen de GET /textos, dentro de textos.footer:
+//   lema, columnas.{explora, cuenta, legal}.{titulo, enlaces}, legal.{derechos, nota}
+export default function Footer({ textos, onAbrirAccesibilidad, onAbrirAuth }) {
+  const pie = textos?.footer;
+
+  // Sin los textos de la API no hay nada que mostrar
+  if (!pie) {
+    return null;
+  }
+
+  const derechos = (pie.legal?.derechos ?? "").replace("{anio}", new Date().getFullYear());
 
   return (
     <footer className="footer">
       <div className="footer-interior">
         <div className="footer-presentacion">
-          <a
-            className="footer-marca"
-            href="#inicio"
-            aria-label={
-              textos?.navbar?.logo?.aria ??
-              (ingles ? "Taquilla, go to home" : "Taquilla, ir al inicio")
-            }
-          >
+          <a className="footer-marca" href="#inicio" aria-label={textos?.navbar?.logo?.aria}>
             <img className="footer-logo" src={logoInverso} alt="" width="109" height="32" />
           </a>
-          <p className="footer-lema">{f.lema}</p>
+          <p className="footer-lema">{pie.lema}</p>
         </div>
 
-        <nav className="footer-columnas" aria-label={ingles ? "Footer" : "Pie de página"}>
-          {Object.entries(f.columnas).map(([clave, columna]) => (
+        <nav className="footer-columnas">
+          {Object.entries(pie.columnas ?? {}).map(([clave, columna]) => (
             <div className="footer-columna" key={clave}>
               <h2 className="footer-titulo">{columna.titulo}</h2>
               <ul className="footer-lista">
-                {Object.entries(columna.enlaces).map(([enlace, texto]) => (
+                {Object.entries(columna.enlaces ?? {}).map(([enlace, texto]) => (
                   <li key={enlace}>
                     {enlace === "accesibilidad" ? (
                       <a
@@ -119,8 +83,7 @@ export default function Footer({ idioma, textos, onAbrirAccesibilidad, onAbrirAu
 
       <div className="footer-base">
         <p>{derechos}</p>
-        <p>{f.legal.nota}</p>
-        <PreferenciasCookies />
+        <p>{pie.legal?.nota}</p>
       </div>
     </footer>
   );

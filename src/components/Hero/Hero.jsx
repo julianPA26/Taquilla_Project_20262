@@ -4,103 +4,54 @@ import Afiche from "../Afiche/Afiche.jsx";
 import { formatearFechaCorta, formatearPrecio } from "../../Utils/formato.js";
 import "./Hero.css";
 
-const LOCAL = {
-  es: {
-    titulo: "Tu próxima noche empieza aquí",
-    subtitulo:
-      "Conciertos, teatro, deportes y festivales. Busca por categoría, fecha o ciudad y consulta todos los detalles de cada evento.",
-    temporada: "nov – dic 2026",
-    verEvento: "Ver evento",
-    filtros: "Filtros",
-    hoy: "Hoy",
-    esteFinDeSemana: "Este fin de semana",
-    esteMes: "Este mes",
-    cualquierFecha: "Cualquier fecha",
-    que: "Qué",
-    donde: "Dónde",
-    cuando: "Cuándo",
-    placeholderQue: "Evento o artista",
-    placeholderMovil: "Evento, artista o lugar",
-    buscar: "Buscar",
-    populares: "Populares:",
-    destacado: "Destacado",
-    desde: "Desde {precio}",
-    temporadaPlantilla: "Temporada {temporada}",
-    terminosPopulares: ["Salsa", "Stand-up", "Fútbol", "Festivales de fin de año"],
-  },
-  en: {
-    titulo: "Your next night out starts here",
-    subtitulo:
-      "Concerts, theater, sports and festivals. Search by category, date or city and see every event's details.",
-    temporada: "Nov – Dec 2026",
-    verEvento: "View event",
-    filtros: "Filters",
-    hoy: "Today",
-    esteFinDeSemana: "This weekend",
-    esteMes: "This month",
-    cualquierFecha: "Any date",
-    que: "What",
-    donde: "Where",
-    cuando: "When",
-    placeholderQue: "Event or artist",
-    placeholderMovil: "Event, artist or place",
-    buscar: "Search",
-    populares: "Popular:",
-    destacado: "Featured",
-    desde: "From {precio}",
-    temporadaPlantilla: "Season {temporada}",
-    terminosPopulares: ["Salsa", "Stand-up", "Soccer", "Year-end festivals"],
-  },
-};
+// Identificadores de las categorías que se ofrecen como "Populares".
+// Son ids (datos), no texto: el nombre que se ve sale de la API (textos.general.categorias).
+const CATEGORIAS_POPULARES = ["conciertos", "teatro", "deportes", "festivales"];
 
+// TODOS los textos de este componente salen de GET /textos.
 // "ciudad" y "onCiudad" llegan desde Inicio: la ciudad se comparte con "Próximamente en {ciudad}"
 export default function Hero({
   textos,
   idioma,
   evento,
   ciudades,
-  ciudad = "Manizales",
+  ciudad = "",
   onCiudad,
   onBuscar,
   onVerEvento,
 }) {
-  const local = LOCAL[idioma] ?? LOCAL.es;
-
-  // Rutas reales de la API: paginas.inicio.hero.{titulo, subtitulo, buscador, destacado...}
+  // Rutas dentro de la respuesta de la API
   const hero = textos?.paginas?.inicio?.hero;
   const buscador = hero?.buscador;
   const destacadoHero = hero?.destacado;
-  const filtrosExplorar = textos?.paginas?.explorar?.filtros;
-
-  // Textos: primero la API, y si no llega esa clave, el respaldo de LOCAL
-  const subtitulo = hero?.subtitulo ?? local.subtitulo;
-  const tituloHero = hero?.titulo ?? local.titulo;
-  const textoVerEvento = destacadoHero?.botones?.verEvento ?? local.verEvento;
-  const textoFiltros = filtrosExplorar?.titulo ?? local.filtros;
-  const textoDestacado =
-    destacadoHero?.etiqueta ?? textos?.componentes?.etiquetas?.destacado ?? local.destacado;
-  const plantillaDesde = destacadoHero?.desde ?? local.desde;
+  const textosFecha = textos?.paginas?.explorar?.filtros?.fecha;
+  const nombresCategorias = textos?.general?.categorias;
 
   const [consulta, setConsulta] = useState("");
   const [fecha, setFecha] = useState("");
 
-  const listaCiudades = ciudades?.length ? ciudades : [{ nombre: "Manizales" }];
+  // Antes de que lleguen las ciudades de la API, se muestra solo la ciudad actual
+  let listaCiudades = ciudades ?? [];
+  if (listaCiudades.length === 0 && ciudad) {
+    listaCiudades = [{ nombre: ciudad }];
+  }
+
   const opcionesFecha = [
-    ["", buscador?.placeholders?.cuando ?? local.cualquierFecha],
-    ["hoy", filtrosExplorar?.fecha?.hoy ?? local.hoy],
-    ["finde", filtrosExplorar?.fecha?.finDeSemana ?? local.esteFinDeSemana],
-    ["mes", filtrosExplorar?.fecha?.mes ?? local.esteMes],
+    ["", buscador?.placeholders?.cuando],
+    ["hoy", textosFecha?.hoy],
+    ["finde", textosFecha?.finDeSemana],
+    ["mes", textosFecha?.mes],
   ];
   const etiquetaFecha = opcionesFecha.find(([valor]) => valor === fecha)?.[1];
 
-  const etiquetaTemporada = (hero?.etiquetas?.temporada ?? local.temporadaPlantilla).replace(
-    "{temporada}",
-    local.temporada,
-  );
-
-  const resumenMovil = (buscador?.resumenMovil ?? "{ciudad} · {fecha}")
+  // Plantillas de la API con huecos como {ciudad}, {fecha} o {precio}.
+  // El "?? ''" evita un error si la clave no llegó (no es un texto escrito en el código).
+  const plantillaResumen = buscador?.resumenMovil ?? "";
+  const resumenMovil = plantillaResumen
     .replace("{ciudad}", ciudad)
-    .replace("{fecha}", etiquetaFecha);
+    .replace("{fecha}", etiquetaFecha ?? "");
+
+  const plantillaDesde = destacadoHero?.desde ?? "";
 
   function enviar(evento) {
     evento.preventDefault();
@@ -108,31 +59,28 @@ export default function Hero({
     onBuscar?.(consulta.trim(), ciudad, "", fecha);
   }
 
-  // Los términos populares no existen en la API: vienen de LOCAL
-  const terminosPopulares = local.terminosPopulares;
-
   return (
     <section className="hero" aria-labelledby="hero-titulo">
       <div className="hero-interior">
         <div className="hero-texto">
-          <p className="hero-etiqueta">{etiquetaTemporada}</p>
+          <p className="hero-etiqueta">{hero?.etiquetas?.temporada}</p>
 
           <h1 className="hero-titulo" id="hero-titulo">
-            {tituloHero}
+            {hero?.titulo}
           </h1>
 
-          <p className="hero-subtitulo">{subtitulo}</p>
+          <p className="hero-subtitulo">{hero?.subtitulo}</p>
 
           <form className="hero-buscador" role="search" onSubmit={enviar}>
             <label className="hero-campo">
               <Icono nombre="buscar" />
               <span className="hero-campo-texto">
-                <span className="hero-campo-etiqueta">{buscador?.etiquetas?.que ?? local.que}</span>
+                <span className="hero-campo-etiqueta">{buscador?.etiquetas?.que}</span>
                 <input
                   type="search"
                   value={consulta}
                   onChange={(e) => setConsulta(e.target.value)}
-                  placeholder={buscador?.placeholders?.que ?? local.placeholderQue}
+                  placeholder={buscador?.placeholders?.que}
                 />
               </span>
             </label>
@@ -140,9 +88,7 @@ export default function Hero({
             <label className="hero-campo">
               <Icono nombre="ubicacion" />
               <span className="hero-campo-texto">
-                <span className="hero-campo-etiqueta">
-                  {buscador?.etiquetas?.donde ?? local.donde}
-                </span>
+                <span className="hero-campo-etiqueta">{buscador?.etiquetas?.donde}</span>
                 <select value={ciudad} onChange={(e) => onCiudad?.(e.target.value)}>
                   {listaCiudades.map((c) => (
                     <option key={c.nombre} value={c.nombre}>
@@ -156,9 +102,7 @@ export default function Hero({
             <label className="hero-campo">
               <Icono nombre="calendario" />
               <span className="hero-campo-texto">
-                <span className="hero-campo-etiqueta">
-                  {buscador?.etiquetas?.cuando ?? local.cuando}
-                </span>
+                <span className="hero-campo-etiqueta">{buscador?.etiquetas?.cuando}</span>
                 <select value={fecha} onChange={(e) => setFecha(e.target.value)}>
                   {opcionesFecha.map(([valor, etiqueta]) => (
                     <option key={valor} value={valor}>
@@ -170,7 +114,7 @@ export default function Hero({
             </label>
 
             <button type="submit" className="hero-boton">
-              {buscador?.botones?.buscar ?? local.buscar}
+              {buscador?.botones?.buscar}
             </button>
           </form>
 
@@ -182,8 +126,8 @@ export default function Hero({
                   type="search"
                   value={consulta}
                   onChange={(e) => setConsulta(e.target.value)}
-                  placeholder={buscador?.placeholders?.movil ?? local.placeholderMovil}
-                  aria-label={buscador?.placeholders?.movil ?? local.buscar}
+                  placeholder={buscador?.placeholders?.movil}
+                  aria-label={buscador?.botones?.buscar}
                 />
                 <span className="hero-resumen">{resumenMovil}</span>
               </span>
@@ -192,7 +136,7 @@ export default function Hero({
             <button
               type="button"
               className="hero-filtros"
-              aria-label={textoFiltros}
+              aria-label={textos?.paginas?.explorar?.filtros?.titulo}
               onClick={() => onBuscar?.(consulta.trim(), ciudad, "", fecha)}
             >
               <Icono nombre="filtros" />
@@ -200,15 +144,15 @@ export default function Hero({
           </form>
 
           <p className="hero-populares">
-            <span>{buscador?.populares ?? local.populares}</span>
-            {terminosPopulares.map((termino) => (
+            <span>{buscador?.populares}</span>
+            {CATEGORIAS_POPULARES.map((idCategoria) => (
               <button
-                key={termino}
+                key={idCategoria}
                 type="button"
                 className="hero-popular"
-                onClick={() => onBuscar?.(termino, ciudad, "", fecha)}
+                onClick={() => onBuscar?.("", ciudad, idCategoria, fecha)}
               >
-                {termino}
+                {nombresCategorias?.[idCategoria]}
               </button>
             ))}
           </p>
@@ -217,7 +161,7 @@ export default function Hero({
         <Afiche evento={evento} paleta={4} alto={274} alineacion="xMaxYMin" className="hero-afiche">
           {evento && (
             <article className="hero-destacado">
-              <p className="hero-insignia">{textoDestacado}</p>
+              <p className="hero-insignia">{destacadoHero?.etiqueta}</p>
               <h2 className="hero-evento-titulo">{evento.titulo}</h2>
               <div className="hero-evento-fila">
                 <div>
@@ -229,7 +173,7 @@ export default function Hero({
                   </p>
                 </div>
                 <button type="button" className="hero-ver" onClick={() => onVerEvento?.(evento)}>
-                  {textoVerEvento}
+                  {destacadoHero?.botones?.verEvento}
                   <span className="hero-ver-oculto"> · {evento.titulo}</span>
                 </button>
               </div>
