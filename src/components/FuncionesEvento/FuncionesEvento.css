@@ -1,0 +1,39 @@
+.detalle-funciones h2 {
+  font-size: 22px;
+  margin: 0 0 16px;
+}
+.detalle-funciones__lista {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.detalle-funciones__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+  padding: 16px;
+  background: var(--fondo-superficie);
+}
+.detalle-funciones__fecha {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+.detalle-funciones__stock {
+  color: var(--estado-exito);
+  font-size: 13px;
+}
+.detalle-funciones__stock--agotado {
+  color: var(--estado-error);
+}
+.detalle-funciones__vacio {
+  color: var(--texto-secundario);
+}

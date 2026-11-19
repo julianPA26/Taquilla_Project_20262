@@ -11,16 +11,11 @@ import Paginacion from "../components/Pagination/Paginacion.jsx";
 import "./Explorar.css";
 
 const POR_PAGINA = 9;
-const CIUDAD_POR_DEFECTO = "Manizales";
 const CANTIDAD_ESQUELETOS = 6;
 
-// Arma el objeto de filtros. La ciudad llega ya decidida: "" significa "todas las ciudades".
+// Una ciudad vacía significa "Todas las ciudades".
 function filtrosIniciales(consulta, ciudad, categoria, fecha) {
-  let categorias = [];
-  if (categoria) {
-    categorias = [categoria];
-  }
-
+  const categorias = categoria ? [categoria] : [];
   return {
     q: consulta ?? "",
     categorias,
@@ -46,34 +41,29 @@ export default function Explorar({
   const t = textos?.paginas?.explorar;
   const nombres = textos?.general?.categorias;
   const estados = textos?.estados;
-
   const [orden, setOrden] = useState("fecha");
-  // Al entrar por primera vez: si no viene ciudad, se usa la de por defecto (Manizales)
   const [filtros, setFiltros] = useState(() =>
-    filtrosIniciales(consulta, ciudadInicial || CIUDAD_POR_DEFECTO, categoriaInicial, fechaInicial),
+    filtrosIniciales(consulta, ciudadInicial, categoriaInicial, fechaInicial),
   );
   const [pagina, setPagina] = useState(1);
   const [panelAbierto, setPanelAbierto] = useState(false);
-
   const todos = useEventos(orden);
   const categorias = useApi(RUTAS.categorias);
   const ciudades = useApi(RUTAS.ciudades);
 
-  // Si llega una búsqueda nueva desde el navbar o el inicio, se aplica aquí
+  // Aplica búsquedas nuevas desde el navbar o Inicio.
   useEffect(() => {
     setFiltros((actuales) => {
-      // Si la búsqueda trae categoría se aplica; si no, se conservan las que ya había
       let categorias = actuales.categorias;
       if (categoriaInicial) {
         categorias = [categoriaInicial];
       }
-
       return {
         ...actuales,
         q: consulta ?? "",
-        ciudad: ciudadInicial || actuales.ciudad,
+        // Una búsqueda global sin ciudad explícita busca en todas las ciudades.
+        ciudad: ciudadInicial ?? "",
         categorias,
-        // Si la búsqueda trae fecha se aplica; si no, se conserva la que ya había
         fecha: fechaInicial || actuales.fecha,
       };
     });
@@ -86,15 +76,13 @@ export default function Explorar({
     [todos.eventos, filtros, limites],
   );
 
-  // Cuántos eventos hay por categoría con los demás filtros ya aplicados
-  // (ciudad, texto, fecha y precio), sin contar el filtro de categorías
+  // Conteos de las categorías teniendo en cuenta los demás filtros.
   const conteosPorCategoria = useMemo(() => {
     const sinFiltroDeCategoria = filtrarEventos(
       todos.eventos,
       { ...filtros, categorias: [] },
       limites,
     );
-
     const conteos = {};
     sinFiltroDeCategoria.forEach((evento) => {
       const cantidadActual = conteos[evento.categoria] ?? 0;
@@ -113,7 +101,6 @@ export default function Explorar({
   }
 
   function limpiar() {
-    // Ciudad "" = todas las ciudades; sin categorías, sin texto, sin fechas ni precio
     setFiltros(filtrosIniciales("", "", "", ""));
     setPagina(1);
   }
@@ -123,7 +110,6 @@ export default function Explorar({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // ===== Textos =====
   const cantidad = filtrados.length;
   const textoResultados = (
     cantidad === 1
@@ -141,7 +127,6 @@ export default function Explorar({
       ? (t?.resultadosCorto?.uno ?? (ingles ? "{cantidad} event" : "{cantidad} evento"))
       : (t?.resultadosCorto?.otro ?? (ingles ? "{cantidad} events" : "{cantidad} eventos"))
   ).replace("{cantidad}", cantidad);
-
   const tituloPagina =
     textos?.footer?.columnas?.explora?.enlaces?.explorar ??
     (ingles ? "Explore events" : "Explorar eventos");
@@ -150,14 +135,12 @@ export default function Explorar({
   const etiquetaBuscar =
     textos?.paginas?.inicio?.hero?.buscador?.placeholders?.movil ??
     (ingles ? "Event, artist or place" : "Evento, artista o lugar");
-
   const opcionesOrden = [
     ["fecha", t?.orden?.opciones?.fecha ?? (ingles ? "Closest date" : "Fecha más próxima")],
     ["precio", t?.orden?.opciones?.precio ?? (ingles ? "Lowest price" : "Precio más bajo")],
     ["popularidad", t?.orden?.opciones?.popularidad ?? (ingles ? "Most popular" : "Más populares")],
   ];
 
-  // ===== Chips de los filtros activos =====
   const chips = [];
   filtros.categorias.forEach((id) => {
     chips.push({
@@ -196,11 +179,10 @@ export default function Explorar({
     });
   }
 
-  // ===== Qué se muestra en la zona de resultados =====
   const primeraCarga = todos.cargando && todos.eventos.length === 0;
   const falloTotal = todos.error && todos.eventos.length === 0;
-
   let contenido;
+
   if (primeraCarga) {
     contenido = (
       <>
@@ -278,7 +260,6 @@ export default function Explorar({
   return (
     <div className="explorar">
       <div className="explorar-interior">
-        {/* Solo escritorio: ruta de migas */}
         <nav className="explorar-migas" aria-label={ingles ? "Breadcrumb" : "Ruta de navegación"}>
           <ol>
             <li>
@@ -287,15 +268,12 @@ export default function Explorar({
             <li aria-current="page">{migas?.explorar ?? (ingles ? "Explore" : "Explorar")}</li>
           </ol>
         </nav>
-
         <header className="explorar-encabezado">
           <h1>{tituloPagina}</h1>
           <p className="explorar-conteo" aria-live="polite">
             {textoResultados}
           </p>
         </header>
-
-        {/* Solo móvil: buscador y botón de filtros */}
         <form
           className="explorar-buscador"
           role="search"
@@ -321,7 +299,6 @@ export default function Explorar({
             <Icono nombre="filtros" />
           </button>
         </form>
-
         <div className="explorar-cuerpo">
           <FiltrosExplorar
             textos={textos}
@@ -337,7 +314,6 @@ export default function Explorar({
             onLimpiar={limpiar}
             onCerrar={() => setPanelAbierto(false)}
           />
-
           <section className="explorar-resultados" aria-busy={todos.cargando}>
             <div className="explorar-barra">
               {chips.length > 0 && (
@@ -357,7 +333,6 @@ export default function Explorar({
                   ))}
                 </ul>
               )}
-
               <div className="explorar-datos">
                 <p className="explorar-conteo-movil">{textoCorto}</p>
                 <label className="explorar-orden">
@@ -383,7 +358,6 @@ export default function Explorar({
                 </label>
               </div>
             </div>
-
             {contenido}
           </section>
         </div>

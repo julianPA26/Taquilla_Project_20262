@@ -1,35 +1,23 @@
-// TODAS las rutas de la API están escritas aquí y en ningún otro archivo.
-// Si la API renombra una ruta, se cambia la línea correspondiente AQUÍ y nada más.
-// (El dominio y la versión, "/api/v1", viven en .env)
-
-// Arma "?clave=valor&clave=valor" usando solo los parámetros que tienen valor.
-// encodeURIComponent convierte "Bogotá" en "Bogot%C3%A1" para que viaje bien en la URL.
+// Centralización de rutas de la API, sin duplicar URLs en componentes.
 function armarConsulta(parametros) {
-  const partes = [];
-
-  for (const [clave, valor] of Object.entries(parametros)) {
+  const consulta = new URLSearchParams();
+  Object.entries(parametros).forEach(([clave, valor]) => {
     if (valor !== undefined && valor !== null && valor !== "") {
-      partes.push(`${clave}=${encodeURIComponent(valor)}`);
+      consulta.set(clave, String(valor));
     }
-  }
-
-  if (partes.length === 0) {
-    return "";
-  }
-  return `?${partes.join("&")}`;
+  });
+  const resultado = consulta.toString();
+  return resultado ? `?${resultado}` : "";
 }
 
 export const RUTAS = {
-  // Las que no cambian son simples textos
   categorias: "/categorias",
   ciudades: "/ciudades",
   eventosDestacados: "/eventos/destacados",
-
-  // Las que reciben datos son funciones que devuelven el texto de la ruta
   textos: (idioma) => `/textos${armarConsulta({ idioma })}`,
-
-  // El nombre de la IZQUIERDA es el que usa la API; el de la DERECHA es el nuestro.
-  // Si la API renombra "porPagina" a "limite", solo se cambia: limite: porPagina
-  eventos: ({ ciudad, orden, porPagina, pagina } = {}) =>
-    `/eventos${armarConsulta({ ciudad, orden, porPagina, pagina })}`,
+  // Conserva los parámetros existentes y permite los nuevos filtros del contrato.
+  eventos: ({ ciudad, categoria, q, orden, porPagina, pagina } = {}) =>
+    `/eventos${armarConsulta({ ciudad, categoria, q, orden, porPagina, pagina })}`,
+  eventoDetalle: (slug) => `/eventos/${encodeURIComponent(slug)}`,
+  eventosRelacionados: (slug) => `/eventos/${encodeURIComponent(slug)}/relacionados`,
 };

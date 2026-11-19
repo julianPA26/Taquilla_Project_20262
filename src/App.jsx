@@ -1,83 +1,100 @@
+import { useEffect, useState } from "react";
 import { useTextos } from "./hooks/useTextos.js";
 import "./App.css";
 import Navbar from "./components/NavBar/Navbar.jsx";
-import { useEffect, useState } from "react";
 import Footer from "./components/Footer/Footer.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
+import DetalleEvento from "./Pages/DetalleEvento.jsx";
 import AccessibilityPanel from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
-import ModalEvento from "./components/ModalEvent/ModalEvent.jsx";
 import ModalAuth from "./components/ModalAuth/ModalAuth.jsx";
 import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
 import { leerIdiomaGuardado, guardarIdioma } from "./Utils/preferencias.js";
 
 const VISTAS = ["inicio", "explorar"];
 
-function leerVista(actual = "inicio") {
+function leerRutaActual() {
+  const partes = window.location.pathname.match(/^\/eventos\/([^/]+)\/?$/);
+  if (partes) {
+    try {
+      return { vista: "detalle", slug: decodeURIComponent(partes[1]) };
+    } catch {
+      return { vista: "detalle", slug: "" };
+    }
+  }
   const hash = window.location.hash.slice(1);
-  return VISTAS.includes(hash) ? hash : actual;
+  return { vista: VISTAS.includes(hash) ? hash : "inicio" };
 }
 
 function App() {
   const [idioma, setIdioma] = useState(leerIdiomaGuardado);
-  const [activo, setActivo] = useState(() => leerVista());
+  const [ruta, setRuta] = useState(leerRutaActual);
   const [panelAccesibilidadAbierto, setPanelAccesibilidadAbierto] = useState(false);
-
-  // ESTADO PARA EL EVENTO SELECCIONADO PARA EL MODAL
-  const [eventoModal, setEventoModal] = useState(null);
-
-  // 2. ESTADO PARA EL MODAL DE AUTENTICACIÓN
   const [authModal, setAuthModal] = useState({ abierto: false, modo: "ingresar" });
-
-  const datos = useTextos(idioma);
-
   const [consulta, setConsulta] = useState("");
   const [ciudadFiltro, setCiudadFiltro] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
-
+  const datos = useTextos(idioma);
+  const activo = ruta.vista;
   const ingles = idioma === "en";
 
   useEffect(() => {
-    function actualizar() {
+    function sincronizar() {
+      // Navbar y Footer del Sprint 1 usan #inicio y #explorar.
+      // Desde /eventos/:slug normalizamos el destino para no conservar el slug anterior.
       const hash = window.location.hash.slice(1);
-      if (!VISTAS.includes(hash)) return;
-      setActivo(hash);
+      if (window.location.pathname.startsWith("/eventos/") && VISTAS.includes(hash)) {
+        window.history.replaceState(null, "", `/#${hash}`);
+      }
+      setRuta(leerRutaActual());
       setConsulta("");
       setCiudadFiltro("");
       setCategoriaFiltro("");
       setFechaFiltro("");
     }
-    window.addEventListener("hashchange", actualizar);
-    return () => window.removeEventListener("hashchange", actualizar);
+    window.addEventListener("hashchange", sincronizar);
+    window.addEventListener("popstate", sincronizar);
+    return () => {
+      window.removeEventListener("hashchange", sincronizar);
+      window.removeEventListener("popstate", sincronizar);
+    };
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = idioma;
   }, [idioma]);
-
   useEffect(() => {
     guardarIdioma(idioma);
   }, [idioma]);
-
   useEffect(() => {
+    if (activo === "detalle") return;
     const nombre =
       activo === "explorar" ? (ingles ? "Explore" : "Explorar") : ingles ? "Home" : "Inicio";
     document.title = `Taquilla · ${nombre}`;
   }, [activo, ingles]);
-
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, [activo]);
+  }, [ruta]);
 
-  // fecha: "hoy", "finde", "mes" o "" (cualquier fecha). Son los mismos valores del filtro de Explorar.
+  function irAVista(vista = "inicio") {
+    if (!VISTAS.includes(vista)) return;
+    window.history.pushState(null, "", `/#${vista}`);
+    setRuta({ vista });
+  }
+
+  function abrirEvento(evento) {
+    if (!evento?.slug) return;
+    window.history.pushState(null, "", `/eventos/${encodeURIComponent(evento.slug)}`);
+    setRuta({ vista: "detalle", slug: evento.slug });
+  }
+
   function buscar(valor = "", ciudad = "", categoria = "", fecha = "") {
     setConsulta(valor);
     setCiudadFiltro(ciudad);
     setCategoriaFiltro(categoria);
     setFechaFiltro(fecha);
-    setActivo("explorar");
-    window.history.replaceState(null, "", "#explorar");
+    irAVista("explorar");
   }
 
   function saltarAlContenido(evento) {
@@ -87,18 +104,15 @@ function App() {
 
   const abrirAccesibilidad = () => setPanelAccesibilidadAbierto(true);
   const cerrarAccesibilidad = () => setPanelAccesibilidadAbierto(false);
-
-  // FUNCIONES PARA ABRIR Y CERRAR EL MODAL DE INICIAR SESIÓN / CREAR CUENTA
   const abrirAuth = (modo) => setAuthModal({ abierto: true, modo });
   const cerrarAuth = () => setAuthModal((prev) => ({ ...prev, abierto: false }));
 
   return (
-    <>
+    <div className={`sitio${activo === "detalle" ? " sitio--detalle" : ""}`}>
       <a className="saltar-contenido" href="#contenido" onClick={saltarAlContenido}>
-        {ingles ? "Skip to content" : "Saltar al contenido"}
+        {datos.textos?.accesibilidad?.saltarContenido ||
+          datos.textos?.navbar?.aria?.saltarContenido}
       </a>
-
-      {/* 3. PROP onAbrirAuth AGREGADA AL NAVBAR */}
       <Navbar
         {...datos}
         idioma={idioma}
@@ -108,9 +122,16 @@ function App() {
         onAbrirAccesibilidad={abrirAccesibilidad}
         onAbrirAuth={abrirAuth}
       />
-
       <main id="contenido" tabIndex={-1}>
-        {activo === "explorar" ? (
+        {activo === "detalle" ? (
+          <DetalleEvento
+            slug={ruta.slug}
+            textos={datos.textos}
+            idioma={idioma}
+            onVolver={irAVista}
+            onVerEvento={abrirEvento}
+          />
+        ) : activo === "explorar" ? (
           <Explorar
             textos={datos.textos}
             idioma={idioma}
@@ -118,7 +139,7 @@ function App() {
             ciudadInicial={ciudadFiltro}
             categoriaInicial={categoriaFiltro}
             fechaInicial={fechaFiltro}
-            onVerEvento={(evento) => setEventoModal(evento)}
+            onVerEvento={abrirEvento}
           />
         ) : (
           <Inicio
@@ -126,27 +147,21 @@ function App() {
             idioma={idioma}
             onBuscar={buscar}
             onExplorarCategoria={(id) => buscar("", "", id)}
-            onVerEvento={(evento) => setEventoModal(evento)}
+            onVerEvento={abrirEvento}
           />
         )}
       </main>
-
       <Footer
         idioma={idioma}
         textos={datos.textos}
         onAbrirAccesibilidad={abrirAccesibilidad}
         onAbrirAuth={abrirAuth}
       />
-
-      {/* Modal de Accesibilidad */}
       {panelAccesibilidadAbierto && (
         <div
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            inset: 0,
             backgroundColor: "rgba(0, 0, 0, 0.4)",
             display: "flex",
             justifyContent: "center",
@@ -160,25 +175,14 @@ function App() {
           </div>
         </div>
       )}
-
-      {eventoModal && (
-        <ModalEvento
-          evento={eventoModal}
-          textos={datos.textos}
-          idioma={idioma}
-          onClose={() => setEventoModal(null)}
-        />
-      )}
-
       <ModalAuth
         abierto={authModal.abierto}
         modo={authModal.modo}
         idioma={idioma}
         onClose={cerrarAuth}
       />
-
-      <AvisoCookies textos={datos.textos} idioma={idioma}/>
-    </>
+      <AvisoCookies textos={datos.textos} idioma={idioma} />
+    </div>
   );
 }
 

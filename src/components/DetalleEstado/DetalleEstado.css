@@ -1,0 +1,31 @@
+.detalle-estado {
+  max-width: 720px;
+  margin: 64px auto;
+  padding: 44px 24px;
+  text-align: center;
+  border: 1px solid var(--borde-sutil);
+  background: var(--fondo-superficie);
+  border-radius: var(--radio-lg);
+}
+.detalle-estado h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+}
+.detalle-estado p {
+  color: var(--texto-secundario);
+  margin: 12px 0 24px;
+}
+.detalle-estado button {
+  padding: 12px 20px;
+  border: 0;
+  color: var(--texto-inverso);
+  background: var(--marca-primario);
+  border-radius: var(--radio-md);
+  font: inherit;
+  cursor: pointer;
+}
+.detalle-estado button:focus-visible {
+  outline: 3px solid var(--marca-acento);
+  outline-offset: 3px;
+}

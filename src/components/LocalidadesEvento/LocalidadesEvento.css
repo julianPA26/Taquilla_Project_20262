@@ -1,0 +1,42 @@
+.detalle-localidades h2 {
+  font-size: 22px;
+  margin: 0 0 16px;
+}
+.detalle-localidades__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.detalle-localidades__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+  background: var(--fondo-superficie);
+}
+.detalle-localidades__item h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.detalle-localidades__item strong {
+  font-size: 17px;
+  white-space: nowrap;
+}
+.detalle-localidades__stock {
+  margin: 0;
+  font-size: 12px;
+  color: var(--estado-exito);
+}
+.detalle-localidades__stock--agotado {
+  color: var(--estado-error);
+}
+.detalle-localidades__vacio {
+  color: var(--texto-secundario);
+}
