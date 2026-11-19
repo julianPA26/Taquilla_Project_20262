@@ -98,7 +98,7 @@
   font-weight: 600;
 }
 
-/* ===== Categoría: chips en móvil ===== */
+/* Categoría: chips en móvil */
 .filtros-categorias {
   display: flex;
   flex-wrap: wrap;
@@ -144,7 +144,7 @@
   outline-offset: 3px;
 }
 
-/* ===== Fecha ===== */
+/* Fecha */
 .filtros-chips {
   display: flex;
   flex-wrap: wrap;
@@ -202,7 +202,7 @@
   font-size: 14px;
 }
 
-/* ===== Ciudad ===== */
+/* Ciudad */
 .filtros-selector {
   position: relative;
 }
@@ -231,6 +231,7 @@
   pointer-events: none;
 }
 
+/* Rango de precio */
 .rango {
   position: relative;
   height: 24px;
@@ -309,6 +310,7 @@
   line-height: 16px;
 }
 
+/* Pie del panel móvil */
 .filtros-pie {
   padding: var(--espacio-4);
   border-top: 1px solid var(--borde-sutil);
@@ -336,6 +338,7 @@
   background: var(--marca-primario-presionado);
 }
 
+/* Diseño de escritorio */
 @media (min-width: 1200px) {
   .filtros {
     position: sticky;
@@ -353,8 +356,8 @@
   }
 
   .filtros-encabezado {
-    padding: 0;
-    border-bottom: 0;
+    padding: 0 0 var(--espacio-4);
+    border-bottom: 1px solid var(--borde-sutil);
   }
 
   .filtros-cerrar,
@@ -372,6 +375,12 @@
     gap: var(--espacio-6);
     padding: 0;
     overflow: visible;
+  }
+
+  /* Líneas divisorias entre los grupos, según Figma */
+  .filtros-grupo:not(:last-child) {
+    padding-bottom: var(--espacio-4);
+    border-bottom: 1px solid var(--borde-sutil);
   }
 
   .filtros-categorias {

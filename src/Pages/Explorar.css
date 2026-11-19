@@ -18,11 +18,14 @@
 .explorar-migas ol {
   display: flex;
   align-items: center;
-  gap: var(--espacio-2);
+  gap: 12px;
   margin: 0 0 var(--espacio-4) 0;
   padding: 0;
   list-style: none;
+  font-family: var(--fuente-instrument-sans);
   font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
   color: var(--texto-secundario);
 }
 
@@ -40,10 +43,21 @@
   font-weight: 500;
 }
 
+.explorar-migas li + li {
+  display: inline-flex;
+  align-items: center;
+}
+
 .explorar-migas li + li::before {
-  content: "/";
-  margin-right: var(--espacio-2);
-  color: var(--texto-terciario);
+  content: "";
+  display: inline-block;
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  margin-right: 12px;
+  border-top: 2px solid var(--texto-terciario);
+  border-right: 2px solid var(--texto-terciario);
+  transform: rotate(45deg);
 }
 
 /* Encabezado */
@@ -73,7 +87,6 @@
   gap: var(--espacio-2);
   padding-bottom: var(--espacio-4);
   border-bottom: 1px solid var(--borde-sutil);
-  /* Línea divisoria gris */
   margin-bottom: var(--espacio-4);
 }
 
@@ -86,7 +99,6 @@
   padding-inline: var(--espacio-3);
   border-radius: var(--radio-md);
   background-color: var(--fondo-sutil);
-  /* Fondo gris sutil */
   border: 1px solid transparent;
   color: var(--texto-secundario);
 }
@@ -105,7 +117,7 @@
   color: var(--texto-terciario);
 }
 
-/* Botón de Filtros (Fondo negro con icono blanco) */
+/* Botón de Filtros */
 .explorar-boton-filtros {
   display: grid;
   place-items: center;
@@ -115,9 +127,7 @@
   border: none;
   border-radius: var(--radio-md);
   background-color: var(--marca-primario);
-  /* Fondo negro */
   color: var(--texto-inverso);
-  /* Icono blanco */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -126,7 +136,7 @@
   background-color: var(--marca-primario-hover);
 }
 
-/* Estructura del Cuerpo */
+/* Estructura del cuerpo */
 .explorar-cuerpo {
   display: flex;
   flex-direction: column;
@@ -138,7 +148,7 @@
   min-width: 0;
 }
 
-/* Barra de Filtros y Ordenamiento */
+/* Barra de filtros y ordenamiento */
 .explorar-barra {
   display: flex;
   flex-direction: column;
@@ -146,7 +156,7 @@
   margin-bottom: var(--espacio-4);
 }
 
-/* Chips de Filtros Activos */
+/* Chips de filtros activos */
 .explorar-chips {
   display: flex;
   flex-wrap: nowrap;
@@ -183,7 +193,7 @@
   background-color: var(--fondo-presionado);
 }
 
-/* Contador de eventos y Selector de Orden */
+/* Contador de eventos y selector de orden */
 .explorar-datos {
   display: flex;
   align-items: center;
@@ -242,7 +252,7 @@
   color: var(--texto-secundario);
 }
 
-/* Grilla de Tarjetas de Evento */
+/* Grilla de tarjetas de evento */
 .explorar-lista {
   display: grid;
   grid-template-columns: 1fr;
@@ -252,7 +262,7 @@
   list-style: none;
 }
 
-/* Estados de Carga y Mensajes */
+/* Estados de carga y mensajes */
 .explorar-estado-oculto {
   position: absolute;
   width: 1px;
@@ -319,10 +329,7 @@
   cursor: pointer;
 }
 
-/* ==========================================================================
-   Adaptaciones Responsivas (Tablets y Escritorio)
-   ========================================================================== */
-
+/* Adaptaciones responsivas (tablets y escritorio) */
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .explorar-lista {
     grid-template-columns: repeat(2, 1fr);
@@ -356,7 +363,6 @@
 
   .explorar-buscador {
     display: none;
-    /* En escritorio la búsqueda se realiza desde el Navbar */
   }
 
   .explorar-cuerpo {

@@ -1,0 +1,400 @@
+/* CONTENEDOR PRINCIPAL */
+
+.sitio--detalle > main {
+  background: var(--fondo-superficie);
+}
+
+.detalle-evento {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+  padding-block: var(--espacio-4) var(--espacio-12);
+  min-width: 0;
+  font-family: var(--fuente-instrument-sans);
+  color: var(--texto-principal);
+}
+
+/* MIGAS DE PAN */
+
+.detalle-evento__migas {
+  display: none;
+  margin-bottom: var(--espacio-4);
+}
+
+.detalle-evento__migas ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--texto-secundario);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.detalle-evento__migas li {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.detalle-evento__migas li:not(:last-child)::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-top: 2px solid var(--texto-terciario);
+  border-right: 2px solid var(--texto-terciario);
+  transform: rotate(45deg);
+}
+
+.detalle-evento__migas a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.detalle-evento__migas a:hover {
+  text-decoration: underline;
+}
+
+.detalle-evento__migas li[aria-current="page"] {
+  color: var(--texto-principal);
+  font-weight: 500;
+}
+
+/* PESTAÑAS */
+
+.detalle-evento__pestanas {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--espacio-6);
+  margin-top: var(--espacio-8);
+  border-bottom: 1px solid var(--borde-sutil);
+  overflow-x: auto;
+}
+
+.detalle-evento__pestana {
+  flex: 0 0 auto;
+  padding: 0 0 var(--espacio-3);
+  border-bottom: 2px solid transparent;
+  color: var(--texto-secundario);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.detalle-evento__pestana:hover,
+.detalle-evento__pestana--activa {
+  color: var(--texto-principal);
+  border-color: var(--marca-primario);
+}
+
+/* SECCIONES */
+
+.detalle-evento__descripcion,
+.detalle-evento__ubicacion,
+.detalle-evento__politicas,
+.detalle-evento .detalle-funciones,
+.detalle-evento .detalle-localidades,
+.detalle-evento .detalle-relacionados {
+  margin-top: var(--espacio-8);
+  scroll-margin-top: 80px;
+}
+
+.detalle-evento__descripcion h2,
+.detalle-evento__ubicacion h2,
+.detalle-evento__politicas h2 {
+  margin: 0 0 var(--espacio-3);
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.detalle-evento__descripcion p,
+.detalle-evento__politicas p {
+  margin: 0;
+  max-width: 100%;
+  color: var(--texto-secundario);
+  font-size: 14px;
+  line-height: 22px;
+  white-space: pre-line;
+}
+
+/* UBICACIÓN */
+
+.detalle-evento__ubicacion-panel {
+  display: flex;
+  min-height: 210px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-6);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-sutil);
+  color: var(--texto-secundario);
+  text-align: center;
+}
+
+.detalle-evento__ubicacion-panel span {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.detalle-evento__direccion {
+  margin: var(--espacio-2) 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--texto-secundario);
+}
+
+/* EVENTOS RELACIONADOS */
+
+.detalle-evento .detalle-funciones h2,
+.detalle-evento .detalle-localidades h2,
+.detalle-evento .detalle-relacionados h2 {
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: -0.01em;
+}
+
+.detalle-evento .detalle-relacionados__lista {
+  gap: var(--espacio-6);
+}
+
+/* LEER MÁS */
+
+.detalle-evento__leer-mas {
+  display: none;
+}
+
+/* ACCESIBILIDAD */
+
+.detalle-evento__solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ESTADO DE CARGA */
+
+.detalle-evento__esqueleto {
+  border-radius: var(--radio-md);
+  background: var(--fondo-sutil);
+  animation: detalle-pulso 1.5s ease-in-out infinite;
+}
+
+.detalle-evento__esqueleto--afiche {
+  height: 360px;
+  margin-bottom: var(--espacio-6);
+}
+
+.detalle-evento__esqueleto--titulo {
+  width: 46%;
+  height: 40px;
+  margin-bottom: var(--espacio-4);
+}
+
+.detalle-evento__esqueleto--texto {
+  width: 100%;
+  height: 18px;
+  margin-bottom: var(--espacio-3);
+}
+
+.detalle-evento__esqueleto--texto:last-child {
+  width: 70%;
+}
+
+@keyframes detalle-pulso {
+  50% {
+    opacity: 0.42;
+  }
+}
+
+/* ESCRITORIO */
+
+@media (min-width: 1200px) {
+  .detalle-evento {
+    padding-block: var(--espacio-6) 72px;
+  }
+
+  .detalle-evento__migas {
+    display: block;
+  }
+
+  .detalle-evento .detalle-encabezado__contenido {
+    padding-top: 40px;
+  }
+
+  .detalle-evento__pestanas {
+    margin-top: var(--espacio-12);
+  }
+
+  .detalle-evento__descripcion,
+  .detalle-evento__ubicacion,
+  .detalle-evento__politicas,
+  .detalle-evento .detalle-funciones,
+  .detalle-evento .detalle-localidades {
+    margin-top: var(--espacio-12);
+  }
+
+  .detalle-evento__ubicacion-panel {
+    min-height: 220px;
+  }
+
+  .detalle-evento__direccion {
+    margin-top: var(--espacio-4);
+  }
+
+  .detalle-evento .detalle-relacionados {
+    margin-top: var(--espacio-16);
+  }
+
+  .detalle-evento .detalle-relacionados__encabezado {
+    margin-bottom: var(--espacio-6);
+  }
+
+  .detalle-evento .detalle-relacionados__lista {
+    gap: var(--espacio-6);
+  }
+}
+
+/* TABLET */
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .detalle-evento__esqueleto--afiche {
+    height: clamp(235px, 27vw, 340px);
+  }
+
+  .detalle-evento .detalle-relacionados__lista {
+    gap: var(--espacio-4);
+  }
+}
+
+/* MÓVIL */
+
+@media (max-width: 767px) {
+  /* Sin navbar en el detalle móvil */
+  .sitio--detalle .navbar {
+    display: none;
+  }
+
+  /* Portada de extremo a extremo */
+  .detalle-evento {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 0 24px;
+  }
+
+  /* Elementos exclusivos de escritorio */
+  .detalle-evento__migas,
+  .detalle-evento__pestanas,
+  .detalle-evento__ubicacion,
+  .detalle-evento__politicas,
+  .detalle-evento .detalle-funciones,
+  .detalle-evento .detalle-localidades,
+  .detalle-evento .detalle-relacionados {
+    display: none;
+  }
+
+  /* Descripción y línea divisoria */
+  .detalle-evento__descripcion {
+    margin: 20px 20px 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--borde-sutil);
+  }
+
+  .detalle-evento__descripcion h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+  }
+
+  .detalle-evento__descripcion p {
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* Descripción de tres líneas antes de expandirse */
+  .detalle-evento__descripcion--recortable:not(.detalle-evento__descripcion--expandida) p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .detalle-evento__leer-mas {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 0;
+    border: 0;
+    color: var(--texto-principal);
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .detalle-evento__leer-mas:focus-visible {
+    outline: 2px solid var(--marca-primario);
+    outline-offset: 3px;
+  }
+
+  /* Esqueleto del afiche */
+  .detalle-evento__esqueleto--afiche {
+    height: auto;
+    aspect-ratio: 39 / 28;
+    border-radius: 0;
+  }
+
+  .detalle-evento__esqueleto--titulo {
+    width: 84%;
+  }
+
+  /* FOOTER MÓVIL */
+
+  .sitio--detalle .footer-interior,
+  .sitio--detalle .footer-base {
+    width: calc(100% - 48px);
+    max-width: none;
+  }
+
+  .sitio--detalle .footer-interior {
+    padding-block: 40px 32px;
+    gap: 32px;
+  }
+
+  .sitio--detalle .footer-columnas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 20px;
+  }
+
+  .sitio--detalle .footer-base {
+    padding-block: 24px 32px;
+  }
+}
+
+/* MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+  .detalle-evento__esqueleto {
+    animation: none;
+  }
+}

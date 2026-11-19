@@ -1,0 +1,77 @@
+
+
+/* En escritorio conservamos la distribución original */
+.detalle-evento__secciones-extra {
+  display: contents;
+}
+
+/* Las funciones y localidades no aparecen en escritorio */
+.detalle-evento__adicionales-movil {
+  display: none;
+}
+
+
+@media (max-width: 767px) {
+  /* Estado inicial: igual al Figma */
+  .detalle-evento__secciones-extra {
+    display: none;
+  }
+
+  /* Mostrar contenido cuando se pulsa Leer más */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__secciones-extra {
+    display: block;
+  }
+
+  /* Recuperar el texto completo */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__descripcion p {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+  }
+
+  /* Funciones y localidades */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__adicionales-movil {
+    display: grid;
+    gap: 24px;
+    margin: 24px 20px 0;
+  }
+
+  .detalle-evento[data-detalle-abierto="true"] .detalle-funciones,
+  .detalle-evento[data-detalle-abierto="true"] .detalle-localidades {
+    display: block;
+    margin: 0;
+  }
+
+  /* Tarjetas de localidades en una columna */
+  .detalle-evento__adicionales-movil .detalle-localidades__lista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Sección Cómo llegar */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__ubicacion {
+    display: block;
+    margin: 28px 20px 0;
+  }
+
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__ubicacion-panel {
+    min-height: 180px;
+  }
+
+  /* Políticas cuando haya información */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-evento__politicas {
+    display: block;
+    margin: 28px 20px 0;
+  }
+
+  /* Eventos relacionados */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados {
+    display: block;
+    margin: 32px 20px 0;
+  }
+
+  /* Tarjetas relacionadas adaptadas a móvil */
+  .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados__lista {
+    gap: 16px;
+  }
+}
