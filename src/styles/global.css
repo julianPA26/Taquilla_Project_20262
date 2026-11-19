@@ -1,10 +1,22 @@
+/* MODELO DE CAJA */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* DOCUMENTO */
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
+  width: 100%;
+  min-width: 0;
   margin: 0;
   font-family: var(--fuente-instrument-sans);
   font-size: 16px;
@@ -13,6 +25,29 @@ body {
   color: var(--texto-principal);
   background: var(--fondo-pagina);
 }
+
+/* CONTENEDORES PRINCIPALES */
+
+#root {
+  width: 100%;
+  min-width: 0;
+}
+
+.sitio,
+.sitio > main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ELEMENTOS MULTIMEDIA */
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+/* TIPOGRAFÍA */
 
 h1,
 h2,
@@ -48,6 +83,8 @@ h4 {
   letter-spacing: -0.005em;
 }
 
+/* ENLACES */
+
 a {
   color: var(--texto-marca);
 }
@@ -56,7 +93,10 @@ a:hover {
   color: var(--marca-primario-hover);
 }
 
+/* CONTENEDOR REUTILIZABLE */
+
 .contenedor {
   width: min(100% - var(--espacio-8), 80rem);
+  min-width: 0;
   margin-inline: auto;
 }
