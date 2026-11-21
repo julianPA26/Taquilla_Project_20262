@@ -1,77 +1,383 @@
+/**
+ * DetalleContenidoMovil.css
+ *
+ * Controla las secciones adicionales del detalle
+ * de evento cuando el usuario pulsa "Leer más".
+ *
+ * - Conserva la vista inicial del Figma.
+ * - Evita desbordamientos horizontales.
+ * - Adapta funciones y localidades a móvil.
+ * - Mantiene el desplazamiento de eventos
+ *   relacionados dentro de su propio carrusel.
+ */
 
+/* ========================================
+   ESTRUCTURA DE ESCRITORIO
+   ======================================== */
 
-/* En escritorio conservamos la distribución original */
+/* En escritorio, las secciones siguen
+   formando parte del flujo normal. */
+
 .detalle-evento__secciones-extra {
   display: contents;
 }
 
-/* Las funciones y localidades no aparecen en escritorio */
+/* Las funciones y localidades adicionales
+   se reservan para la versión móvil. */
+
 .detalle-evento__adicionales-movil {
   display: none;
 }
 
+/* ========================================
+   VISTA MÓVIL
+   ======================================== */
 
 @media (max-width: 767px) {
-  /* Estado inicial: igual al Figma */
-  .detalle-evento__secciones-extra {
-    display: none;
+  /* CONTENEDOR PRINCIPAL */
+
+  /*
+   * La página nunca debe superar el ancho
+   * disponible en el dispositivo.
+   */
+
+  .detalle-evento {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
-  /* Mostrar contenido cuando se pulsa Leer más */
+  /* SECCIONES OCULTAS INICIALMENTE */
+
+  .detalle-evento__secciones-extra {
+    display: none;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* APERTURA DEL BOTÓN LEER MÁS */
+
+  /*
+   * Cuando el usuario expande la descripción,
+   * las secciones adicionales aparecen debajo.
+   */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__secciones-extra {
     display: block;
   }
 
-  /* Recuperar el texto completo */
+  /* DESCRIPCIÓN DEL EVENTO */
+
+  /*
+   * Evita que una palabra o dirección larga
+   * aumente el ancho de la pantalla.
+   */
+
+  .detalle-evento__descripcion {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .detalle-evento__descripcion p {
+    max-width: 100%;
+
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  /* Recupera el texto completo al expandir. */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__descripcion p {
     display: block;
+
     overflow: visible;
+
     -webkit-line-clamp: unset;
     line-clamp: unset;
   }
 
-  /* Funciones y localidades */
+  /* CONTENEDOR DE FUNCIONES Y LOCALIDADES */
+
+  /*
+   * Una cuadrícula de una sola columna evita
+   * que los componentes se distribuyan en
+   * columnas demasiado anchas para el móvil.
+   */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__adicionales-movil {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
     gap: 24px;
-    margin: 24px 20px 0;
+
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+
+    margin: 24px clamp(16px, 5.13vw, 20px) 0;
   }
 
-  .detalle-evento[data-detalle-abierto="true"] .detalle-funciones,
-  .detalle-evento[data-detalle-abierto="true"] .detalle-localidades {
+  /* Cada sección debe poder reducir su ancho. */
+
+  .detalle-evento__adicionales-movil > * {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* HABILITAR FUNCIONES Y LOCALIDADES */
+
+  .detalle-evento[data-detalle-abierto="true"]
+    .detalle-evento__adicionales-movil
+    .detalle-funciones,
+  .detalle-evento[data-detalle-abierto="true"]
+    .detalle-evento__adicionales-movil
+    .detalle-localidades {
     display: block;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
     margin: 0;
   }
 
-  /* Tarjetas de localidades en una columna */
-  .detalle-evento__adicionales-movil .detalle-localidades__lista {
+  /* ========================================
+     FUNCIONES DEL EVENTO
+     ======================================== */
+
+  /*
+   * Las fechas y la disponibilidad pueden
+   * ocupar varias líneas cuando sea necesario.
+   */
+
+  .detalle-evento__adicionales-movil .detalle-funciones__lista {
+    display: grid;
     grid-template-columns: minmax(0, 1fr);
+
+    width: 100%;
+    min-width: 0;
   }
 
-  /* Sección Cómo llegar */
+  .detalle-evento__adicionales-movil .detalle-funciones__item {
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 10px;
+  }
+
+  .detalle-evento__adicionales-movil .detalle-funciones__fecha {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+
+  .detalle-evento__adicionales-movil .detalle-funciones__stock {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================
+     LOCALIDADES Y PRECIOS
+     ======================================== */
+
+  /*
+   * Una tarjeta por fila.
+   *
+   * El nombre y el precio pueden reorganizarse
+   * si el dispositivo es demasiado estrecho.
+   */
+
+  .detalle-evento__adicionales-movil .detalle-localidades__lista {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 12px;
+  }
+
+  .detalle-evento__adicionales-movil .detalle-localidades__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 12px;
+  }
+
+  /* Información de la localidad. */
+
+  .detalle-evento__adicionales-movil .detalle-localidades__item > div {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .detalle-evento__adicionales-movil .detalle-localidades__item h3,
+  .detalle-evento__adicionales-movil .detalle-localidades__stock {
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* El precio no debe forzar el ancho. */
+
+  .detalle-evento__adicionales-movil .detalle-localidades__item strong {
+    flex: 0 1 auto;
+
+    min-width: 0;
+    max-width: 100%;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================
+     UBICACIÓN DEL EVENTO
+     ======================================== */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__ubicacion {
     display: block;
-    margin: 28px 20px 0;
+
+    min-width: 0;
+    max-width: 100%;
+
+    margin: 28px clamp(16px, 5.13vw, 20px) 0;
   }
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__ubicacion-panel {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
     min-height: 180px;
   }
 
-  /* Políticas cuando haya información */
+  /* Direcciones largas con saltos de línea. */
+
+  .detalle-evento__ubicacion-panel span,
+  .detalle-evento__direccion {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================
+     POLÍTICAS DEL EVENTO
+     ======================================== */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__politicas {
     display: block;
-    margin: 28px 20px 0;
+
+    min-width: 0;
+    max-width: 100%;
+
+    margin: 28px clamp(16px, 5.13vw, 20px) 0;
   }
 
-  /* Eventos relacionados */
+  .detalle-evento__politicas p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================
+     EVENTOS RELACIONADOS
+     ======================================== */
+
+  /*
+   * El contenedor permanece dentro de la página.
+   * Solamente la lista de tarjetas se desplaza
+   * horizontalmente.
+   */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados {
     display: block;
-    margin: 32px 20px 0;
+
+    min-width: 0;
+    max-width: 100%;
+
+    margin: 32px clamp(16px, 5.13vw, 20px) 0;
   }
 
-  /* Tarjetas relacionadas adaptadas a móvil */
+  /* CARRUSEL HORIZONTAL */
+
   .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados__lista {
+    display: flex;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
     gap: 16px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+
+    padding-bottom: 12px;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cada tarjeta mantiene un ancho limitado. */
+
+  .detalle-evento__secciones-extra .detalle-relacionados__lista > li {
+    flex: 0 0 min(78vw, 280px);
+
+    min-width: 0;
+    max-width: 100%;
+
+    scroll-snap-align: start;
+  }
+
+  /* Ajustes internos de las tarjetas relacionadas. */
+
+  .detalle-evento__secciones-extra .tarjeta-evento,
+  .detalle-evento__secciones-extra .tarjeta-cuerpo {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Evita que el precio y el botón
+     provoquen un ancho mayor al de la tarjeta. */
+
+  .detalle-evento__secciones-extra .tarjeta-pie {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .detalle-evento__secciones-extra .tarjeta-precio {
+    min-width: 0;
+  }
+
+  /* Los nombres de lugares pueden ser largos. */
+
+  .detalle-evento__secciones-extra .tarjeta-datos li {
+    min-width: 0;
+  }
+
+  .detalle-evento__secciones-extra .tarjeta-datos li span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 }
