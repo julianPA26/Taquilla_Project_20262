@@ -1,0 +1,403 @@
+/* CONTENEDORES PRINCIPALES */
+
+.sitio--acceso,
+.sitio--acceso > main {
+  min-width: 0;
+  width: 100%;
+}
+
+.acceso-layout {
+  --acceso-ancho-formulario: 390px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 42%)
+    minmax(0, 58%);
+
+  width: 100%;
+  min-height: 100dvh;
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+  font-family: var(--fuente-instrument-sans);
+}
+
+.acceso-layout *,
+.acceso-layout *::before,
+.acceso-layout *::after {
+  box-sizing: border-box;
+}
+
+/* PANEL DERECHO */
+
+.acceso-layout__principal {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: clamp(32px, 6vw, 100px) clamp(20px, 5vw, 96px);
+}
+
+/* LOGOTIPO MÓVIL */
+
+.acceso-layout__marca-movil {
+  display: none;
+  width: fit-content;
+}
+
+.acceso-layout__marca-movil img {
+  display: block;
+  width: clamp(100px, 9vw, 126px);
+  height: auto;
+}
+
+/* FORMULARIO */
+
+.acceso-formulario {
+  width: min(100%, var(--acceso-ancho-formulario));
+  min-width: 0;
+}
+
+.acceso-formulario h1 {
+  margin: 0 0 12px;
+
+  font-size: clamp(28px, 2.4vw, 36px);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.acceso-formulario__introduccion {
+  margin: 0 0 clamp(22px, 3vw, 34px);
+
+  color: var(--texto-secundario);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* ESTRUCTURA DEL FORMULARIO */
+
+.acceso-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* CAMPOS */
+
+.acceso-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.acceso-campo label {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.acceso-campo input {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+
+  padding: 0 12px;
+
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-md);
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.acceso-campo input::placeholder {
+  color: var(--texto-terciario);
+}
+
+.acceso-campo input[aria-invalid="true"] {
+  border-color: var(--estado-error);
+}
+
+.acceso-campo input:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 2px;
+}
+
+/* CONTRASEÑA VISIBLE */
+
+.acceso-campo__con-ojo {
+  position: relative;
+}
+
+.acceso-campo__con-ojo input {
+  padding-right: 50px;
+}
+
+.acceso-campo__ojo {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+
+  border: 0;
+  border-radius: var(--radio-md);
+
+  background: transparent;
+  color: var(--texto-principal);
+  cursor: pointer;
+}
+
+/* OPCIONES DEL FORMULARIO */
+
+.acceso-formulario__opciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+
+  margin: 0 0 24px;
+}
+
+.acceso-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.acceso-checkbox input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--marca-primario);
+}
+
+.acceso-formulario__opciones a,
+.acceso-formulario__pie a {
+  color: var(--texto-principal);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* BOTÓN PRINCIPAL */
+
+.acceso-boton {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: 0;
+  border-radius: var(--radio-md);
+
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.acceso-boton:hover:not(:disabled) {
+  background: var(--marca-primario-hover);
+}
+
+.acceso-boton:disabled {
+  opacity: 0.76;
+  cursor: not-allowed;
+}
+
+/* INDICADOR DE CARGA */
+
+.acceso-boton__spinner {
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid rgb(255 255 255 / 40%);
+  border-top-color: var(--texto-inverso);
+  border-radius: 50%;
+
+  animation: acceso-giro 0.8s linear infinite;
+}
+
+@keyframes acceso-giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* PIE DEL FORMULARIO */
+
+.acceso-formulario__pie {
+  margin: 22px 0 0;
+  text-align: center;
+
+  font-size: 12px;
+  color: var(--texto-secundario);
+}
+
+/* MENSAJES DE ERROR */
+
+.acceso-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-bottom: 18px;
+  padding: 12px;
+
+  border: 1px solid var(--estado-error);
+  border-radius: var(--radio-md);
+
+  background: var(--estado-error-suave);
+  color: var(--texto-principal);
+
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.acceso-aviso strong {
+  display: block;
+  margin-bottom: 2px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.acceso-aviso p {
+  margin: 0;
+}
+
+.acceso-aviso__icono {
+  display: grid;
+  flex: 0 0 18px;
+
+  width: 18px;
+  height: 18px;
+  place-items: center;
+
+  border: 1.5px solid var(--estado-error);
+  border-radius: 50%;
+
+  color: var(--estado-error);
+  font-weight: 700;
+}
+
+/* BOTÓN REINTENTAR */
+
+.acceso-reintentar {
+  display: block;
+
+  margin: 16px auto 0;
+  padding: 8px 12px;
+
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-md);
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* RECUPERACIÓN DE CONTRASEÑA */
+
+.acceso-codigo-prueba {
+  padding: 12px;
+  border-radius: var(--radio-md);
+
+  background: var(--fondo-sutil);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* ACCESIBILIDAD */
+
+.acceso-campo__ojo:focus-visible,
+.acceso-layout a:focus-visible,
+.acceso-boton:focus-visible,
+.acceso-reintentar:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+
+/* MÓVIL */
+
+@media (max-width: 767px) {
+  .acceso-layout {
+    display: block;
+    min-height: 100dvh;
+  }
+
+  .acceso-layout__principal {
+    display: block;
+    min-height: 100dvh;
+
+    padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5.1vw, 24px) 36px;
+  }
+
+  .acceso-layout__marca-movil {
+    display: inline-flex;
+    margin-bottom: 30px;
+  }
+
+  .acceso-layout__marca-movil img {
+    width: 112px;
+  }
+
+  .acceso-formulario {
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+  }
+
+  .acceso-formulario h1 {
+    font-size: clamp(26px, 6.6vw, 30px);
+  }
+
+  .acceso-formulario__opciones {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .acceso-campo {
+    margin-bottom: 18px;
+  }
+}
+
+/* MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+  .acceso-boton__spinner {
+    animation: none;
+  }
+}

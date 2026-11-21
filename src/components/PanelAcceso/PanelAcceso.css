@@ -1,0 +1,96 @@
+.panel-presentacion {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+
+  padding: clamp(32px, 3.5vw, 80px);
+
+  background: var(--fondo-inverso);
+  color: var(--texto-inverso);
+}
+
+/* LOGOTIPO */
+
+.panel-presentacion__marca {
+  display: inline-flex;
+  width: fit-content;
+}
+
+.panel-presentacion__marca img {
+  display: block;
+  width: clamp(100px, 9vw, 126px);
+  height: auto;
+}
+
+/* CONTENIDO PROMOCIONAL */
+
+.panel-presentacion__contenido {
+  width: 100%;
+  max-width: 430px;
+  min-width: 0;
+}
+
+/* TÍTULO */
+
+.panel-presentacion__contenido h2 {
+  max-width: 12ch;
+  margin: 0 0 clamp(24px, 3vw, 42px);
+
+  color: inherit;
+
+  font-size: clamp(30px, 3.2vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+}
+
+/* LISTA DE BENEFICIOS */
+
+.panel-presentacion__contenido ul {
+  display: grid;
+  gap: clamp(12px, 1.3vw, 20px);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panel-presentacion__contenido li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: clamp(12px, 1.05vw, 15px);
+  line-height: 1.5;
+}
+
+/* ICONOS */
+
+.panel-presentacion__icono {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+  background: var(--borde-inverso);
+}
+
+/* ACCESIBILIDAD */
+
+.panel-presentacion__marca:focus-visible {
+  outline: 2px solid var(--marca-acento);
+  outline-offset: 4px;
+}
+
+/* MÓVIL */
+
+@media (max-width: 767px) {
+  .panel-presentacion {
+    display: none;
+  }
+}
