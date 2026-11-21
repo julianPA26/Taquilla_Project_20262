@@ -1,21 +1,22 @@
 /**
  * FormularioIngreso.jsx
  *
- * Formulario de inicio de sesión de Taquilla.
- * Gestiona validaciones, visibilidad de contraseña,
- * peticiones a la API y estados de error.
- *
- * Los enlaces del Sprint 3 se mantienen visualmente,
- * pero todavía no permiten navegar.
+ * Gestiona el inicio de sesión:
+ * - Validación de los campos.
+ * - Mostrar y ocultar la contraseña.
+ * - Envío de credenciales a la API.
+ * - Mensajes de error y reintento.
+ * - Bloqueo temporal por demasiados intentos.
  */
 
 import { useEffect, useRef, useState } from "react";
+
 import { ErrorApi } from "../../Api/Cliente.js";
 import { iniciarSesion } from "../../Api/Sesion.js";
 
 import { mensajeError, textoAcceso } from "../../Utils/textosAcceso.js";
 
-// Icono para mostrar u ocultar la contraseña.
+// Icono que permite mostrar u ocultar la contraseña.
 function Ojo({ visible }) {
   return (
     <svg
@@ -31,44 +32,50 @@ function Ojo({ visible }) {
     >
       <path d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z" />
       <circle cx="12" cy="12" r="2.5" />
+
       {visible && <path d="M3 3 21 21" />}
     </svg>
   );
 }
 
 export default function FormularioIngreso({ textos, idioma, onIngreso }) {
-  // Obtiene las etiquetas desde GET /textos.
-  const t = (clave) => textoAcceso(textos, idioma, clave);
+  // Obtiene los textos de la API.
+  const t = (nombre) => textoAcceso(textos, idioma, nombre);
 
-  // Estados de los campos.
+  // Datos introducidos por el usuario.
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
   const [recordar, setRecordar] = useState(true);
   const [visible, setVisible] = useState(false);
 
-  // Estados de validación y envío.
+  // Estados de validación y solicitud.
   const [erroresCampos, setErroresCampos] = useState({});
   const [errorCodigo, setErrorCodigo] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  // Bloqueo temporal del formulario.
+  // Contador de bloqueo cuando la API responde 429.
   const [bloqueoHasta, setBloqueoHasta] = useState(0);
   const [segundosRestantes, setSegundosRestantes] = useState(0);
 
-  // Referencias de los campos y control de envíos.
+  // Referencias para controlar el foco y los envíos.
   const correoRef = useRef(null);
   const claveRef = useRef(null);
   const envioEnCurso = useRef(false);
 
   const bloqueado = segundosRestantes > 0;
 
-  // Actualiza el contador cuando la API responde 429.
+  /**
+   * Actualiza el contador y libera el formulario
+   * cuando termina el tiempo de bloqueo.
+   */
   useEffect(() => {
     if (!bloqueoHasta) return;
 
-    const actualizar = () => {
-      setSegundosRestantes(Math.max(0, Math.ceil((bloqueoHasta - Date.now()) / 1000)));
-    };
+    function actualizar() {
+      const restantes = Math.max(0, Math.ceil((bloqueoHasta - Date.now()) / 1000));
+
+      setSegundosRestantes(restantes);
+    }
 
     actualizar();
 
@@ -77,10 +84,17 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     return () => window.clearInterval(intervalo);
   }, [bloqueoHasta]);
 
-  // Actualiza los valores y limpia errores anteriores.
+  /**
+   * Actualiza un campo y limpia los errores anteriores.
+   */
   function actualizarCampo(campo, valor) {
-    if (campo === "correo") setCorreo(valor);
-    if (campo === "clave") setClave(valor);
+    if (campo === "correo") {
+      setCorreo(valor);
+    }
+
+    if (campo === "clave") {
+      setClave(valor);
+    }
 
     setErroresCampos((actual) => ({
       ...actual,
@@ -90,33 +104,38 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     setErrorCodigo("");
   }
 
-  // Valida los campos y envía el formulario a la API.
+  /**
+   * Valida el formulario y solicita iniciar sesión.
+   */
   async function enviar() {
     if (envioEnCurso.current || bloqueado) return;
 
     const nuevosErrores = {};
 
+    // Comprueba el correo.
     if (!correo.trim()) {
       nuevosErrores.correo = t("correoObligatorio");
     } else if (!correoRef.current?.validity.valid) {
       nuevosErrores.correo = t("correoInvalido");
     }
 
+    // Comprueba la contraseña.
     if (!clave) {
       nuevosErrores.clave = t("claveObligatoria");
     }
 
-    // Muestra los errores y enfoca el primer campo inválido.
-    if (Object.keys(nuevosErrores).length) {
+    // Muestra los errores antes de enviar.
+    if (Object.keys(nuevosErrores).length > 0) {
       setErroresCampos(nuevosErrores);
       setErrorCodigo("validacion");
 
-      (nuevosErrores.correo ? correoRef : claveRef).current?.focus();
+      const primerCampo = nuevosErrores.correo ? correoRef : claveRef;
 
+      primerCampo.current?.focus();
       return;
     }
 
-    // Evita enviar dos veces las mismas credenciales.
+    // Impide solicitudes duplicadas.
     envioEnCurso.current = true;
     setEnviando(true);
     setErrorCodigo("");
@@ -124,27 +143,34 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     try {
       const datos = await iniciarSesion(correo.trim(), clave);
 
-      // No almacenamos el token en localStorage.
+      // La sesión se gestiona mediante la API.
+      // No almacenamos tokens en localStorage.
       onIngreso(datos.usuario);
     } catch (error) {
       if (error instanceof ErrorApi) {
         setErrorCodigo(error.codigo || "error_interno");
 
-        // Procesa errores de validación de la API.
+        // Errores de validación que devuelve el servidor.
         if (error.codigo === "validacion") {
           const campos = error.campos || {};
 
           setErroresCampos(campos);
 
-          (campos.correo ? correoRef : claveRef).current?.focus();
+          const primerCampo = campos.correo ? correoRef : claveRef;
+
+          primerCampo.current?.focus();
         }
 
-        // Bloquea el formulario durante Retry-After.
+        // Respeta el tiempo de espera del servidor.
         if (error.status === 429) {
-          setBloqueoHasta(Date.now() + error.retryAfter * 1000);
+          const segundos = Math.max(0, Number(error.retryAfter) || 0);
+
+          setBloqueoHasta(Date.now() + segundos * 1000);
+
+          setSegundosRestantes(Math.ceil(segundos));
         }
       } else {
-        // Error de conexión.
+        // Conserva los campos cuando falla la conexión.
         setErrorCodigo("conexion");
       }
     } finally {
@@ -153,19 +179,38 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     }
   }
 
-  // Evita que el navegador recargue la página.
+  // Evita la recarga del navegador al enviar.
   function manejarEnvio(evento) {
     evento.preventDefault();
     void enviar();
   }
 
-  // Mensajes de error provenientes de la API.
+  // Mensajes de la alerta obtenidos desde GET /textos.
+  const erroresIngreso = textos?.paginas?.ingresar?.errores;
+
+  const tituloAlerta =
+    errorCodigo === "validacion"
+      ? erroresIngreso?.camposObligatorios?.titulo
+      : errorCodigo === "credenciales_invalidas"
+        ? erroresIngreso?.credenciales?.titulo
+        : errorCodigo === "conexion"
+          ? erroresIngreso?.conexion?.titulo
+          : errorCodigo === "demasiadas_peticiones"
+            ? erroresIngreso?.demasiadosIntentos?.titulo
+            : "";
+
   const textoAlerta = errorCodigo
-    ? mensajeError(textos, idioma, errorCodigo, {
-        segundos: segundosRestantes,
-      })
+    ? mensajeError(textos, idioma, errorCodigo, { segundos: segundosRestantes })
     : "";
 
+  // El botón principal también sirve para reintentar.
+  const textoBoton = enviando
+    ? t("ingresando")
+    : errorCodigo === "conexion"
+      ? t("reintentar")
+      : t("ingresar");
+
+  // Asocia los errores visuales a sus campos.
   const idCorreoError = erroresCampos.correo ? "ingreso-correo-error" : undefined;
 
   const idClaveError = erroresCampos.clave ? "ingreso-clave-error" : undefined;
@@ -178,7 +223,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
 
       <p className="acceso-formulario__introduccion">{t("descripcion")}</p>
 
-      {/* ALERTAS DE ERROR */}
+      {/* ALERTA DE VALIDACIÓN O CONEXIÓN */}
 
       {errorCodigo && (
         <div className="acceso-aviso" role="alert">
@@ -186,19 +231,19 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
             !
           </span>
 
-          <div>
-            {errorCodigo === "validacion" && <strong>{t("camposMarcados")}</strong>}
+          <div className="acceso-aviso__contenido">
+            {tituloAlerta && <strong>{tituloAlerta}</strong>}
 
-            <p>{textoAlerta}</p>
+            {textoAlerta && <p>{textoAlerta}</p>}
           </div>
         </div>
       )}
 
-      {/* FORMULARIO */}
+      {/* FORMULARIO DE INGRESO */}
 
       <form noValidate onSubmit={manejarEnvio} aria-busy={enviando}>
         <fieldset className="acceso-fieldset" disabled={enviando || bloqueado}>
-          {/* CORREO */}
+          {/* CORREO ELECTRÓNICO */}
 
           <div className="acceso-campo">
             <label htmlFor="ingreso-correo">{t("correo")}</label>
@@ -223,6 +268,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
             )}
           </div>
 
+          {/* CONTRASEÑA */}
 
           <div className="acceso-campo">
             <label htmlFor="ingreso-clave">{t("clave")}</label>
@@ -257,6 +303,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
             )}
           </div>
 
+          {/* OPCIONES DEL FORMULARIO */}
 
           <div className="acceso-formulario__opciones">
             <label className="acceso-checkbox">
@@ -269,30 +316,21 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
               <span>{t("recordar")}</span>
             </label>
 
+            {/* Sprint 3: texto sin navegación temporalmente */}
             <a>{t("olvidaste")}</a>
           </div>
 
+          {/* BOTÓN PRINCIPAL: INGRESAR O REINTENTAR */}
 
           <button type="submit" className="acceso-boton" disabled={enviando || bloqueado}>
             {enviando && <span className="acceso-boton__spinner" aria-hidden="true" />}
 
-            {enviando ? t("ingresando") : t("ingresar")}
+            {textoBoton}
           </button>
         </fieldset>
       </form>
 
-
-      {errorCodigo === "conexion" && (
-        <button
-          type="button"
-          className="acceso-reintentar"
-          disabled={enviando}
-          onClick={() => void enviar()}
-        >
-          {t("reintentar")}
-        </button>
-      )}
-
+      {/* ENLACE DE REGISTRO PENDIENTE DEL SPRINT 3 */}
 
       <p className="acceso-formulario__pie">
         {t("noTienesCuenta")} <a>{t("crearCuenta")}</a>

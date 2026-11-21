@@ -2,20 +2,25 @@
  * Navbar.jsx
  *
  * Navegación principal de Taquilla.
- * Muestra las opciones públicas, el buscador,
- * los controles de idioma y el estado de sesión.
  *
- * Cuando hay un usuario autenticado, sustituye
- * los botones de ingreso por su menú de cuenta.
+ * Administra:
+ * - Enlaces de Inicio y Explorar.
+ * - Buscador de eventos.
+ * - Selector de idioma y accesibilidad.
+ * - Inicio y cierre de sesión.
+ * - Menú responsive de escritorio y móvil.
+ *
+ * La información de la cuenta se delega a MenuSesion.
  */
-
 import { useEffect, useRef, useState } from "react";
 import Icono from "../Icono/Icono.jsx";
+import MenuSesion from "./MenuSesion.jsx";
 import logoNormal from "../../Assets/Logos/logo-normal.svg";
 import logoInverso from "../../Assets/Logos/logo-inverso.svg";
 import "./Navbar.css";
 import "./NavbarSesion.css";
 
+// Destinos de navegación disponibles en el Sprint 2.
 const DESTINOS = {
   inicio: "#inicio",
   explorar: "#explorar",
@@ -37,37 +42,22 @@ export default function Navbar({
   onAbrirAccesibilidad,
   onAbrirAuth,
 }) {
-  // Estados del menú móvil y del buscador.
+  // Estados de navegación móvil y búsqueda.
   const [abierto, setAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
 
+  // Permite devolver el foco al botón del menú móvil.
   const botonMenu = useRef(null);
 
-  // Textos de navegación provenientes de la API.
+  // Textos procedentes de GET /textos.
   const nav = textos?.navbar;
   const textosMovil = textos?.menuMovil;
-  const ingles = idioma === "en";
-
-  const abrirMenu = textosMovil?.abrir;
-  const cerrarMenu = textosMovil?.cerrar;
 
   const enlaces = [
     ["inicio", nav?.enlaces?.inicio ?? textos?.componentes?.migas?.inicio],
     ["explorar", nav?.enlaces?.explorar],
   ];
 
-  const etiquetaIdioma = textos?.idioma?.tituloMovil;
-
-  const etiquetaAccesibilidad = textosMovil?.secciones?.accesibilidad;
-
-  const textoIngresar = nav?.botones?.ingresar;
-
-  // El nombre visible proviene de GET /sesion.
-  const nombreUsuario = usuario?.nombre ?? usuario?.correo ?? nav?.usuario?.panel ?? "";
-
-  const etiquetaMenuUsuario = nav?.usuario?.menu?.replace("{nombre}", nombreUsuario);
-
-  // Aplica las clases del Navbar según la vista actual.
   const claseNavbar = [
     "navbar",
     abierto ? "is-abierto" : "",
@@ -89,11 +79,13 @@ export default function Navbar({
 
     document.addEventListener("keydown", cerrarConEscape);
 
-    return () => document.removeEventListener("keydown", cerrarConEscape);
+    return () => {
+      document.removeEventListener("keydown", cerrarConEscape);
+    };
   }, [abierto]);
 
   /**
-   * Envía la búsqueda a App.jsx para abrir Explorar.
+   * Envía el término buscado a App.jsx.
    */
   function buscar(evento) {
     evento.preventDefault();
@@ -107,7 +99,7 @@ export default function Navbar({
   }
 
   /**
-   * Abre el formulario de ingreso y cierra el menú móvil.
+   * Navega al formulario de ingreso.
    */
   function abrirIngreso(evento) {
     evento.preventDefault();
@@ -116,7 +108,7 @@ export default function Navbar({
   }
 
   /**
-   * Mantiene visible Crear cuenta sin navegar al Sprint 3.
+   * Mantiene desactivado el registro del Sprint 3.
    */
   function mantenerRegistroPendiente(evento) {
     evento.preventDefault();
@@ -124,7 +116,7 @@ export default function Navbar({
   }
 
   /**
-   * Solicita cerrar sesión y cierra el menú móvil.
+   * Cierra el menú móvil y solicita cerrar sesión.
    */
   function salir() {
     setAbierto(false);
@@ -133,10 +125,7 @@ export default function Navbar({
 
   return (
     <header className={claseNavbar}>
-      <nav
-        className="navbar-interior"
-        aria-label={nav?.aria?.menu ?? (ingles ? "Main navigation" : "Navegación principal")}
-      >
+      <nav className="navbar-interior" aria-label={textos?.sitio?.nombre}>
         {/* LOGOTIPO */}
 
         <a
@@ -162,9 +151,11 @@ export default function Navbar({
           />
         </a>
 
-        {/* ACCIONES VISIBLES EN MÓVIL */}
+        {/* ENCABEZADO MÓVIL */}
 
         <div className="navbar-movil-acciones">
+          {/* Acceso a la búsqueda */}
+
           <a
             className="navbar-icono"
             href="#explorar"
@@ -174,27 +165,29 @@ export default function Navbar({
             <Icono nombre="buscar" />
           </a>
 
-          {usuario ? (
-            <span
-              className="navbar-movil-ingresar navbar-sesion__nombre-movil"
-              title={nombreUsuario}
-            >
-              {nombreUsuario}
-            </span>
-          ) : (
+          {/*
+           * Si hay una sesión activa, NO mostramos
+           * el nombre del usuario en el encabezado.
+           *
+           * Su perfil aparecerá dentro del menú móvil.
+           */}
+
+          {!usuario && (
             <a className="navbar-movil-ingresar" href="/ingresar" onClick={abrirIngreso}>
-              {textoIngresar}
+              {nav?.botones?.ingresar}
             </a>
           )}
+
+          {/* Botón hamburguesa */}
 
           <button
             ref={botonMenu}
             type="button"
             className="navbar-icono"
-            aria-label={abierto ? cerrarMenu : abrirMenu}
+            aria-label={abierto ? textosMovil?.cerrar : textosMovil?.abrir}
             aria-expanded={abierto}
             aria-controls="navbar-panel"
-            onClick={() => setAbierto((valor) => !valor)}
+            onClick={() => setAbierto((actual) => !actual)}
           >
             <Icono nombre={abierto ? "cerrar" : "menu"} />
           </button>
@@ -207,33 +200,28 @@ export default function Navbar({
           className={`navbar-panel${abierto ? " is-abierto" : ""}`}
           aria-busy={cargando}
         >
-          {/* Estados de carga de los textos */}
+          {/* ESTADOS DE CARGA Y ERROR */}
 
           {cargando && (
             <p className="navbar-estado" role="status">
-              {textos?.estados?.cargando?.indicador ??
-                (ingles ? "Loading navigation…" : "Cargando navegación…")}
+              {textos?.estados?.cargando?.indicador}
             </p>
           )}
 
           {error && (
             <div className="navbar-estado" role="alert">
-              <p>
-                {textos?.estados?.error?.texto ??
-                  (ingles ? "Navigation could not be loaded." : "No pudimos cargar el menú.")}
-              </p>
+              <p>{textos?.estados?.error?.texto}</p>
 
               <button type="button" onClick={recargar}>
-                {textos?.estados?.error?.botones?.reintentar ??
-                  (ingles ? "Try again" : "Reintentar")}
+                {textos?.estados?.error?.botones?.reintentar}
               </button>
             </div>
           )}
 
+          {/* ENLACES DE INICIO Y EXPLORAR */}
+
           {nav && (
             <>
-              {/* ENLACES PRINCIPALES */}
-
               <ul className="navbar-enlaces">
                 {enlaces.map(([clave, etiqueta]) => (
                   <li key={clave}>
@@ -248,7 +236,7 @@ export default function Navbar({
                 ))}
               </ul>
 
-              {/* BUSCADOR */}
+              {/* BUSCADOR DE EVENTOS */}
 
               <form
                 className="navbar-buscador"
@@ -272,12 +260,14 @@ export default function Navbar({
             </>
           )}
 
-          {/* IDIOMA Y ACCESIBILIDAD */}
+          {/* IDIOMA, ACCESIBILIDAD Y CUENTA */}
 
           <div className="navbar-utilidades">
             <div className="navbar-ajustes">
+              {/* SELECTOR DE IDIOMA */}
+
               <div className="navbar-fila">
-                <span className="navbar-fila-etiqueta">{etiquetaIdioma}</span>
+                <span className="navbar-fila-etiqueta">{textos?.idioma?.tituloMovil}</span>
 
                 <div className="navbar-idioma-movil" role="group" aria-label={nav?.aria?.idioma}>
                   <button
@@ -298,8 +288,12 @@ export default function Navbar({
                 </div>
               </div>
 
+              {/* ACCESIBILIDAD */}
+
               <div className="navbar-fila navbar-fila-accesibilidad">
-                <span className="navbar-fila-etiqueta">{etiquetaAccesibilidad}</span>
+                <span className="navbar-fila-etiqueta">
+                  {textosMovil?.secciones?.accesibilidad}
+                </span>
 
                 <button
                   className="navbar-icono navbar-accesibilidad"
@@ -315,39 +309,28 @@ export default function Navbar({
               </div>
             </div>
 
-            {/* ESTADO DE LA CUENTA */}
+            {/* CUENTA DEL USUARIO */}
 
             {nav && (
               <div className="navbar-acciones">
                 {usuario ? (
-                  <details className="navbar-sesion">
-                    <summary aria-label={etiquetaMenuUsuario}>
-                      <span className="navbar-sesion__nombre" title={nombreUsuario}>
-                        {nombreUsuario}
-                      </span>
-
-                      <span aria-hidden="true">▾</span>
-                    </summary>
-
-                    <div className="navbar-sesion__panel">
-                      <button
-                        type="button"
-                        className="navbar-sesion__salir"
-                        disabled={cerrandoSesion}
-                        onClick={salir}
-                      >
-                        {nav.usuario.cerrarSesion}
-                      </button>
-
-                      {errorSesion && (
-                        <p className="navbar-sesion__error" role="alert">
-                          {errorSesion}
-                        </p>
-                      )}
-                    </div>
-                  </details>
+                  /*
+                   * El mismo componente muestra:
+                   *
+                   * Escritorio: avatar con desplegable.
+                   * Móvil: perfil y botón de salida.
+                   */
+                  <MenuSesion
+                    usuario={usuario}
+                    textos={textos}
+                    cerrandoSesion={cerrandoSesion}
+                    errorSesion={errorSesion}
+                    onCerrarSesion={salir}
+                  />
                 ) : (
                   <>
+                    {/* INICIAR SESIÓN */}
+
                     <a
                       className="navbar-accion navbar-accion-contorno"
                       href="/ingresar"
@@ -356,7 +339,8 @@ export default function Navbar({
                       {nav.botones.ingresar}
                     </a>
 
-                    {/* Sprint 3: enlace visible sin navegación */}
+                    {/* REGISTRO PENDIENTE DEL SPRINT 3 */}
+
                     <a
                       className="navbar-accion"
                       href="#crear-cuenta"

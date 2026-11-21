@@ -1,95 +1,99 @@
 /**
  * NavbarSesion.css
  *
- * Estilos del menú de usuario autenticado.
- * Se complementa con el Navbar.css existente.
+ * Estilos de la sesión iniciada.
+ *
+ * Escritorio: avatar circular y tarjeta flotante.
+ * Móvil: perfil integrado al final del menú.
  */
 
-/* CONTENEDOR DE LA CUENTA */
+/* ESTILOS COMPARTIDOS */
 
-.navbar-sesion {
-  position: relative;
+.navbar-sesion,
+.navbar-sesion-movil {
   min-width: 0;
   font-family: var(--fuente-instrument-sans);
 }
 
-/* BOTÓN QUE ABRE EL MENÚ */
-
-.navbar-sesion > summary {
-  display: flex;
-  min-width: 110px;
-  max-width: clamp(140px, 17vw, 220px);
-  min-height: 40px;
-
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--espacio-2);
-
-  padding: 0 var(--espacio-3);
-
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-md);
-
-  color: var(--texto-principal);
-  background: var(--fondo-superficie);
-
-  font-size: 14px;
-  font-weight: 500;
-
-  cursor: pointer;
-  list-style: none;
+.navbar-sesion {
+  position: relative;
 }
 
-.navbar-sesion > summary::-webkit-details-marker {
+.navbar-sesion-movil {
   display: none;
 }
 
-.navbar-sesion > summary:focus-visible {
-  outline: 2px solid var(--marca-primario);
-  outline-offset: 3px;
+/* AVATAR CON INICIALES */
+
+.navbar-sesion__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: var(--radio-completo);
+
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-/* NOMBRE DEL USUARIO */
+/* DATOS DEL PERFIL */
 
-.navbar-sesion__nombre {
+.navbar-sesion__perfil {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+
+  width: 100%;
+  min-width: 0;
+}
+
+.navbar-sesion__datos {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-sesion__nombre-completo {
   overflow: hidden;
+
+  color: var(--texto-principal);
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.navbar-sesion__nombre-movil {
-  display: inline-block;
-  max-width: min(35vw, 145px);
+.navbar-sesion__correo {
   overflow: hidden;
+
+  color: var(--texto-secundario);
+
+  font-size: 11px;
+  line-height: 16px;
+
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-/* PANEL DESPLEGABLE */
-
-.navbar-sesion__panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 30;
-
-  min-width: 190px;
-  padding: var(--espacio-2);
-
-  border: 1px solid var(--borde-sutil);
-  border-radius: var(--radio-md);
-
-  background: var(--fondo-superficie);
-  box-shadow: var(--sombra-flotante);
-}
-
-/* CERRAR SESIÓN */
+/* BOTÓN DE CERRAR SESIÓN */
 
 .navbar-sesion__salir {
-  display: block;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--espacio-2);
 
-  padding: var(--espacio-3);
+  width: 100%;
+  min-height: 42px;
+
+  padding: var(--espacio-2) var(--espacio-3);
 
   border: 0;
   border-radius: var(--radio-sm);
@@ -97,12 +101,21 @@
   background: transparent;
   color: var(--texto-principal);
 
-  font-size: 14px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 18px;
   text-align: left;
+
   cursor: pointer;
 }
 
-.navbar-sesion__salir:hover {
+.navbar-sesion__salir svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.navbar-sesion__salir:hover:not(:disabled) {
   background: var(--fondo-sutil);
 }
 
@@ -111,36 +124,220 @@
   cursor: not-allowed;
 }
 
-/* ERROR AL CERRAR SESIÓN */
+.navbar-sesion__salir:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 2px;
+}
+
+/* ERROR DE CIERRE DE SESIÓN */
 
 .navbar-sesion__error {
   margin: var(--espacio-2) 0 0;
   padding: var(--espacio-2);
 
   color: var(--estado-error);
+
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
-/* MENÚ RESPONSIVE */
+/* ESCRITORIO: AVATAR DEL NAVBAR */
 
-@media (max-width: 1199.98px) {
-  .navbar-sesion {
-    width: 100%;
+@media (min-width: 1200px) {
+  .navbar-sesion-movil {
+    display: none;
+  }
+
+  .navbar-sesion--escritorio {
+    display: block;
   }
 
   .navbar-sesion > summary {
-    width: 100%;
-    max-width: none;
-    min-height: 44px;
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: var(--radio-completo);
+
+    background: var(--fondo-sutil);
+    color: var(--texto-principal);
+
+    cursor: pointer;
+    list-style: none;
   }
 
+  .navbar-sesion > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .navbar-sesion > summary::marker {
+    content: "";
+  }
+
+  .navbar-sesion > summary:hover,
+  .navbar-sesion[open] > summary {
+    background: var(--fondo-presionado);
+  }
+
+  .navbar-sesion > summary:focus-visible {
+    outline: 2px solid var(--marca-primario);
+    outline-offset: 3px;
+  }
+
+  /* Iniciales en el encabezado */
+
+  .navbar-sesion__avatar--boton {
+    width: 40px;
+    height: 40px;
+
+    font-size: 12px;
+    letter-spacing: 0.01em;
+  }
+
+  /* Tarjeta flotante */
+
   .navbar-sesion__panel {
-    position: static;
+    position: absolute;
+    top: calc(100% + var(--espacio-2));
+    right: 0;
+    z-index: 30;
+
+    width: clamp(235px, 19vw, 260px);
+
+    padding: var(--espacio-2);
+
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-md);
+
+    background: var(--fondo-superficie);
+    box-shadow: var(--sombra-flotante);
+  }
+
+  .navbar-sesion__panel .navbar-sesion__perfil {
+    padding: var(--espacio-2);
+  }
+
+  /* Avatar oscuro dentro de la tarjeta */
+
+  .navbar-sesion__avatar--perfil {
+    width: 36px;
+    height: 36px;
+
+    background: var(--fondo-inverso);
+    color: var(--texto-inverso);
+
+    font-size: 12px;
+  }
+
+  /* Separador de la tarjeta */
+
+  .navbar-sesion__separador {
+    height: 1px;
+
+    margin: var(--espacio-2) var(--espacio-2);
+
+    background: var(--borde-sutil);
+  }
+}
+
+/* MÓVIL Y TABLETA: PERFIL AL FINAL DEL MENÚ */
+
+@media (max-width: 1199.98px) {
+  /* Oculta completamente el desplegable de escritorio */
+
+  .navbar-sesion--escritorio {
+    display: none;
+  }
+
+  /* Información de cuenta siempre visible */
+
+  .navbar-sesion-movil {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+
     width: 100%;
     min-width: 0;
 
-    margin-top: var(--espacio-2);
-    box-shadow: none;
+    padding: clamp(4px, 1.5vw, 8px) var(--espacio-2) 0;
+  }
+
+  .navbar-sesion-movil .navbar-sesion__perfil {
+    min-height: 36px;
+    gap: var(--espacio-2);
+  }
+
+  /* Avatar gris y pequeño, como en el Figma */
+
+  .navbar-sesion-movil .navbar-sesion__avatar--perfil {
+    width: 32px;
+    height: 32px;
+
+    background: var(--fondo-sutil);
+    color: var(--texto-principal);
+
+    font-size: 11px;
+  }
+
+  /* Datos compactos del usuario */
+
+  .navbar-sesion-movil .navbar-sesion__nombre-completo {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .navbar-sesion-movil .navbar-sesion__correo {
+    font-size: 11px;
+    line-height: 15px;
+  }
+
+  /* Botón ancho con borde, sin icono */
+
+  .navbar-sesion-movil .navbar-sesion__salir {
+    justify-content: center;
+
+    width: 100%;
+    min-height: 42px;
+
+    padding: var(--espacio-2) var(--espacio-3);
+
+    border: 1px solid var(--borde-fuerte);
+    border-radius: var(--radio-md);
+
+    background: var(--fondo-superficie);
+    color: var(--texto-principal);
+
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .navbar-sesion-movil .navbar-sesion__salir svg {
+    display: none;
+  }
+
+  .navbar-sesion-movil .navbar-sesion__salir:hover:not(:disabled) {
+    background: var(--fondo-sutil);
+  }
+}
+
+/* PANTALLAS MÓVILES ESTRECHAS */
+
+@media (max-width: 360px) {
+  .navbar-sesion-movil {
+    padding-inline: var(--espacio-1);
+  }
+
+  .navbar-sesion-movil .navbar-sesion__perfil {
+    gap: var(--espacio-2);
   }
 }

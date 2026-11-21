@@ -1,9 +1,19 @@
-/* CONTENEDORES PRINCIPALES */
+/**
+ * Acceso.css
+ *
+ * Estilos de la página de inicio de sesión.
+ * Incluye la distribución responsive, los campos,
+ * los botones y los estados de validación.
+ *
+ * El panel negro conserva su propio CSS.
+ */
+
+/* CONTENEDOR DE LA PÁGINA */
 
 .sitio--acceso,
 .sitio--acceso > main {
-  min-width: 0;
   width: 100%;
+  min-width: 0;
 }
 
 .acceso-layout {
@@ -28,19 +38,21 @@
   box-sizing: border-box;
 }
 
-/* PANEL DERECHO */
+/* COLUMNA DERECHA */
 
 .acceso-layout__principal {
   display: flex;
   min-width: 0;
+  width: 100%;
+
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   padding: clamp(32px, 6vw, 100px) clamp(20px, 5vw, 96px);
 }
 
-/* LOGOTIPO MÓVIL */
+/* LOGOTIPO EXCLUSIVO DE MÓVIL */
 
 .acceso-layout__marca-movil {
   display: none;
@@ -57,15 +69,18 @@
 
 .acceso-formulario {
   width: min(100%, var(--acceso-ancho-formulario));
+
   min-width: 0;
+  margin-inline: auto;
 }
 
 .acceso-formulario h1 {
   margin: 0 0 12px;
 
+  color: var(--texto-principal);
   font-size: clamp(28px, 2.4vw, 36px);
-  line-height: 1.15;
   font-weight: 600;
+  line-height: 1.15;
   letter-spacing: -0.035em;
 }
 
@@ -73,32 +88,46 @@
   margin: 0 0 clamp(22px, 3vw, 34px);
 
   color: var(--texto-secundario);
+
   font-size: 14px;
   line-height: 1.55;
 }
 
 /* ESTRUCTURA DEL FORMULARIO */
 
-.acceso-fieldset {
+.acceso-formulario form {
+  width: 100%;
   min-width: 0;
+  margin: 0;
+}
+
+.acceso-fieldset {
+  width: 100%;
+  min-width: 0;
+
   margin: 0;
   padding: 0;
   border: 0;
 }
 
-/* CAMPOS */
+/* CAMPOS DE ENTRADA */
 
 .acceso-campo {
   display: flex;
+  min-width: 0;
+
   flex-direction: column;
   gap: 7px;
+
   margin-bottom: 18px;
 }
 
 .acceso-campo label {
+  color: var(--texto-principal);
+
   font-size: 13px;
-  line-height: 18px;
   font-weight: 500;
+  line-height: 18px;
 }
 
 .acceso-campo input {
@@ -108,6 +137,7 @@
   min-width: 0;
   height: 46px;
 
+  margin: 0;
   padding: 0 12px;
 
   border: 1px solid var(--borde-fuerte);
@@ -116,27 +146,46 @@
   background: var(--fondo-superficie);
   color: var(--texto-principal);
 
+  font-family: inherit;
   font-size: 14px;
   line-height: 20px;
 }
 
 .acceso-campo input::placeholder {
   color: var(--texto-terciario);
+  opacity: 1;
 }
 
-.acceso-campo input[aria-invalid="true"] {
-  border-color: var(--estado-error);
-}
+/* FOCO Y VALIDACIÓN */
 
 .acceso-campo input:focus-visible {
   outline: 2px solid var(--marca-primario);
   outline-offset: 2px;
 }
 
-/* CONTRASEÑA VISIBLE */
+.acceso-campo input[aria-invalid="true"] {
+  border-color: var(--estado-error);
+}
+
+.acceso-campo__error {
+  display: block;
+  min-width: 0;
+
+  color: var(--estado-error);
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+
+  overflow-wrap: break-word;
+}
+
+/* CAMPO CON BOTÓN PARA MOSTRAR CONTRASEÑA */
 
 .acceso-campo__con-ojo {
   position: relative;
+  width: 100%;
+  min-width: 0;
 }
 
 .acceso-campo__con-ojo input {
@@ -147,29 +196,31 @@
   position: absolute;
   top: 0;
   right: 0;
-
   display: grid;
   width: 46px;
   height: 46px;
   place-items: center;
-
+  padding: 0;
   border: 0;
   border-radius: var(--radio-md);
-
   background: transparent;
   color: var(--texto-principal);
   cursor: pointer;
 }
 
-/* OPCIONES DEL FORMULARIO */
+.acceso-campo__ojo:hover:not(:disabled) {
+  background: var(--fondo-sutil);
+}
+
+/* CHECKBOX Y ENLACE DE RECUPERACIÓN */
 
 .acceso-formulario__opciones {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px 16px;
 
+  gap: 8px 16px;
   margin: 0 0 24px;
 }
 
@@ -177,24 +228,30 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-
+  min-width: 0;
+  color: var(--texto-principal);
   font-size: 12px;
+  line-height: 18px;
   cursor: pointer;
 }
 
 .acceso-checkbox input {
+  flex-shrink: 0;
   width: 15px;
   height: 15px;
   margin: 0;
   accent-color: var(--marca-primario);
 }
 
+/* ENLACES VISUALES DEL SPRINT 3 */
 .acceso-formulario__opciones a,
 .acceso-formulario__pie a {
   color: var(--texto-principal);
+
   font-size: 12px;
-  line-height: 18px;
   font-weight: 500;
+  line-height: 18px;
+
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -210,15 +267,18 @@
   justify-content: center;
   gap: 10px;
 
+  padding: 12px 16px;
+
   border: 0;
   border-radius: var(--radio-md);
 
   background: var(--marca-primario);
   color: var(--texto-inverso);
 
-  font: inherit;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
 
   cursor: pointer;
 }
@@ -235,6 +295,8 @@
 /* INDICADOR DE CARGA */
 
 .acceso-boton__spinner {
+  flex-shrink: 0;
+
   width: 16px;
   height: 16px;
 
@@ -251,150 +313,187 @@
   }
 }
 
-/* PIE DEL FORMULARIO */
+/* MENSAJE INFERIOR DEL FORMULARIO */
 
 .acceso-formulario__pie {
   margin: 22px 0 0;
-  text-align: center;
 
-  font-size: 12px;
   color: var(--texto-secundario);
-}
-
-/* MENSAJES DE ERROR */
-
-.acceso-aviso {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-
-  margin-bottom: 18px;
-  padding: 12px;
-
-  border: 1px solid var(--estado-error);
-  border-radius: var(--radio-md);
-
-  background: var(--estado-error-suave);
-  color: var(--texto-principal);
 
   font-size: 12px;
   line-height: 18px;
+  text-align: center;
+}
+
+/* ALERTA DE ERROR */
+
+/*
+ * La alerta utiliza dos columnas:
+ * una para el icono y otra para el mensaje.
+ *
+ * Su altura depende del texto y no es fija,
+ * evitando que el contenido se salga.
+ */
+
+.acceso-aviso {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--estado-error);
+  border-radius: var(--radio-md);
+  background: var(--estado-error-suave);
+  color: var(--texto-principal);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.acceso-aviso__contenido {
+  min-width: 0;
+  width: 100%;
 }
 
 .acceso-aviso strong {
   display: block;
-  margin-bottom: 2px;
-
+  margin: 0 0 4px;
+  color: var(--texto-principal);
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .acceso-aviso p {
+  display: block;
   margin: 0;
+  color: var(--texto-principal);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
+
+/* ICONO DE LA ALERTA */
 
 .acceso-aviso__icono {
   display: grid;
-  flex: 0 0 18px;
-
+  place-items: center;
   width: 18px;
   height: 18px;
-  place-items: center;
-
   border: 1.5px solid var(--estado-error);
   border-radius: 50%;
-
   color: var(--estado-error);
+  font-size: 12px;
   font-weight: 700;
-}
-
-/* BOTÓN REINTENTAR */
-
-.acceso-reintentar {
-  display: block;
-
-  margin: 16px auto 0;
-  padding: 8px 12px;
-
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-md);
-
-  background: var(--fondo-superficie);
-  color: var(--texto-principal);
-
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-/* RECUPERACIÓN DE CONTRASEÑA */
-
-.acceso-codigo-prueba {
-  padding: 12px;
-  border-radius: var(--radio-md);
-
-  background: var(--fondo-sutil);
-  font-size: 13px;
-  overflow-wrap: anywhere;
+  line-height: 1;
 }
 
 /* ACCESIBILIDAD */
 
 .acceso-campo__ojo:focus-visible,
 .acceso-layout a:focus-visible,
-.acceso-boton:focus-visible,
-.acceso-reintentar:focus-visible {
+.acceso-boton:focus-visible {
   outline: 2px solid var(--marca-primario);
   outline-offset: 3px;
 }
 
-/* MÓVIL */
+/* VISTA MÓVIL */
 
 @media (max-width: 767px) {
   .acceso-layout {
     display: block;
+    width: 100%;
     min-height: 100dvh;
   }
 
   .acceso-layout__principal {
     display: block;
+    width: 100%;
     min-height: 100dvh;
 
     padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5.1vw, 24px) 36px;
   }
 
+  /* El logo aparece arriba del formulario. */
+
   .acceso-layout__marca-movil {
     display: inline-flex;
-    margin-bottom: 30px;
+
+    margin-bottom: clamp(26px, 4.5vw, 36px);
   }
 
   .acceso-layout__marca-movil img {
     width: 112px;
+    height: auto;
   }
+
+  /* El formulario ocupa el ancho disponible. */
 
   .acceso-formulario {
     width: 100%;
     max-width: 390px;
-    margin: 0 auto;
+    margin-inline: auto;
   }
 
   .acceso-formulario h1 {
     font-size: clamp(26px, 6.6vw, 30px);
+    line-height: 1.15;
   }
+
+  .acceso-formulario__introduccion {
+    margin-bottom: 24px;
+  }
+
+  /* En móvil las opciones se colocan en columna. */
 
   .acceso-formulario__opciones {
     align-items: flex-start;
     flex-direction: column;
     gap: 12px;
+
     margin-bottom: 20px;
   }
 
   .acceso-campo {
     margin-bottom: 18px;
   }
+
+  /* La alerta puede crecer sin tapar los campos. */
+
+  .acceso-aviso {
+    margin-bottom: 22px;
+    padding: 12px;
+  }
+
+  .acceso-formulario__pie {
+    margin-top: 22px;
+  }
 }
 
-/* MOVIMIENTO REDUCIDO */
+/* PANTALLAS MÓVILES ESTRECHAS */
+
+@media (max-width: 360px) {
+  .acceso-layout__principal {
+    padding-inline: 16px;
+  }
+
+  .acceso-formulario h1 {
+    font-size: 25px;
+  }
+
+  .acceso-aviso {
+    gap: 8px;
+  }
+}
+
+/* PREFERENCIA DE MOVIMIENTO REDUCIDO */
 
 @media (prefers-reduced-motion: reduce) {
   .acceso-boton__spinner {
