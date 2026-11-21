@@ -1,15 +1,14 @@
 /**
  * textosAcceso.js
  *
- * Centraliza el acceso a los textos de autenticación.
- * Todas las etiquetas y mensajes se obtienen de GET /textos.
+ * Centraliza los textos del inicio de sesión.
+ * Las etiquetas y los mensajes proceden de GET /textos.
  *
- * Este archivo no contiene contenido visual hardcodeado.
+ * No contiene traducciones ni mensajes visuales fijos.
  */
 
-// Rutas de las etiquetas dentro de la respuesta de la API.
+// Relaciona nombres internos con las rutas reales de la API.
 const RUTAS_TEXTOS = {
-  // Formulario de ingreso
   titulo: "paginas.ingresar.formulario.titulo",
   descripcion: "paginas.ingresar.formulario.subtitulo",
 
@@ -30,42 +29,16 @@ const RUTAS_TEXTOS = {
   mostrarClave: "formularios.aria.mostrarClave",
   ocultarClave: "formularios.aria.ocultarClave",
 
-  // Validaciones
+  // Mensajes de validación de los campos.
   camposMarcados: "paginas.ingresar.errores.camposObligatorios.titulo",
-
   correoObligatorio: "paginas.ingresar.errores.correoObligatorio",
   claveObligatoria: "paginas.ingresar.errores.claveObligatoria",
-
   correoInvalido: "formularios.validacion.correoInvalido",
 
   reintentar: "paginas.ingresar.errores.conexion.botones.reintentar",
-
-  // Presentación de escritorio
-  promocionTitulo: "paginas.ingresar.presentacion.lema",
-
-  // Recuperación de contraseña
-  recuperarTitulo: "paginas.recuperarClave.solicitud.titulo",
-
-  recuperarDescripcion: "paginas.recuperarClave.solicitud.texto",
-
-  enviarCodigo: "paginas.recuperarClave.solicitud.botones.enviar",
-
-  codigo: "paginas.recuperarClave.nuevaClave.etiquetas.codigo",
-
-  nuevaClave: "paginas.recuperarClave.nuevaClave.etiquetas.clave",
-
-  cambiarClave: "paginas.recuperarClave.nuevaClave.botones.guardar",
-
-  volverIngreso: "paginas.recuperarClave.solicitud.enlaces.volver",
-
-  codigoPrueba: "paginas.recuperarClave.nuevaClave.etiquetas.codigo",
-
-  recuperacionEnviada: "paginas.recuperarClave.enviado.texto",
-
-  claveCambiada: "paginas.recuperarClave.actualizada.texto",
 };
 
-// Rutas de mensajes específicos del formulario.
+// Relaciona los códigos de error con sus mensajes en la API.
 const RUTAS_ERRORES = {
   credenciales_invalidas: "paginas.ingresar.errores.credenciales.texto",
 
@@ -77,10 +50,7 @@ const RUTAS_ERRORES = {
 };
 
 /**
- * Obtiene una propiedad anidada mediante su ruta.
- *
- * Ejemplo:
- * "paginas.ingresar.formulario.titulo"
+ * Recorre un objeto utilizando una ruta de propiedades.
  */
 function obtenerPorRuta(objeto, ruta) {
   if (!objeto || !ruta) return undefined;
@@ -89,11 +59,8 @@ function obtenerPorRuta(objeto, ruta) {
 }
 
 /**
- * Sustituye variables dinámicas de la API.
- *
- * Ejemplo:
- * "Espera {segundos} segundos"
- * con { segundos: 30 }
+ * Sustituye variables de textos devueltos por la API.
+ * Por ejemplo: {segundos}.
  */
 export function interpolarTexto(plantilla, variables = {}) {
   if (typeof plantilla !== "string") {
@@ -108,10 +75,8 @@ export function interpolarTexto(plantilla, variables = {}) {
 }
 
 /**
- * Obtiene una etiqueta desde GET /textos.
- *
- * El idioma ya viene aplicado por useTextos,
- * por eso no necesitamos duplicar traducciones.
+ * Obtiene una etiqueta del formulario de ingreso.
+ * El idioma ya fue aplicado por useTextos.
  */
 export function textoAcceso(textos, idioma, clave, variables = {}) {
   const ruta = RUTAS_TEXTOS[clave];
@@ -124,41 +89,20 @@ export function textoAcceso(textos, idioma, clave, variables = {}) {
 }
 
 /**
- * Obtiene mensajes de error específicos o generales.
- *
- * Los códigos HTTP se interpretan en el componente,
- * mientras que el mensaje visible viene de la API.
+ * Obtiene el mensaje correspondiente a un error.
+ * Prioriza los mensajes específicos del formulario.
  */
 export function mensajeError(textos, idioma, codigo, variables = {}) {
   const rutaEspecial = RUTAS_ERRORES[codigo];
 
   const mensajeEspecial = rutaEspecial ? obtenerPorRuta(textos, rutaEspecial) : undefined;
 
-  const mensajeGeneral = textos?.errores?.[codigo];
+  let mensaje = mensajeEspecial ?? textos?.errores?.[codigo] ?? textos?.errores?.generico;
 
-  let mensaje = mensajeEspecial ?? mensajeGeneral ?? textos?.errores?.generico;
-
-  // Evita mostrar una plantilla incompleta
-  // si todavía no se han enviado los segundos.
+  // Evita mostrar un marcador sin reemplazar.
   if (codigo === "demasiadas_peticiones" && variables.segundos === undefined) {
     mensaje = textos?.paginas?.ingresar?.errores?.demasiadosIntentos?.titulo;
   }
 
   return interpolarTexto(mensaje, variables);
-}
-
-/**
- * Obtiene los beneficios del panel negro.
- *
- * No se define ninguna lista manual:
- * los beneficios provienen de GET /textos.
- */
-export function beneficiosAcceso(textos, idioma) {
-  const beneficios = textos?.paginas?.ingresar?.presentacion?.beneficios;
-
-  if (!beneficios) return [];
-
-  return Object.values(beneficios).filter(
-    (beneficio) => typeof beneficio === "string" && beneficio.trim().length > 0,
-  );
 }

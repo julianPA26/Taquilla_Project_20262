@@ -1,0 +1,146 @@
+/**
+ * NavbarSesion.css
+ *
+ * Estilos del menú de usuario autenticado.
+ * Se complementa con el Navbar.css existente.
+ */
+
+/* CONTENEDOR DE LA CUENTA */
+
+.navbar-sesion {
+  position: relative;
+  min-width: 0;
+  font-family: var(--fuente-instrument-sans);
+}
+
+/* BOTÓN QUE ABRE EL MENÚ */
+
+.navbar-sesion > summary {
+  display: flex;
+  min-width: 110px;
+  max-width: clamp(140px, 17vw, 220px);
+  min-height: 40px;
+
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+
+  padding: 0 var(--espacio-3);
+
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-md);
+
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  list-style: none;
+}
+
+.navbar-sesion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.navbar-sesion > summary:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+
+/* NOMBRE DEL USUARIO */
+
+.navbar-sesion__nombre {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar-sesion__nombre-movil {
+  display: inline-block;
+  max-width: min(35vw, 145px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* PANEL DESPLEGABLE */
+
+.navbar-sesion__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+
+  min-width: 190px;
+  padding: var(--espacio-2);
+
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+}
+
+/* CERRAR SESIÓN */
+
+.navbar-sesion__salir {
+  display: block;
+  width: 100%;
+
+  padding: var(--espacio-3);
+
+  border: 0;
+  border-radius: var(--radio-sm);
+
+  background: transparent;
+  color: var(--texto-principal);
+
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.navbar-sesion__salir:hover {
+  background: var(--fondo-sutil);
+}
+
+.navbar-sesion__salir:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ERROR AL CERRAR SESIÓN */
+
+.navbar-sesion__error {
+  margin: var(--espacio-2) 0 0;
+  padding: var(--espacio-2);
+
+  color: var(--estado-error);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* MENÚ RESPONSIVE */
+
+@media (max-width: 1199.98px) {
+  .navbar-sesion {
+    width: 100%;
+  }
+
+  .navbar-sesion > summary {
+    width: 100%;
+    max-width: none;
+    min-height: 44px;
+  }
+
+  .navbar-sesion__panel {
+    position: static;
+    width: 100%;
+    min-width: 0;
+
+    margin-top: var(--espacio-2);
+    box-shadow: none;
+  }
+}

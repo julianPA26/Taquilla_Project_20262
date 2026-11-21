@@ -3,54 +3,28 @@ import FormularioIngreso from "../components/FormularioIngreso/FormularioIngreso
 import logoNormal from "../Assets/Logos/logo-normal.svg";
 import "./Acceso.css";
 
-export default function Acceso({
-  modo,
-  textos,
-  idioma,
-  onIngreso,
-  onVolverIngreso,
-  onRecuperar,
-  onCrearCuenta,
-  onInicio,
-}) {
-  // El panel utiliza los textos de ingreso
-  // hasta que se implemente el registro.
-  const tipoPresentacion = modo === "registro" ? "registro" : "ingresar";
-
-  // Navega al inicio sin recargar la página.
+export default function Acceso({ textos, idioma, onIngreso, onInicio }) {
+  // Permite regresar al Inicio sin recargar la página.
   function manejarInicio(evento) {
     evento.preventDefault();
-    onInicio?.();
+    onInicio();
   }
+
+  const etiquetaLogo = textos?.navbar?.logo?.aria ?? textos?.sitio?.nombre ?? "";
 
   return (
     <div className="acceso-layout">
-      {/* PANEL REUTILIZABLE DE ESCRITORIO */}
-
-      <PanelPresentacionAcceso tipo={tipoPresentacion} textos={textos} onInicio={onInicio} />
-
-      {/* CONTENIDO PRINCIPAL */}
+      {/* Panel negro reutilizable de escritorio */}
+      <PanelPresentacionAcceso tipo="ingresar" textos={textos} onInicio={onInicio} />
 
       <section className="acceso-layout__principal">
-        {/* LOGOTIPO EXCLUSIVO DE MÓVIL */}
-
+        {/* Logotipo visible en pantallas móviles */}
         <a href="/#inicio" className="acceso-layout__marca-movil" onClick={manejarInicio}>
-          <img src={logoNormal} alt={textos?.navbar?.logo?.aria ?? textos?.sitio?.nombre ?? ""} />
+          <img src={logoNormal} alt={etiquetaLogo} />
         </a>
 
-        {/* FORMULARIO SEGÚN LA RUTA ACTUAL */}
-
-        {modo === "recuperar" ? (
-          <RecuperarClave textos={textos} idioma={idioma} onVolverIngreso={onVolverIngreso} />
-        ) : (
-          <FormularioIngreso
-            textos={textos}
-            idioma={idioma}
-            onIngreso={onIngreso}
-            onRecuperar={onRecuperar}
-            onCrearCuenta={onCrearCuenta}
-          />
-        )}
+        {/* Formulario exclusivo del Sprint 2 */}
+        <FormularioIngreso textos={textos} idioma={idioma} onIngreso={onIngreso} />
       </section>
     </div>
   );

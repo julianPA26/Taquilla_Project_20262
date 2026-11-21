@@ -1,6 +1,6 @@
+
 import { BASE_API, ErrorApi } from "./Cliente.js";
 import { RUTAS } from "./Rutas.js";
-
 const TIEMPO_LIMITE_MS = 20000;
 
 function leerEspera(valor) {
@@ -17,6 +17,10 @@ function leerEspera(valor) {
   return Number.isNaN(fecha) ? 0 : Math.max(0, Math.ceil((fecha - Date.now()) / 1000));
 }
 
+/**
+ * Realiza peticiones autenticadas mediante fetch.
+ * Envía las cookies y transforma los errores de la API.
+ */
 async function solicitar(ruta, { metodo = "GET", datos } = {}) {
   const controlador = new AbortController();
 
@@ -26,11 +30,13 @@ async function solicitar(ruta, { metodo = "GET", datos } = {}) {
     const respuesta = await fetch(`${BASE_API}${ruta}`, {
       method: metodo,
       credentials: "include",
-
-      headers: datos === undefined ? undefined : { "Content-Type": "application/json" },
-
+      headers:
+        datos === undefined
+          ? undefined
+          : {
+              "Content-Type": "application/json",
+            },
       body: datos === undefined ? undefined : JSON.stringify(datos),
-
       signal: controlador.signal,
     });
 
@@ -42,7 +48,7 @@ async function solicitar(ruta, { metodo = "GET", datos } = {}) {
         codigo: contenido?.error?.codigo ?? "error_interno",
         campos: contenido?.error?.campos ?? {},
         retryAfter: leerEspera(respuesta.headers.get("Retry-After")),
-        mensaje: contenido?.error?.mensaje || `HTTP ${respuesta.status}`,
+        mensaje: contenido?.error?.mensaje ?? `HTTP ${respuesta.status}`,
       });
     }
 
@@ -52,29 +58,31 @@ async function solicitar(ruta, { metodo = "GET", datos } = {}) {
   }
 }
 
-// La API establece la cookie httpOnly.
-// Nunca almacenamos el token de la respuesta.
-export const iniciarSesion = (correo, clave) =>
-  solicitar(RUTAS.sesion, {
+/**
+ * POST /sesion
+ * Valida las credenciales del formulario de ingreso.
+ */
+export function iniciarSesion(correo, clave) {
+  return solicitar(RUTAS.sesion, {
     metodo: "POST",
     datos: { correo, clave },
   });
+}
 
-export const consultarSesion = () => solicitar(RUTAS.sesion);
+/**
+ * GET /sesion
+ * Consulta si el navegador conserva una sesión activa.
+ */
+export function consultarSesion() {
+  return solicitar(RUTAS.sesion);
+}
 
-export const cerrarSesion = () =>
-  solicitar(RUTAS.sesion, {
+/**
+ * DELETE /sesion
+ * Solicita a la API cerrar la sesión activa.
+ */
+export function cerrarSesion() {
+  return solicitar(RUTAS.sesion, {
     metodo: "DELETE",
   });
-
-export const solicitarRecuperacion = (correo) =>
-  solicitar(RUTAS.recuperacion, {
-    metodo: "POST",
-    datos: { correo },
-  });
-
-export const cambiarClave = ({ correo, codigo, clave }) =>
-  solicitar(RUTAS.nuevaClave, {
-    metodo: "POST",
-    datos: { correo, codigo, clave },
-  });
+}

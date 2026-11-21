@@ -1,3 +1,4 @@
+
 function armarConsulta(parametros) {
   const consulta = new URLSearchParams();
 
@@ -8,9 +9,11 @@ function armarConsulta(parametros) {
   });
 
   const resultado = consulta.toString();
+
   return resultado ? `?${resultado}` : "";
 }
 
+// Rutas utilizadas por las funcionalidades del Sprint 2.
 export const RUTAS = {
   categorias: "/categorias",
   ciudades: "/ciudades",
@@ -32,7 +35,6 @@ export const RUTAS = {
 
   eventosRelacionados: (slug) => `/eventos/${encodeURIComponent(slug)}/relacionados`,
 
+  // Inicio, consulta y cierre de sesión.
   sesion: "/sesion",
-  recuperacion: "/recuperacion",
-  nuevaClave: "/recuperacion/nueva-clave",
 };
