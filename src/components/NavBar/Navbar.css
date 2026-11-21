@@ -395,7 +395,7 @@
     gap: 0;
     margin-top: auto;
     padding-top: var(--espacio-2);
-    border-top: 1px solid var(--borde-sutil);
+    border-top: none;
   }
 
   .navbar-ajustes {
@@ -421,8 +421,8 @@
 
   .navbar-idioma-movil {
     padding: 2px;
-    order: 1px solid var(--marca-primario);
-    background: var(--fondo-sutil);
+    border: 0.5px solid var(--marca-primario);
+    background: var(--fondo-superficie);
   }
 
   .navbar-idioma-movil button {
