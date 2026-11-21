@@ -1,16 +1,20 @@
+
 .explorar {
   width: 100%;
-  background-color: var(--fondo-superficie);
+  min-width: 0;
+  max-width: 100%;
   min-height: calc(100vh - 56px);
+  background-color: var(--fondo-superficie);
 }
 
 .explorar-interior {
   width: min(100% - 2rem, 80rem);
+  min-width: 0;
+  max-width: 100%;
   margin-inline: auto;
   padding-block: var(--espacio-4) var(--espacio-12);
 }
 
-/* Migas de pan (visibles únicamente en escritorio) */
 .explorar-migas {
   display: none;
 }
@@ -19,14 +23,14 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 var(--espacio-4) 0;
+  margin: 0 0 var(--espacio-4);
   padding: 0;
   list-style: none;
+  color: var(--texto-secundario);
   font-family: var(--fuente-instrument-sans);
   font-size: 14px;
-  line-height: 20px;
   font-weight: 500;
-  color: var(--texto-secundario);
+  line-height: 20px;
 }
 
 .explorar-migas a {
@@ -60,71 +64,105 @@
   transform: rotate(45deg);
 }
 
-/* Encabezado */
+
 .explorar-encabezado {
+  min-width: 0;
   margin-bottom: var(--espacio-3);
 }
 
 .explorar-encabezado h1 {
   margin: 0;
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 600;
   color: var(--texto-principal);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  overflow-wrap: break-word;
 }
 
 .explorar-conteo {
   display: none;
-  margin: var(--espacio-1) 0 0 0;
-  font-size: 14px;
+  margin: var(--espacio-1) 0 0;
   color: var(--texto-secundario);
+  font-size: 14px;
 }
 
-/* Buscador Móvil (con fondo sutil y línea divisoria inferior) */
+/* ========================================
+   BUSCADOR MÓVIL
+   ======================================== */
+
+/*
+ * min-width: 0 permite que el campo de búsqueda
+ * se reduzca sin ampliar la pantalla.
+ */
+
 .explorar-buscador {
   display: flex;
   align-items: center;
   gap: var(--espacio-2);
+  width: 100%;
+  min-width: 0;
+  margin-bottom: var(--espacio-4);
   padding-bottom: var(--espacio-4);
   border-bottom: 1px solid var(--borde-sutil);
-  margin-bottom: var(--espacio-4);
 }
 
+/* Contenedor del icono y el input. */
+
 .explorar-campo {
-  flex: 1;
   display: flex;
+  flex: 1 1 0%;
   align-items: center;
   gap: var(--espacio-2);
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
   height: 44px;
   padding-inline: var(--espacio-3);
+  border: 1px solid transparent;
   border-radius: var(--radio-md);
   background-color: var(--fondo-sutil);
-  border: 1px solid transparent;
   color: var(--texto-secundario);
 }
 
+/* Icono del buscador. */
+
+.explorar-campo > svg {
+  flex-shrink: 0;
+}
+
+/* Input flexible que no fuerza el ancho. */
+
 .explorar-campo input {
+  display: block;
+  flex: 1 1 auto;
   width: 100%;
-  border: none;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
   background: transparent;
   color: var(--texto-principal);
-  font-size: 14px;
   font-family: inherit;
-  outline: none;
+  font-size: 14px;
 }
 
 .explorar-campo input::placeholder {
   color: var(--texto-terciario);
 }
 
-/* Botón de Filtros */
+/* ========================================
+   BOTÓN PARA ABRIR FILTROS
+   ======================================== */
+
 .explorar-boton-filtros {
   display: grid;
+  flex: 0 0 44px;
   place-items: center;
   width: 44px;
   height: 44px;
-  flex-shrink: 0;
-  border: none;
+  padding: 0;
+  border: 0;
   border-radius: var(--radio-md);
   background-color: var(--marca-primario);
   color: var(--texto-inverso);
@@ -136,35 +174,67 @@
   background-color: var(--marca-primario-hover);
 }
 
-/* Estructura del cuerpo */
+/* ========================================
+   CUERPO DE EXPLORAR
+   ======================================== */
+
 .explorar-cuerpo {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-6);
-}
 
-.explorar-resultados {
-  flex: 1;
+  gap: var(--espacio-6);
+
+  width: 100%;
   min-width: 0;
 }
 
-/* Barra de filtros y ordenamiento */
+.explorar-resultados {
+  flex: 1 1 auto;
+
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ========================================
+   BARRA DE FILTROS Y ORDENAMIENTO
+   ======================================== */
+
 .explorar-barra {
   display: flex;
   flex-direction: column;
+
   gap: var(--espacio-3);
+
+  width: 100%;
+  min-width: 0;
+
   margin-bottom: var(--espacio-4);
 }
 
-/* Chips de filtros activos */
+/* ========================================
+   FILTROS ACTIVOS
+   ======================================== */
+
+/*
+ * Solamente esta lista se desplaza horizontalmente.
+ * El resto de Explorar permanece dentro de la pantalla.
+ */
+
 .explorar-chips {
   display: flex;
   flex-wrap: nowrap;
   gap: var(--espacio-2);
-  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
-  padding: 0 0 var(--espacio-2) 0;
+  padding: 0 0 var(--espacio-2);
   list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
@@ -172,19 +242,31 @@
   display: none;
 }
 
+.explorar-chips > li {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Cada filtro activo. */
+
 .explorar-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--espacio-2);
-  height: 36px;
+  width: auto;
+  max-width: min(80vw, 280px);
+  min-width: 0;
+  min-height: 36px;
   padding: 0 var(--espacio-3);
-  border: none;
+  border: 0;
   border-radius: var(--radio-completo);
   background-color: var(--fondo-sutil);
   color: var(--texto-principal);
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -193,38 +275,77 @@
   background-color: var(--fondo-presionado);
 }
 
-/* Contador de eventos y selector de orden */
+/* Los textos largos no ensanchan cada chip. */
+
+.explorar-chip span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.explorar-chip svg {
+  flex-shrink: 0;
+}
+
+/* ========================================
+   CONTADOR Y SELECTOR DE ORDEN
+   ======================================== */
+
+/*
+ * En pantallas estrechas, estos elementos
+ * podrán pasar a otra fila si no caben.
+ */
+
 .explorar-datos {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--espacio-4);
+  flex-wrap: wrap;
+  gap: var(--espacio-2) var(--espacio-4);
+  width: 100%;
+  min-width: 0;
 }
 
 .explorar-conteo-movil {
+  flex: 0 1 auto;
+  min-width: 0;
   margin: 0;
-  font-size: 14px;
   color: var(--texto-secundario);
+  font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
+  overflow-wrap: break-word;
 }
+
+/* Contenedor de la etiqueta y el selector. */
 
 .explorar-orden {
   display: inline-flex;
   align-items: center;
+  flex: 0 1 auto;
   gap: var(--espacio-2);
-  cursor: pointer;
+  min-width: 0;
+  max-width: 100%;
   margin-left: auto;
+  cursor: pointer;
 }
 
 .explorar-orden-etiqueta {
-  font-size: 14px;
+  flex: 0 0 auto;
   color: var(--texto-secundario);
+  font-size: 14px;
 }
+
+/* Selector de orden. */
 
 .explorar-orden-selector {
   position: relative;
   display: inline-flex;
+  flex: 0 1 auto;
   align-items: center;
+  min-width: 0;
+  max-width: 100%;
   height: 36px;
   padding-inline: var(--espacio-3) var(--espacio-8);
   border: 1px solid var(--borde-sutil);
@@ -233,42 +354,80 @@
 }
 
 .explorar-orden-selector select {
-  border: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 0;
+  outline: none;
   background: transparent;
   color: var(--texto-principal);
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
   appearance: none;
-  outline: none;
-  width: 100%;
+  cursor: pointer;
+  text-overflow: ellipsis;
 }
 
 .explorar-orden-selector svg {
   position: absolute;
   right: var(--espacio-3);
-  pointer-events: none;
   color: var(--texto-secundario);
+  pointer-events: none;
 }
 
-/* Grilla de tarjetas de evento */
+/* ========================================
+   CUADRÍCULA DE EVENTOS
+   ======================================== */
+
+/*
+ * minmax(0, 1fr) evita que una tarjeta
+ * fuerce una columna más ancha que la pantalla.
+ */
+
 .explorar-lista {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--espacio-4);
-  margin: 0 0 var(--espacio-8) 0;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 var(--espacio-8);
   padding: 0;
   list-style: none;
 }
 
-/* Estados de carga y mensajes */
+.explorar-lista > li {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Restringe únicamente las tarjetas de Explorar. */
+
+.explorar-lista .tarjeta-evento,
+.explorar-lista .tarjeta-cuerpo,
+.explorar-lista .tarjeta-pie {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.explorar-lista .tarjeta-titulo,
+.explorar-lista .tarjeta-datos li {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* ========================================
+   ESTADOS DE CARGA
+   ======================================== */
+
 .explorar-estado-oculto {
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
   margin: -1px;
+  padding: 0;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -276,8 +435,10 @@
 }
 
 .tarjeta-esqueleto {
+  min-width: 0;
   height: 280px;
   border-radius: var(--radio-lg);
+
   background: linear-gradient(
     90deg,
     var(--fondo-sutil) 25%,
@@ -298,28 +459,37 @@
   }
 }
 
+/* ========================================
+   MENSAJES DE ERROR O SIN RESULTADOS
+   ======================================== */
+
 .explorar-mensaje {
-  text-align: center;
-  padding: var(--espacio-12) var(--espacio-4);
-  background-color: var(--fondo-sutil);
-  border-radius: var(--radio-lg);
+  min-width: 0;
+  max-width: 100%;
   margin-bottom: var(--espacio-8);
+  padding: var(--espacio-12) var(--espacio-4);
+  border-radius: var(--radio-lg);
+  background-color: var(--fondo-sutil);
+  text-align: center;
 }
 
 .explorar-mensaje h2 {
-  margin: 0 0 var(--espacio-2) 0;
-  font-size: 20px;
+  margin: 0 0 var(--espacio-2);
   color: var(--texto-principal);
+  font-size: 20px;
+  overflow-wrap: break-word;
 }
 
 .explorar-mensaje p {
-  margin: 0 0 var(--espacio-4) 0;
-  font-size: 14px;
+  margin: 0 0 var(--espacio-4);
   color: var(--texto-secundario);
+  font-size: 14px;
+  overflow-wrap: break-word;
 }
 
 .explorar-mensaje button {
-  height: 40px;
+  max-width: 100%;
+  min-height: 40px;
   padding-inline: var(--espacio-4);
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-md);
@@ -327,28 +497,76 @@
   color: var(--texto-principal);
   font-weight: 500;
   cursor: pointer;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
-/* Adaptaciones responsivas (tablets y escritorio) */
-@media (min-width: 768px) and (max-width: 1199.98px) {
-  .explorar-lista {
-    grid-template-columns: repeat(2, 1fr);
+/* ========================================
+   MÓVILES ESTRECHOS
+   ======================================== */
+
+@media (max-width: 360px) {
+  /*
+   * El contador y el ordenamiento pueden
+   * ocupar líneas independientes.
+   */
+
+  .explorar-datos {
+    align-items: flex-start;
+  }
+
+  .explorar-orden {
+    max-width: 100%;
+  }
+
+  /*
+   * En tarjetas estrechas, el precio y botón
+   * pueden reorganizarse sin desbordarse.
+   */
+
+  .explorar-lista .tarjeta-pie {
+    flex-wrap: wrap;
+  }
+
+  .explorar-lista .tarjeta-precio {
+    min-width: 0;
   }
 }
+
+/* ========================================
+   TABLET
+   ======================================== */
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .explorar-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ========================================
+   ESCRITORIO
+   ======================================== */
 
 @media (min-width: 1200px) {
   .explorar-interior {
     padding-block: var(--espacio-6) var(--espacio-12);
   }
 
+  /* Migas de pan visibles. */
+
   .explorar-migas {
     display: block;
   }
+
+  /* Título y cantidad de resultados. */
 
   .explorar-encabezado {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+
+    gap: var(--espacio-6);
+
     margin-bottom: var(--espacio-6);
   }
 
@@ -361,19 +579,26 @@
     display: block;
   }
 
+  /* Oculta el buscador exclusivo de móvil. */
+
   .explorar-buscador {
     display: none;
   }
 
+  /* Filtros a la izquierda y resultados a la derecha. */
+
   .explorar-cuerpo {
     flex-direction: row;
     align-items: flex-start;
+
     gap: var(--espacio-8);
   }
 
   .explorar-conteo-movil {
     display: none;
   }
+
+  /* Barra horizontal de filtros y ordenamiento. */
 
   .explorar-barra {
     flex-direction: row;
@@ -382,8 +607,27 @@
     margin-bottom: var(--espacio-6);
   }
 
+  .explorar-datos {
+    flex-wrap: nowrap;
+  }
+
+  /* Tres columnas de eventos. */
+
   .explorar-lista {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--espacio-6);
+  }
+}
+
+/* ========================================
+   MOVIMIENTO REDUCIDO
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .explorar-boton-filtros,
+  .explorar-chip,
+  .tarjeta-esqueleto {
+    animation: none;
+    transition: none;
   }
 }
