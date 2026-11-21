@@ -1,164 +1,611 @@
-/* Contenedor principal usando variables de tokens.css */
-.accessibility-panel {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  width: 360px;
-  height: 576px;
-  background-color: var(--fondo-superficie);
-  border: 1px solid var(--borde-sutil);
-  border-radius: var(--radio-xl);
-  padding: var(--espacio-6);
-  gap: 20px;
-  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.18);
-  color: var(--texto-principal);
-  position: relative;
-}
+/**
+ * AccessibilityPanel.css
+ *
+ * Estilos del panel de accesibilidad de Taquilla.
+ *
+ * - Mantiene las medidas y colores del Figma.
+ * - Utiliza las variables globales de tokens.css.
+ * - Se adapta a escritorio y móvil.
+ * - Evita desbordamientos al aumentar el texto.
+ */
 
-/* Encabezado */
-.ap-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+/* =========================================
+   SUPERPOSICIÓN DEL PANEL
+   ========================================= */
 
-.ap-title {
-  margin: 0;
-}
+/*
+ * Oscurece el contenido de la página
+ * y mantiene el panel centrado.
+ */
 
-.ap-close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
+.sitio > .accesibilidad-superposicion {
+  --ap-margen-horizontal: clamp(12px, 6.15vw, 24px);
+  --ap-margen-vertical: clamp(12px, 3vh, 24px);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--espacio-1);
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  padding: var(--ap-margen-vertical) var(--ap-margen-horizontal);
+
+  background: color-mix(in srgb, var(--fondo-inverso) 45%, transparent);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Contenedor intermedio creado desde App.jsx. */
+
+.sitio > .accesibilidad-superposicion > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* =========================================
+   PANEL PRINCIPAL
+   ========================================= */
+
+/*
+ * box-sizing evita que el padding y los bordes
+ * aumenten las dimensiones de los elementos.
+ */
+
+.accessibility-panel,
+.accessibility-panel *,
+.accessibility-panel *::before,
+.accessibility-panel *::after {
+  box-sizing: border-box;
+}
+
+/*
+ * En escritorio el panel mide hasta 360px.
+ *
+ * La altura se adapta al contenido y no supera
+ * la pantalla. Si es necesario, permite scroll.
+ */
+
+.accessibility-panel {
+  display: flex;
+  flex: 0 1 360px;
+  flex-direction: column;
+
+  width: min(360px, 100%);
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+
+  max-height: calc(100dvh - var(--ap-margen-vertical) - var(--ap-margen-vertical));
+
+  margin: auto;
+
+  padding: 24px;
+  gap: 20px;
+
+  border: 1px solid var(--borde-sutil);
+  border-radius: 16px;
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+
+  box-shadow: var(--sombra-flotante);
+
+  font-family: var(--fuente-instrument-sans);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--borde-fuerte) transparent;
+}
+
+/*
+ * Evita que Flexbox comprima las secciones
+ * cuando el usuario aumenta el tamaño de texto.
+ */
+
+.ap-header,
+.ap-section,
+.ap-toggles-list,
+.ap-footer-note,
+.ap-footer-actions {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+
+.ap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--espacio-3);
+}
+
+/* Título de accesibilidad. */
+
+.ap-title {
+  min-width: 0;
+  margin: 0;
+
+  color: var(--texto-principal);
+
+  font-size: clamp(18px, 4.8vw, 20px);
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+}
+
+/* Botón para cerrar el panel. */
+
+.ap-close-btn {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+
+  border: 0;
   border-radius: var(--radio-sm);
+
+  background: transparent;
+  color: var(--texto-principal);
+
+  cursor: pointer;
 }
 
 .ap-close-btn:hover {
-  background-color: var(--fondo-sutil);
+  background: var(--fondo-sutil);
 }
 
-.ap-section-title {
-  margin: 0 0 var(--espacio-3) 0;
+.ap-close-btn svg {
+  display: block;
+
+  width: 14px;
+  height: 14px;
 }
+
+/* =========================================
+   SECCIÓN DE TAMAÑO DE TEXTO
+   ========================================= */
+
+.ap-section {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+}
+
+/* Etiqueta "Tamaño del texto". */
+
+.ap-section-title {
+  margin: 0 0 12px;
+
+  color: var(--texto-principal);
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+/* =========================================
+   CONTROL DE TAMAÑO: - A +
+   ========================================= */
+
+/*
+ * Medidas del Figma:
+ *
+ * Ancho: relleno del contenedor (310px aprox.)
+ * Alto: 50px
+ * Radio: 12px
+ * Borde: 1px
+ * Fondo: blanco
+ *
+ * El fondo gris se aplica únicamente
+ * a los botones laterales.
+ */
 
 .ap-text-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--fondo-sutil);
-  border-radius: var(--radio-md);
-  padding: var(--espacio-1);
+
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+
+  padding: 4px;
+
+  border: 1px solid var(--borde-sutil);
+  border-radius: 12px;
+
+  background: var(--fondo-superficie);
 }
+
+/* Botones para disminuir y aumentar el texto. */
 
 .ap-text-btn {
-  background: none;
-  border: none;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
   width: 40px;
-  height: 32px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radio-sm);
+  height: 40px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: var(--fondo-sutil);
   color: var(--texto-principal);
+
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+
+  cursor: pointer;
 }
 
-.ap-text-btn:hover {
-  background-color: var(--fondo-presionado);
+.ap-text-btn:hover:not(:disabled) {
+  background: var(--fondo-presionado);
 }
+
+.ap-text-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/*
+ * Indicador central con la letra A.
+ * Mantiene el mismo fondo blanco del contenedor.
+ */
+
+.ap-text-indicator {
+  display: grid;
+  place-items: center;
+
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* =========================================
+   OPCIONES DE ACCESIBILIDAD
+   ========================================= */
+
+/* Lista vertical de interruptores. */
 
 .ap-toggles-list {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-4);
+
+  gap: 20px;
+
+  width: 100%;
+  min-width: 0;
 }
+
+/* Cada opción tiene texto e interruptor. */
 
 .ap-toggle-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: var(--espacio-3);
+  justify-content: space-between;
+
+  gap: 16px;
+
+  width: 100%;
+  min-width: 0;
 }
 
+/* Título y descripción de cada opción. */
+
 .ap-toggle-text {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+
+  gap: 4px;
+  min-width: 0;
 }
 
 .ap-toggle-title {
-  margin: 0 0 var(--espacio-1) 0;
+  margin: 0;
+
   color: var(--texto-principal);
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .ap-toggle-desc {
   margin: 0;
+
   color: var(--texto-terciario);
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
-/* Estilos del Toggle Switch */
+/* =========================================
+   INTERRUPTORES
+   ========================================= */
+
+/*
+ * Cada interruptor mantiene su tamaño
+ * aunque el texto ocupe varias líneas.
+ */
+
 .ap-toggle-switch {
   position: relative;
+
+  display: block;
+  flex: 0 0 44px;
+
   width: 44px;
   height: 24px;
-  background-color: var(--borde-fuerte);
-  border-radius: var(--radio-completo);
-  border: none;
-  cursor: pointer;
+
   padding: 2px;
-  transition: background-color 0.3s ease;
-  flex-shrink: 0;
+
+  border: 0;
+  border-radius: var(--radio-completo);
+
+  background: var(--borde-fuerte);
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
 }
 
+/* Color del interruptor activado. */
+
 .ap-toggle-switch.active {
-  background-color: var(--estado-exito);
+  background: var(--estado-exito);
 }
+
+/* Círculo interior del interruptor. */
 
 .ap-toggle-thumb {
   position: absolute;
   top: 2px;
   left: 2px;
+
+  display: block;
+
   width: 20px;
   height: 20px;
-  background-color: var(--fondo-superficie);
+
   border-radius: var(--radio-completo);
-  transition: transform 0.3s ease;
+
+  background: var(--fondo-superficie);
   box-shadow: var(--sombra-tarjeta);
+
+  transition: transform 0.2s ease;
 }
+
+/* Desplaza el círculo hacia la derecha. */
 
 .ap-toggle-switch.active .ap-toggle-thumb {
   transform: translateX(20px);
 }
 
+/* =========================================
+   NOTA INFORMATIVA
+   ========================================= */
+
 .ap-footer-note {
   margin: 0;
+
   color: var(--texto-terciario);
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
-/* Pie (Acciones) */
+/* =========================================
+   ACCIONES INFERIORES
+   ========================================= */
+
+/*
+ * Contiene el enlace de declaración
+ * y el botón para restablecer opciones.
+ *
+ * flex-wrap evita el desbordamiento
+ * al aumentar el tamaño de letra.
+ */
+
 .ap-footer-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  width: 100%;
+  min-width: 0;
+
   margin-top: auto;
 }
 
+/* Enlace de declaración de accesibilidad. */
+
 .ap-link {
+  min-width: 0;
+
   color: var(--texto-principal);
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+
   text-decoration: underline;
+  text-underline-offset: 2px;
+
+  overflow-wrap: anywhere;
 }
 
+/* Botón Restablecer. */
+
 .ap-reset-btn {
-  padding: var(--espacio-2) var(--espacio-4);
-  background-color: var(--fondo-superficie);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  min-height: 36px;
+
+  padding: 8px 12px;
+
   border: 1px solid var(--borde-sutil);
   border-radius: var(--radio-md);
-  cursor: pointer;
+
+  background: var(--fondo-superficie);
   color: var(--texto-principal);
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+
+  cursor: pointer;
 }
 
 .ap-reset-btn:hover {
-  background-color: var(--fondo-sutil);
+  background: var(--fondo-sutil);
+}
+
+/* =========================================
+   ACCESIBILIDAD DEL TECLADO
+   ========================================= */
+
+/* Muestra el foco al navegar con Tab. */
+
+.ap-close-btn:focus-visible,
+.ap-text-btn:focus-visible,
+.ap-toggle-switch:focus-visible,
+.ap-link:focus-visible,
+.ap-reset-btn:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+
+/* =========================================
+   MÓVIL
+   ========================================= */
+
+@media (max-width: 767px) {
+  /*
+   * El panel aprovecha el ancho disponible,
+   * respetando los márgenes de la pantalla.
+   */
+
+  .accessibility-panel {
+    width: 100%;
+    max-width: 360px;
+
+    padding: clamp(16px, 6vw, 24px);
+    gap: 20px;
+
+    border-radius: 16px;
+  }
+
+  /* Mantiene las opciones bien separadas. */
+
+  .ap-toggles-list {
+    gap: 20px;
+  }
+
+  .ap-toggle-item {
+    gap: 12px;
+  }
+
+  /* Evita desbordes en los controles inferiores. */
+
+  .ap-footer-actions {
+    gap: 12px;
+  }
+
+  .ap-link {
+    flex: 1 1 130px;
+  }
+}
+
+/* =========================================
+   PANTALLAS DE POCA ALTURA
+   ========================================= */
+
+/*
+ * Reducimos espacios en pantallas bajas.
+ * El desplazamiento interno sigue disponible.
+ */
+
+@media (max-height: 650px) {
+  .accessibility-panel {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .ap-toggles-list {
+    gap: 16px;
+  }
+
+  .ap-toggle-text {
+    gap: 2px;
+  }
+}
+
+/* =========================================
+   MOVIMIENTO REDUCIDO
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-toggle-switch,
+  .ap-toggle-thumb {
+    transition: none;
+  }
 }

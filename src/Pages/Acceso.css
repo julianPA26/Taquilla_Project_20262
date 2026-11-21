@@ -2,13 +2,18 @@
  * Acceso.css
  *
  * Estilos de la página de inicio de sesión.
- * Incluye la distribución responsive, los campos,
- * los botones y los estados de validación.
  *
- * El panel negro conserva su propio CSS.
+ * - Conserva las dos columnas de escritorio.
+ * - Ajusta el contenedor móvil a las medidas de Figma.
+ * - Mantiene los errores, campos y botones responsive.
+ * - Utiliza los tokens globales del proyecto.
+ *
+ * El panel negro tiene sus propios estilos.
  */
 
-/* CONTENEDOR DE LA PÁGINA */
+/* ========================================
+   CONTENEDOR GENERAL
+   ======================================== */
 
 .sitio--acceso,
 .sitio--acceso > main {
@@ -25,6 +30,7 @@
     minmax(0, 58%);
 
   width: 100%;
+  min-width: 0;
   min-height: 100dvh;
 
   background: var(--fondo-superficie);
@@ -32,27 +38,37 @@
   font-family: var(--fuente-instrument-sans);
 }
 
+/* Incluye padding y bordes dentro de las medidas. */
+
 .acceso-layout *,
 .acceso-layout *::before,
 .acceso-layout *::after {
   box-sizing: border-box;
 }
 
-/* COLUMNA DERECHA */
+/* ========================================
+   COLUMNA DEL FORMULARIO
+   ======================================== */
+
+/* En escritorio el formulario queda centrado. */
 
 .acceso-layout__principal {
   display: flex;
-  min-width: 0;
-  width: 100%;
-
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
+  width: 100%;
+  min-width: 0;
+
   padding: clamp(32px, 6vw, 100px) clamp(20px, 5vw, 96px);
 }
 
-/* LOGOTIPO EXCLUSIVO DE MÓVIL */
+/* ========================================
+   LOGOTIPO MÓVIL
+   ======================================== */
+
+/* Se oculta en escritorio. */
 
 .acceso-layout__marca-movil {
   display: none;
@@ -61,11 +77,14 @@
 
 .acceso-layout__marca-movil img {
   display: block;
+
   width: clamp(100px, 9vw, 126px);
   height: auto;
 }
 
-/* FORMULARIO */
+/* ========================================
+   CONTENEDOR DEL FORMULARIO
+   ======================================== */
 
 .acceso-formulario {
   width: min(100%, var(--acceso-ancho-formulario));
@@ -74,15 +93,20 @@
   margin-inline: auto;
 }
 
+/* Título principal */
+
 .acceso-formulario h1 {
   margin: 0 0 12px;
 
   color: var(--texto-principal);
+
   font-size: clamp(28px, 2.4vw, 36px);
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.035em;
 }
+
+/* Texto debajo del título */
 
 .acceso-formulario__introduccion {
   margin: 0 0 clamp(22px, 3vw, 34px);
@@ -90,10 +114,13 @@
   color: var(--texto-secundario);
 
   font-size: 14px;
+  font-weight: 400;
   line-height: 1.55;
 }
 
-/* ESTRUCTURA DEL FORMULARIO */
+/* ========================================
+   FORMULARIO Y FIELDSET
+   ======================================== */
 
 .acceso-formulario form {
   width: 100%;
@@ -110,15 +137,23 @@
   border: 0;
 }
 
-/* CAMPOS DE ENTRADA */
+/* ========================================
+   CAMPOS DE ENTRADA
+   ======================================== */
+
+/*
+ * Cada campo contiene su etiqueta,
+ * el input y el mensaje de error si existe.
+ */
 
 .acceso-campo {
   display: flex;
+  flex-direction: column;
+
+  width: 100%;
   min-width: 0;
 
-  flex-direction: column;
   gap: 7px;
-
   margin-bottom: 18px;
 }
 
@@ -129,6 +164,8 @@
   font-weight: 500;
   line-height: 18px;
 }
+
+/* Inputs de correo y contraseña */
 
 .acceso-campo input {
   display: block;
@@ -156,34 +193,47 @@
   opacity: 1;
 }
 
-/* FOCO Y VALIDACIÓN */
+/* ========================================
+   ESTADOS DE LOS CAMPOS
+   ======================================== */
+
+/* Foco del teclado */
 
 .acceso-campo input:focus-visible {
   outline: 2px solid var(--marca-primario);
   outline-offset: 2px;
 }
 
+/* Campo con error */
+
 .acceso-campo input[aria-invalid="true"] {
   border-color: var(--estado-error);
 }
 
+/* Texto rojo debajo del campo */
+
 .acceso-campo__error {
   display: block;
+  width: 100%;
   min-width: 0;
 
   color: var(--estado-error);
 
   font-size: 12px;
   font-weight: 400;
-  line-height: 17px;
+  line-height: 16px;
 
+  white-space: normal;
   overflow-wrap: break-word;
 }
 
-/* CAMPO CON BOTÓN PARA MOSTRAR CONTRASEÑA */
+/* ========================================
+   CONTRASEÑA Y BOTÓN DEL OJO
+   ======================================== */
 
 .acceso-campo__con-ojo {
   position: relative;
+
   width: 100%;
   min-width: 0;
 }
@@ -196,15 +246,21 @@
   position: absolute;
   top: 0;
   right: 0;
+
   display: grid;
+  place-items: center;
+
   width: 46px;
   height: 46px;
-  place-items: center;
+
   padding: 0;
+
   border: 0;
   border-radius: var(--radio-md);
+
   background: transparent;
   color: var(--texto-principal);
+
   cursor: pointer;
 }
 
@@ -212,7 +268,14 @@
   background: var(--fondo-sutil);
 }
 
-/* CHECKBOX Y ENLACE DE RECUPERACIÓN */
+/* ========================================
+   OPCIONES DEL FORMULARIO
+   ======================================== */
+
+/*
+ * Checkbox de mantener sesión y texto
+ * de recuperación de contraseña.
+ */
 
 .acceso-formulario__opciones {
   display: flex;
@@ -227,23 +290,31 @@
 .acceso-checkbox {
   display: inline-flex;
   align-items: center;
+
   gap: 7px;
   min-width: 0;
+
   color: var(--texto-principal);
+
   font-size: 12px;
   line-height: 18px;
+
   cursor: pointer;
 }
 
 .acceso-checkbox input {
   flex-shrink: 0;
+
   width: 15px;
   height: 15px;
+
   margin: 0;
+
   accent-color: var(--marca-primario);
 }
 
-/* ENLACES VISUALES DEL SPRINT 3 */
+/* Enlaces visuales preparados para el Sprint 3 */
+
 .acceso-formulario__opciones a,
 .acceso-formulario__pie a {
   color: var(--texto-principal);
@@ -256,16 +327,19 @@
   text-underline-offset: 2px;
 }
 
-/* BOTÓN PRINCIPAL */
+/* ========================================
+   BOTÓN PRINCIPAL
+   ======================================== */
 
 .acceso-boton {
   display: flex;
-  width: 100%;
-  min-height: 48px;
-
   align-items: center;
   justify-content: center;
+
   gap: 10px;
+
+  width: 100%;
+  min-height: 48px;
 
   padding: 12px 16px;
 
@@ -292,7 +366,7 @@
   cursor: not-allowed;
 }
 
-/* INDICADOR DE CARGA */
+/* Indicador mientras se envía la solicitud */
 
 .acceso-boton__spinner {
   flex-shrink: 0;
@@ -313,7 +387,9 @@
   }
 }
 
-/* MENSAJE INFERIOR DEL FORMULARIO */
+/* ========================================
+   TEXTO DEBAJO DEL BOTÓN
+   ======================================== */
 
 .acceso-formulario__pie {
   margin: 22px 0 0;
@@ -325,77 +401,103 @@
   text-align: center;
 }
 
-/* ALERTA DE ERROR */
+/* ========================================
+   ALERTA DE VALIDACIÓN
+   ======================================== */
 
 /*
- * La alerta utiliza dos columnas:
- * una para el icono y otra para el mensaje.
+ * En Figma la alerta tiene 342px de ancho
+ * y aproximadamente 60px de alto a 390px.
  *
- * Su altura depende del texto y no es fija,
- * evitando que el contenido se salga.
+ * No usamos altura fija, para que pueda crecer
+ * cuando cambie el idioma o el tamaño del texto.
  */
 
 .acceso-aviso {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   align-items: start;
+
   gap: 10px;
+
   width: 100%;
   min-width: 0;
   height: auto;
-  min-height: 0;
+
   margin: 0 0 20px;
   padding: 12px 14px;
+
   border: 1px solid var(--estado-error);
   border-radius: var(--radio-md);
+
   background: var(--estado-error-suave);
   color: var(--texto-principal);
+
   font-size: 12px;
   line-height: 1.5;
 }
 
-.acceso-aviso__contenido {
-  min-width: 0;
+/* Contenido textual de la alerta */
+
+.acceso-aviso__contenido,
+.acceso-aviso > div {
   width: 100%;
+  min-width: 0;
 }
 
 .acceso-aviso strong {
   display: block;
+
   margin: 0 0 4px;
+
   color: var(--texto-principal);
+
   font-size: 13px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 18px;
+
   overflow-wrap: break-word;
 }
 
 .acceso-aviso p {
   display: block;
+
   margin: 0;
+
   color: var(--texto-principal);
+
   font-size: 12px;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 18px;
+
   white-space: normal;
   overflow-wrap: break-word;
 }
 
-/* ICONO DE LA ALERTA */
+/* Icono de advertencia */
 
 .acceso-aviso__icono {
   display: grid;
   place-items: center;
+
   width: 18px;
   height: 18px;
+
   border: 1.5px solid var(--estado-error);
   border-radius: 50%;
+
   color: var(--estado-error);
+
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
 }
 
-/* ACCESIBILIDAD */
+/* ========================================
+   ACCESIBILIDAD
+   ======================================== */
+
+/* Foco visible al utilizar el teclado */
 
 .acceso-campo__ojo:focus-visible,
 .acceso-layout a:focus-visible,
@@ -404,29 +506,54 @@
   outline-offset: 3px;
 }
 
-/* VISTA MÓVIL */
+/* ========================================
+   VISTA MÓVIL: HASTA 767PX
+   ======================================== */
 
 @media (max-width: 767px) {
+  /*
+   * Medidas de Figma para una pantalla de 390px:
+   *
+   * Contenedor: 390px de ancho.
+   * Padding superior: 20px.
+   * Padding lateral: 24px.
+   * Padding inferior: 32px.
+   *
+   * Ancho interior: 390 - 48 = 342px.
+   */
+
   .acceso-layout {
     display: block;
+
     width: 100%;
+    min-width: 0;
     min-height: 100dvh;
   }
 
   .acceso-layout__principal {
     display: block;
+
     width: 100%;
+    min-width: 0;
     min-height: 100dvh;
 
-    padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5.1vw, 24px) 36px;
+    padding: max(20px, env(safe-area-inset-top)) clamp(16px, 6.154vw, 24px)
+      max(32px, env(safe-area-inset-bottom));
   }
 
-  /* El logo aparece arriba del formulario. */
+  /* LOGOTIPO MÓVIL */
+
+  /*
+   * Reducimos la separación respecto al formulario
+   * para acercarla a los 18px del Figma.
+   */
 
   .acceso-layout__marca-movil {
-    display: inline-flex;
+    display: flex;
 
-    margin-bottom: clamp(26px, 4.5vw, 36px);
+    width: fit-content;
+
+    margin-bottom: 18px;
   }
 
   .acceso-layout__marca-movil img {
@@ -434,56 +561,118 @@
     height: auto;
   }
 
-  /* El formulario ocupa el ancho disponible. */
+  /* FORMULARIO MÓVIL */
+
+  /*
+   * El formulario ocupa el ancho interior disponible.
+   * A 390px de pantalla mide 342px.
+   */
 
   .acceso-formulario {
     width: 100%;
     max-width: 390px;
+    min-width: 0;
+
     margin-inline: auto;
   }
 
+  /* TÍTULO Y DESCRIPCIÓN */
+
   .acceso-formulario h1 {
-    font-size: clamp(26px, 6.6vw, 30px);
-    line-height: 1.15;
+    margin-bottom: 12px;
+
+    font-size: clamp(26px, 7.18vw, 28px);
+    line-height: 1.2;
   }
 
   .acceso-formulario__introduccion {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
+
+    font-size: 13px;
+    line-height: 20px;
   }
 
-  /* En móvil las opciones se colocan en columna. */
+  /* ALERTA DE ERROR */
 
-  .acceso-formulario__opciones {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
+  /*
+   * Ocupa el mismo ancho que los campos.
+   * Su altura depende del mensaje.
+   */
 
-    margin-bottom: 20px;
+  .acceso-aviso {
+    width: 100%;
+
+    margin-bottom: 18px;
+    padding: 12px;
+
+    gap: 10px;
   }
+
+  /* CAMPOS */
+
+  /*
+   * Mantienen un ancho flexible.
+   * Los mensajes de error se colocan debajo
+   * sin superponerse a las siguientes opciones.
+   */
 
   .acceso-campo {
+    gap: 6px;
     margin-bottom: 18px;
   }
 
-  /* La alerta puede crecer sin tapar los campos. */
-
-  .acceso-aviso {
-    margin-bottom: 22px;
-    padding: 12px;
+  .acceso-campo label {
+    line-height: 18px;
   }
 
+  .acceso-campo input {
+    height: 46px;
+  }
+
+  .acceso-campo__error {
+    line-height: 16px;
+  }
+
+  /* OPCIONES */
+
+  /*
+   * En móvil el checkbox y recuperación
+   * se ubican uno debajo del otro.
+   */
+
+  .acceso-formulario__opciones {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  /* BOTÓN PRINCIPAL */
+
+  .acceso-boton {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* TEXTO INFERIOR */
+
   .acceso-formulario__pie {
-    margin-top: 22px;
+    margin-top: 18px;
   }
 }
 
-/* PANTALLAS MÓVILES ESTRECHAS */
+/* ========================================
+   MÓVILES ESTRECHOS: HASTA 360PX
+   ======================================== */
+
+/*
+ * En pantallas pequeñas mantenemos los campos
+ * dentro del ancho disponible, sin desbordes.
+ */
 
 @media (max-width: 360px) {
-  .acceso-layout__principal {
-    padding-inline: 16px;
-  }
-
   .acceso-formulario h1 {
     font-size: 25px;
   }
@@ -491,9 +680,15 @@
   .acceso-aviso {
     gap: 8px;
   }
+
+  .acceso-formulario__opciones {
+    gap: 8px;
+  }
 }
 
-/* PREFERENCIA DE MOVIMIENTO REDUCIDO */
+/* ========================================
+   MOVIMIENTO REDUCIDO
+   ======================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .acceso-boton__spinner {

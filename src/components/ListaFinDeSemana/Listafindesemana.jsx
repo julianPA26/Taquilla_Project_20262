@@ -1,9 +1,20 @@
+/**
+ * Listafindesemana.jsx
+ *
+ * Muestra hasta tres eventos del fin de semana
+ * en tarjetas horizontales para la vista móvil.
+ *
+ * Los eventos provienen de la API y cada tarjeta
+ * permite abrir su página de detalle.
+ */
+
 import Afiche from "../Afiche/Afiche.jsx";
 import Icono from "../Icono/Icono.jsx";
+
 import { formatearFechaCorta, formatearHora, formatearPrecio } from "../../Utils/formato.js";
+
 import "./Listafindesemana.css";
 
-// Lista compacta de eventos con miniatura. Solo se ve en móvil.
 export default function ListaFinDeSemana({
   textos,
   idioma,
@@ -12,50 +23,93 @@ export default function ListaFinDeSemana({
   onVerTodos,
   onVerEvento,
 }) {
-  const ingles = idioma === "en";
-  const titulo =
-    textos?.paginas?.inicio?.filtrosMovil?.finDeSemana ??
-    (ingles ? "This weekend" : "Este fin de semana");
-  const verTodos =
-    textos?.paginas?.inicio?.destacados?.enlaces?.verTodos ??
-    textos?.general?.acciones?.verTodos ??
-    (ingles ? "View all" : "Ver todos");
-  const desde = textos?.componentes?.precio?.desde ?? (ingles ? "From" : "Desde");
+  // Obtiene los textos de la sección desde la API.
+  const titulo = textos?.paginas?.inicio?.filtrosMovil?.finDeSemana;
 
-  if (!cargando && (!eventos || eventos.length === 0)) return null;
+  const verTodos =
+    textos?.paginas?.inicio?.destacados?.enlaces?.verTodos ?? textos?.general?.acciones?.verTodos;
+
+  const desde = textos?.componentes?.precio?.desde;
+
+  // La lista presenta como máximo tres eventos.
+  const lista = (eventos ?? []).slice(0, 3);
+
+  // No dibuja la sección si no existen eventos.
+  if (!cargando && lista.length === 0) {
+    return null;
+  }
+
+  /**
+   * Abre la vista Explorar desde el enlace Ver todos.
+   */
+  function manejarVerTodos(evento) {
+    evento.preventDefault();
+    onVerTodos?.();
+  }
+
+  /**
+   * Abre el detalle sin recargar la página.
+   * Permite que el navegador gestione los clics
+   * con Ctrl, Cmd o botón secundario normalmente.
+   */
+  function manejarVerEvento(eventoClick, evento) {
+    if (
+      eventoClick.metaKey ||
+      eventoClick.ctrlKey ||
+      eventoClick.shiftKey ||
+      eventoClick.altKey ||
+      eventoClick.button !== 0
+    ) {
+      return;
+    }
+
+    if (onVerEvento) {
+      eventoClick.preventDefault();
+      onVerEvento(evento);
+    }
+  }
 
   return (
     <section className="finde" aria-labelledby="finde-titulo">
       <div className="finde-interior">
+        {/* ENCABEZADO */}
+
         <div className="finde-encabezado">
           <h2 className="finde-titulo" id="finde-titulo">
             {titulo}
           </h2>
-          <a
-            className="finde-ver-todos"
-            href="#explorar"
-            onClick={(evento) => {
-              evento.preventDefault();
-              onVerTodos?.();
-            }}
-          >
+
+          <a className="finde-ver-todos" href="/#explorar" onClick={manejarVerTodos}>
             {verTodos}
             <Icono nombre="flechaDerecha" />
           </a>
         </div>
 
+        {/* LISTA DE TARJETAS */}
+
         <ul className="finde-lista" aria-busy={cargando}>
-          {(eventos ?? []).slice(0, 3).map((evento) => (
+          {lista.map((evento) => (
             <li key={evento.id}>
-              {/* El detalle no está en el sprint: el enlace solo cambia el # */}
-              <a className="finde-fila" href={`#evento-${evento.slug}`}>
+              <a
+                className="finde-fila"
+                href={`/eventos/${encodeURIComponent(evento.slug)}`}
+                onClick={(eventoClick) => manejarVerEvento(eventoClick, evento)}
+              >
+                {/* MINIATURA */}
+
                 <Afiche evento={evento} className="finde-miniatura" />
+
+                {/* INFORMACIÓN DEL EVENTO */}
+
                 <span className="finde-texto">
                   <span className="finde-nombre">{evento.titulo}</span>
+
                   <span className="finde-fecha">
-                    {formatearFechaCorta(evento.fecha, idioma)} ·{" "}
+                    {formatearFechaCorta(evento.fecha, idioma)}
+                    {" · "}
                     {formatearHora(evento.fecha, idioma)}
                   </span>
+
                   <span className="finde-precio">
                     {desde} {formatearPrecio(evento.precioDesde)}
                   </span>

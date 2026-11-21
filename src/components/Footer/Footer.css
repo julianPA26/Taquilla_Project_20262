@@ -1,4 +1,20 @@
+/**
+ * Footer.css
+ *
+ * Estilos del pie de página de Taquilla.
+ *
+ * En escritorio se conserva la distribución original.
+ * En móvil se adapta al Figma con:
+ * - Márgenes laterales de 24px a 390px de pantalla.
+ * - Tres columnas de enlaces en una misma fila.
+ * - Espaciado vertical más compacto.
+ * - Textos y tamaños responsive.
+ */
+
+/* CONTENEDOR PRINCIPAL */
+
 .footer {
+  min-width: 0;
   color: var(--texto-inverso);
   background: var(--fondo-inverso);
   font-family: var(--fuente-instrument-sans);
@@ -14,23 +30,30 @@
   outline-offset: 3px;
 }
 
+/* ANCHO INTERIOR */
+
 .footer-interior,
 .footer-base {
   width: min(100% - 2rem, 80rem);
   margin-inline: auto;
 }
 
+/* PRESENTACIÓN Y NAVEGACIÓN */
+
 .footer-interior {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-8);
-  padding-block: 56px 40px; /* arriba 56, y 40 hasta la línea */
+  padding-block: 56px 40px;
 }
+
+/* LOGOTIPO Y DESCRIPCIÓN */
 
 .footer-presentacion {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-3);
+  min-width: 0;
 }
 
 .footer-marca {
@@ -38,60 +61,102 @@
   align-items: center;
   align-self: flex-start;
   gap: var(--espacio-2);
+
   color: var(--texto-inverso);
+
   font-size: 20px;
   line-height: 26px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
+.footer-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ESTILO AUXILIAR DEL SÍMBOLO */
+
 .footer-simbolo {
   display: grid;
   place-items: center;
   flex-shrink: 0;
+
   width: var(--espacio-8);
   height: var(--espacio-8);
+
   border-radius: var(--radio-md);
+
   color: var(--texto-principal);
   background: var(--fondo-superficie);
 }
 
+/* LEMA DE TAQUILLA */
+
 .footer-lema {
   max-width: 22rem;
   margin: 0;
+
   color: var(--texto-inverso-suave);
+
   font-size: 14px;
+  font-weight: 400;
   line-height: 20px;
 }
+
+/* COLUMNAS DE NAVEGACIÓN */
 
 .footer-columnas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+
   gap: var(--espacio-8) var(--espacio-6);
+  min-width: 0;
 }
+
+.footer-columna {
+  min-width: 0;
+}
+
+/* TÍTULOS DE LAS COLUMNAS */
 
 .footer-titulo {
   margin: 0 0 var(--espacio-3);
+
   color: var(--texto-inverso-suave);
+
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
 }
 
+/* ENLACES DE CADA COLUMNA */
+
 .footer-lista {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-3);
+
   margin: 0;
   padding: 0;
+
   list-style: none;
+}
+
+.footer-lista li {
+  min-width: 0;
 }
 
 .footer-lista a {
   display: inline-block;
+
   color: var(--texto-inverso);
+
   font-size: 14px;
   line-height: 20px;
+
+  overflow-wrap: break-word;
 }
 
 .footer-lista a:hover {
@@ -99,28 +164,40 @@
   text-underline-offset: 4px;
 }
 
-/* ===== Línea inferior ===== */
+/* PARTE INFERIOR: DERECHOS Y NOTA */
+
 .footer-base {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-2);
-  padding-block: var(--espacio-6) var(--espacio-8); /* 24 bajo la línea, 32 abajo */
+
+  padding-block: var(--espacio-6) var(--espacio-8);
+
   border-top: 1px solid var(--borde-inverso);
 }
 
 .footer-base p {
   margin: 0;
+
   color: var(--texto-inverso-suave);
+
   font-size: 12px;
   line-height: 16px;
 }
 
-/* ===== Escritorio y tablet ===== */
+/* ESCRITORIO Y TABLETA */
+
+/*
+ * Conservamos la distribución original:
+ * presentación a la izquierda y columnas a la derecha.
+ */
+
 @media (min-width: 768px) {
   .footer-interior {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+
     gap: var(--espacio-12);
   }
 
@@ -135,19 +212,169 @@
   }
 }
 
+/* MÓVIL */
+
+/*
+ * A 390px, los márgenes laterales son de 24px.
+ * Así, el contenido ocupa 342px como en Figma.
+ */
+
+@media (max-width: 767px) {
+  .footer {
+    width: 100%;
+
+    padding: clamp(32px, 10.26vw, 40px) clamp(16px, 6.15vw, 24px) var(--espacio-8);
+  }
+
+  /* Evita sumar márgenes interiores adicionales. */
+
+  .footer-interior,
+  .footer-base {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  /* Distribución vertical del contenido principal. */
+
+  .footer-interior {
+    flex-direction: column;
+    gap: var(--espacio-8);
+
+    padding: 0;
+  }
+
+  /* Logotipo y descripción más compactos. */
+
+  .footer-presentacion {
+    gap: var(--espacio-3);
+  }
+
+  .footer-logo {
+    width: clamp(92px, 28vw, 109px);
+    height: auto;
+  }
+
+  .footer-lema {
+    max-width: 100%;
+
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /*
+   * Las tres columnas siempre comparten una fila.
+   * minmax(0, 1fr) permite distribuir el espacio
+   * disponible sin provocar desbordamientos.
+   */
+
+  .footer-columnas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    column-gap: clamp(8px, 2.4vw, 12px);
+    row-gap: 0;
+
+    width: 100%;
+  }
+
+  .footer-columna {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Encabezados: Explora, Tu cuenta y Legal. */
+
+  .footer-titulo {
+    margin-bottom: var(--espacio-3);
+
+    font-size: clamp(10px, 2.95vw, 12px);
+    line-height: 16px;
+    font-weight: 400;
+  }
+
+  /* Los enlaces quedan debajo de cada encabezado. */
+
+  .footer-lista {
+    gap: var(--espacio-2);
+  }
+
+  .footer-lista a {
+    max-width: 100%;
+
+    font-size: clamp(10px, 2.95vw, 12px);
+    line-height: 16px;
+    font-weight: 400;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+
+  /* Separación entre las columnas y la parte legal. */
+
+  .footer-base {
+    flex-direction: column;
+    gap: var(--espacio-2);
+
+    margin-top: var(--espacio-8);
+
+    padding: var(--espacio-6) 0 0;
+
+    border-top: 1px solid var(--borde-inverso);
+  }
+
+  .footer-base p {
+    font-size: 10px;
+    line-height: 16px;
+  }
+}
+
+/* MÓVILES MÁS ESTRECHOS */
+
+/*
+ * Para pantallas de 320px o menos,
+ * reducimos los espacios sin eliminar columnas.
+ */
+
+@media (max-width: 360px) {
+  .footer-interior {
+    gap: var(--espacio-6);
+  }
+
+  .footer-columnas {
+    column-gap: var(--espacio-2);
+  }
+
+  .footer-titulo,
+  .footer-lista a {
+    font-size: 10px;
+  }
+}
+
+/* OPCIONES DE COOKIES DEL FOOTER */
+
+/*
+ * Se conservan los estilos existentes
+ * para los controles de cookies.
+ */
+
 .footer-base .cookies {
   margin-top: var(--espacio-2);
 }
 
 .footer-base .cookies-boton {
-  background: transparent;
+  padding: 0;
+
   border: none;
+  background: transparent;
+
   color: var(--texto-inverso-suave);
   font-family: var(--fuente-instrument-sans);
   font-size: 14px;
-  cursor: pointer;
-  padding: 0;
+
   text-decoration: underline;
+  cursor: pointer;
+
   transition: color 0.2s ease;
 }
 

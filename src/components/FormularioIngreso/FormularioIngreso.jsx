@@ -1,12 +1,15 @@
 /**
  * FormularioIngreso.jsx
  *
- * Gestiona el inicio de sesión:
- * - Validación de los campos.
- * - Mostrar y ocultar la contraseña.
- * - Envío de credenciales a la API.
- * - Mensajes de error y reintento.
+ * Gestiona el formulario de inicio de sesión:
+ * - Validaciones de correo y contraseña.
+ * - Mostrar y ocultar contraseña.
+ * - Comunicación con la API.
+ * - Estados de carga, errores y reintento.
  * - Bloqueo temporal por demasiados intentos.
+ *
+ * Los enlaces del Sprint 3 son interactivos,
+ * pero mantienen al usuario en la misma pantalla.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +19,7 @@ import { iniciarSesion } from "../../Api/Sesion.js";
 
 import { mensajeError, textoAcceso } from "../../Utils/textosAcceso.js";
 
-// Icono que permite mostrar u ocultar la contraseña.
+// Icono para mostrar u ocultar la contraseña.
 function Ojo({ visible }) {
   return (
     <svg
@@ -32,32 +35,31 @@ function Ojo({ visible }) {
     >
       <path d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z" />
       <circle cx="12" cy="12" r="2.5" />
-
       {visible && <path d="M3 3 21 21" />}
     </svg>
   );
 }
 
 export default function FormularioIngreso({ textos, idioma, onIngreso }) {
-  // Obtiene los textos de la API.
+  // Obtiene las etiquetas y los mensajes desde GET /textos.
   const t = (nombre) => textoAcceso(textos, idioma, nombre);
 
-  // Datos introducidos por el usuario.
+  // Estados de los campos del formulario.
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
   const [recordar, setRecordar] = useState(true);
   const [visible, setVisible] = useState(false);
 
-  // Estados de validación y solicitud.
+  // Estados de validación y comunicación con la API.
   const [erroresCampos, setErroresCampos] = useState({});
   const [errorCodigo, setErrorCodigo] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  // Contador de bloqueo cuando la API responde 429.
+  // Estados para controlar el bloqueo de intentos.
   const [bloqueoHasta, setBloqueoHasta] = useState(0);
   const [segundosRestantes, setSegundosRestantes] = useState(0);
 
-  // Referencias para controlar el foco y los envíos.
+  // Referencias para manejar el foco y evitar envíos dobles.
   const correoRef = useRef(null);
   const claveRef = useRef(null);
   const envioEnCurso = useRef(false);
@@ -65,8 +67,8 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
   const bloqueado = segundosRestantes > 0;
 
   /**
-   * Actualiza el contador y libera el formulario
-   * cuando termina el tiempo de bloqueo.
+   * Actualiza el tiempo restante cuando la API
+   * devuelve un error de demasiados intentos.
    */
   useEffect(() => {
     if (!bloqueoHasta) return;
@@ -85,7 +87,8 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
   }, [bloqueoHasta]);
 
   /**
-   * Actualiza un campo y limpia los errores anteriores.
+   * Actualiza los campos y limpia los errores
+   * cuando el usuario vuelve a escribir.
    */
   function actualizarCampo(campo, valor) {
     if (campo === "correo") {
@@ -105,26 +108,38 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
   }
 
   /**
-   * Valida el formulario y solicita iniciar sesión.
+   * Mantiene activos los enlaces del Sprint 3
+   * sin abandonar la página de inicio de sesión.
+   *
+   * Cuando implementemos el Sprint 3, podremos
+   * retirar esta función y utilizar sus rutas reales.
+   */
+  function mantenerEnIngreso(evento) {
+    evento.preventDefault();
+  }
+
+  /**
+   * Valida los datos e intenta iniciar sesión.
+   * También gestiona las respuestas de error.
    */
   async function enviar() {
     if (envioEnCurso.current || bloqueado) return;
 
     const nuevosErrores = {};
 
-    // Comprueba el correo.
+    // Valida el correo electrónico.
     if (!correo.trim()) {
       nuevosErrores.correo = t("correoObligatorio");
     } else if (!correoRef.current?.validity.valid) {
       nuevosErrores.correo = t("correoInvalido");
     }
 
-    // Comprueba la contraseña.
+    // Valida que la contraseña no esté vacía.
     if (!clave) {
       nuevosErrores.clave = t("claveObligatoria");
     }
 
-    // Muestra los errores antes de enviar.
+    // Muestra los errores y enfoca el primer campo inválido.
     if (Object.keys(nuevosErrores).length > 0) {
       setErroresCampos(nuevosErrores);
       setErrorCodigo("validacion");
@@ -135,7 +150,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
       return;
     }
 
-    // Impide solicitudes duplicadas.
+    // Evita enviar las credenciales más de una vez.
     envioEnCurso.current = true;
     setEnviando(true);
     setErrorCodigo("");
@@ -143,14 +158,14 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     try {
       const datos = await iniciarSesion(correo.trim(), clave);
 
-      // La sesión se gestiona mediante la API.
-      // No almacenamos tokens en localStorage.
+      // La API administra la sesión mediante cookies.
+      // No guardamos tokens en localStorage.
       onIngreso(datos.usuario);
     } catch (error) {
       if (error instanceof ErrorApi) {
         setErrorCodigo(error.codigo || "error_interno");
 
-        // Errores de validación que devuelve el servidor.
+        // Procesa los errores de validación del servidor.
         if (error.codigo === "validacion") {
           const campos = error.campos || {};
 
@@ -161,7 +176,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
           primerCampo.current?.focus();
         }
 
-        // Respeta el tiempo de espera del servidor.
+        // Respeta el tiempo de espera enviado por la API.
         if (error.status === 429) {
           const segundos = Math.max(0, Number(error.retryAfter) || 0);
 
@@ -170,7 +185,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
           setSegundosRestantes(Math.ceil(segundos));
         }
       } else {
-        // Conserva los campos cuando falla la conexión.
+        // Conserva los datos si ocurre un error de conexión.
         setErrorCodigo("conexion");
       }
     } finally {
@@ -179,13 +194,13 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     }
   }
 
-  // Evita la recarga del navegador al enviar.
+  // Evita que el navegador recargue al enviar el formulario.
   function manejarEnvio(evento) {
     evento.preventDefault();
     void enviar();
   }
 
-  // Mensajes de la alerta obtenidos desde GET /textos.
+  // Obtiene los mensajes de error desde GET /textos.
   const erroresIngreso = textos?.paginas?.ingresar?.errores;
 
   const tituloAlerta =
@@ -203,14 +218,14 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
     ? mensajeError(textos, idioma, errorCodigo, { segundos: segundosRestantes })
     : "";
 
-  // El botón principal también sirve para reintentar.
+  // Cambia el texto del botón si necesitamos reintentar.
   const textoBoton = enviando
     ? t("ingresando")
     : errorCodigo === "conexion"
       ? t("reintentar")
       : t("ingresar");
 
-  // Asocia los errores visuales a sus campos.
+  // Relaciona los mensajes de error con sus campos.
   const idCorreoError = erroresCampos.correo ? "ingreso-correo-error" : undefined;
 
   const idClaveError = erroresCampos.clave ? "ingreso-clave-error" : undefined;
@@ -223,7 +238,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
 
       <p className="acceso-formulario__introduccion">{t("descripcion")}</p>
 
-      {/* ALERTA DE VALIDACIÓN O CONEXIÓN */}
+      {/* MENSAJES DE ERROR */}
 
       {errorCodigo && (
         <div className="acceso-aviso" role="alert">
@@ -239,7 +254,7 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
         </div>
       )}
 
-      {/* FORMULARIO DE INGRESO */}
+      {/* FORMULARIO */}
 
       <form noValidate onSubmit={manejarEnvio} aria-busy={enviando}>
         <fieldset className="acceso-fieldset" disabled={enviando || bloqueado}>
@@ -316,11 +331,18 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
               <span>{t("recordar")}</span>
             </label>
 
-            {/* Sprint 3: texto sin navegación temporalmente */}
-            <a>{t("olvidaste")}</a>
+            {/*
+             * ENLACE DE RECUPERACIÓN - SPRINT 3
+             *
+             * Se puede pulsar, pero no navega todavía.
+             * Conserva el estilo y el foco del enlace.
+             */}
+            <a href="/ingresar" onClick={mantenerEnIngreso}>
+              {t("olvidaste")}
+            </a>
           </div>
 
-          {/* BOTÓN PRINCIPAL: INGRESAR O REINTENTAR */}
+          {/* BOTÓN PRINCIPAL */}
 
           <button type="submit" className="acceso-boton" disabled={enviando || bloqueado}>
             {enviando && <span className="acceso-boton__spinner" aria-hidden="true" />}
@@ -330,10 +352,17 @@ export default function FormularioIngreso({ textos, idioma, onIngreso }) {
         </fieldset>
       </form>
 
-      {/* ENLACE DE REGISTRO PENDIENTE DEL SPRINT 3 */}
+      {/* ENLACE DE REGISTRO - SPRINT 3 */}
 
       <p className="acceso-formulario__pie">
-        {t("noTienesCuenta")} <a>{t("crearCuenta")}</a>
+        {t("noTienesCuenta")}{" "}
+        {/*
+         * Es un enlace interactivo, pero permanece
+         * en la página de ingreso hasta el Sprint 3.
+         */}
+        <a href="/ingresar" onClick={mantenerEnIngreso}>
+          {t("crearCuenta")}
+        </a>
       </p>
     </div>
   );

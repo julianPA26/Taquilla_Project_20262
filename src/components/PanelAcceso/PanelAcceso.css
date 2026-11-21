@@ -1,30 +1,87 @@
+/**
+ * PanelAcceso.css
+ *
+ * Estilos del panel negro de autenticación.
+ *
+ * - Mantiene el diseño del Figma.
+ * - Conserva el logotipo y los beneficios.
+ * - Evita que el panel se estire cuando
+ *   aparecen errores en el formulario.
+ * - Se oculta en la versión móvil.
+ */
+
+/* ========================================
+   PANEL PRINCIPAL
+   ======================================== */
+
+/*
+ * El panel ocupa la altura de la pantalla.
+ *
+ * align-self: start evita que CSS Grid lo estire
+ * cuando el formulario de la derecha crece.
+ *
+ * position: sticky mantiene el panel en su lugar
+ * si la página necesita desplazamiento vertical.
+ */
+
 .panel-presentacion {
+  position: sticky;
+  top: 0;
+  align-self: start;
+
   display: flex;
-  min-width: 0;
   flex-direction: column;
   justify-content: space-between;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 100vh;
+  height: 100dvh;
+
   gap: 40px;
 
   padding: clamp(32px, 3.5vw, 80px);
 
   background: var(--fondo-inverso);
   color: var(--texto-inverso);
+
+  /*
+   * En pantallas de poca altura, el contenido
+   * podrá desplazarse sin estirar el panel.
+   */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-/* LOGOTIPO */
+/* ========================================
+   LOGOTIPO
+   ======================================== */
 
 .panel-presentacion__marca {
   display: inline-flex;
+  align-self: flex-start;
+
   width: fit-content;
+  flex-shrink: 0;
 }
 
 .panel-presentacion__marca img {
   display: block;
+
   width: clamp(100px, 9vw, 126px);
   height: auto;
 }
 
-/* CONTENIDO PROMOCIONAL */
+/* ========================================
+   CONTENIDO PROMOCIONAL
+   ======================================== */
+
+/*
+ * Contiene el lema y los beneficios
+ * obtenidos desde GET /textos.
+ */
 
 .panel-presentacion__contenido {
   width: 100%;
@@ -32,10 +89,13 @@
   min-width: 0;
 }
 
-/* TÍTULO */
+/* ========================================
+   TÍTULO PROMOCIONAL
+   ======================================== */
 
 .panel-presentacion__contenido h2 {
   max-width: 12ch;
+
   margin: 0 0 clamp(24px, 3vw, 42px);
 
   color: inherit;
@@ -46,7 +106,9 @@
   font-weight: 600;
 }
 
-/* LISTA DE BENEFICIOS */
+/* ========================================
+   LISTA DE BENEFICIOS
+   ======================================== */
 
 .panel-presentacion__contenido ul {
   display: grid;
@@ -54,40 +116,59 @@
 
   margin: 0;
   padding: 0;
+
   list-style: none;
 }
+
+/* Cada beneficio muestra un icono y su texto. */
 
 .panel-presentacion__contenido li {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   font-size: clamp(12px, 1.05vw, 15px);
   line-height: 1.5;
 }
 
-/* ICONOS */
+/* ========================================
+   ICONOS DE BENEFICIOS
+   ======================================== */
 
 .panel-presentacion__icono {
   display: grid;
   place-items: center;
 
   flex: 0 0 22px;
+
   width: 22px;
   height: 22px;
 
   border-radius: 50%;
+
   background: var(--borde-inverso);
 }
 
-/* ACCESIBILIDAD */
+/* ========================================
+   ACCESIBILIDAD
+   ======================================== */
+
+/* Permite identificar el enlace al usar Tab. */
 
 .panel-presentacion__marca:focus-visible {
   outline: 2px solid var(--marca-acento);
   outline-offset: 4px;
 }
 
-/* MÓVIL */
+/* ========================================
+   VISTA MÓVIL
+   ======================================== */
+
+/*
+ * En móvil ocultamos el panel negro.
+ * Solo se muestra el formulario de ingreso.
+ */
 
 @media (max-width: 767px) {
   .panel-presentacion {

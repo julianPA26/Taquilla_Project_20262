@@ -1,47 +1,79 @@
+/**
+ * Listafindesemana.css
+ *
+ * Estilos de la sección "Este fin de semana".
+ *
+ * Cada evento se muestra como una tarjeta independiente
+ * de 98px de alto, siguiendo el diseño móvil de Figma.
+ *
+ * La sección permanece oculta en escritorio.
+ */
+
+/* CONTENEDOR DE LA SECCIÓN */
+
 .finde {
+  width: 100%;
+  min-width: 0;
+
   color: var(--texto-principal);
   font-family: var(--fuente-instrument-sans);
 }
 
-.finde :focus-visible {
-  outline: 3px solid var(--marca-primario);
-  outline-offset: 3px;
+/*
+ * A 390px de pantalla, los márgenes laterales
+ * llegan a 20px y el contenido mide 350px.
+ */
+.finde-interior {
+  width: calc(100% - 2 * clamp(16px, 5.13vw, 20px));
+  max-width: 80rem;
+
+  margin-inline: auto;
+
+  padding-block: var(--espacio-2) var(--espacio-6);
 }
 
-.finde-interior {
-  width: min(100% - 2rem, 80rem);
-  margin-inline: auto;
-  padding-block: var(--espacio-2) var(--espacio-8);
-}
+/* ENCABEZADO */
 
 .finde-encabezado {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--espacio-4);
+
+  gap: var(--espacio-3);
   margin-bottom: var(--espacio-3);
 }
 
-/* titular-h3 (20px / 26px / 600) */
 .finde-titulo {
+  min-width: 0;
   margin: 0;
-  font-size: 20px;
+
+  font-size: clamp(18px, 5vw, 20px);
   line-height: 26px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
+/* ENLACE VER TODOS */
+
 .finde-ver-todos {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
+  justify-content: center;
+
   gap: 6px;
   min-height: 40px;
+
   padding-inline: var(--espacio-2);
+
   border-radius: var(--radio-sm);
+
   color: var(--texto-principal);
+
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
+
   text-decoration: none;
   white-space: nowrap;
 }
@@ -50,31 +82,72 @@
   background: var(--fondo-sutil);
 }
 
-/* Tarjeta blanca con una fila por evento */
-.finde-lista {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  list-style: none;
-  border: 1px solid var(--borde-sutil);
-  border-radius: var(--radio-lg);
-  background: var(--fondo-superficie);
-  box-shadow: var(--sombra-tarjeta);
+.finde-ver-todos:active {
+  background: var(--fondo-presionado);
 }
 
-.finde-lista li + li {
-  border-top: 1px solid var(--borde-sutil);
+/* LISTA DE EVENTOS */
+
+/*
+ * Antes había una sola tarjeta con divisores.
+ * Ahora usamos Grid para separar las tres tarjetas.
+ */
+.finde-lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: var(--espacio-3);
+
+  width: 100%;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  box-shadow: none;
+
+  list-style: none;
 }
+
+/* CADA EVENTO OCUPA SU PROPIA TARJETA */
+
+.finde-lista > li {
+  width: 100%;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* TARJETA HORIZONTAL */
 
 .finde-fila {
   display: flex;
   align-items: center;
+
   gap: var(--espacio-3);
-  min-height: 64px;
-  padding: var(--espacio-3);
-  color: inherit;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 98px;
+
+  padding: var(--espacio-4) var(--espacio-3);
+
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+
   text-decoration: none;
 }
+
+/* INTERACCIÓN DE LA TARJETA */
 
 .finde-fila:hover {
   background: var(--fondo-sutil);
@@ -84,41 +157,111 @@
   background: var(--fondo-presionado);
 }
 
+.finde-fila:focus-visible,
+.finde-ver-todos:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+
+/* MINIATURA DEL EVENTO */
+
+/*
+ * La miniatura mide 64 × 64px.
+ * Flex-shrink evita que se comprima por textos largos.
+ */
 .finde-miniatura {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  flex: 0 0 64px;
+
+  width: 64px;
+  height: 64px;
+
+  min-width: 64px;
+  min-height: 64px;
+
+  overflow: hidden;
+
   border-radius: var(--radio-md);
 }
 
+/* CONTENIDO DE TEXTO */
+
 .finde-texto {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  justify-content: center;
+
   min-width: 0;
 }
 
+/* NOMBRE DEL EVENTO */
+
 .finde-nombre {
+  display: block;
+
+  min-width: 0;
   overflow: hidden;
+
+  color: var(--texto-principal);
+
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
+
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.finde-fecha,
-.finde-precio {
+/* FECHA Y HORA */
+
+.finde-fecha {
+  display: block;
+
+  min-width: 0;
+  overflow: hidden;
+
   color: var(--texto-secundario);
+
   font-size: 12px;
   line-height: 16px;
+  font-weight: 400;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+/* PRECIO */
+
 .finde-precio {
+  display: block;
+
   color: var(--texto-principal);
+
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 500;
 }
 
-/* Solo móvil */
+/* ADAPTACIÓN A PANTALLAS ESTRECHAS */
+
+@media (max-width: 360px) {
+  .finde-fila {
+    gap: var(--espacio-2);
+    padding-inline: var(--espacio-2);
+  }
+
+  .finde-nombre {
+    font-size: 13px;
+  }
+
+  .finde-fecha,
+  .finde-precio {
+    font-size: 11px;
+  }
+}
+
+/* OCULTAR EN TABLET Y ESCRITORIO */
+
 @media (min-width: 768px) {
   .finde {
     display: none;
