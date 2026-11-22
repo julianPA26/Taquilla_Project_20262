@@ -1,26 +1,44 @@
 /**
  * ajustesMoviles.css
  *
- * Correcciones puntuales de desbordamiento
- * para pantallas pequeñas.
+ * Ajustes responsive de Taquilla.
  *
- * No modifica los tamaños de escritorio
- * ni sustituye los estilos originales.
+ * - Evita que Inicio y Detalle amplíen la página.
+ * - Mantiene los carruseles desplazables.
+ * - Controla el desplazamiento horizontal en Safari.
+ * - Conserva las correcciones del panel de filtros.
+ * - No modifica los estilos de escritorio.
  */
 
 /* ========================================
-   CONTENEDOR GENERAL
+   PANTALLAS MÓVILES
    ======================================== */
 
 @media (max-width: 767px) {
+  /* ======================================
+     LÍMITES DEL DOCUMENTO
+     ====================================== */
+
   /*
-   * El Layout y el main deben respetar
-   * siempre el ancho disponible.
+   * Evita el desplazamiento lateral de la
+   * página sin impedir que los carruseles
+   * interiores se desplacen por separado.
    *
-   * No usamos overflow-x: hidden para
-   * ocultar un problema de tamaño.
+   * hidden sirve de respaldo para Safari
+   * cuando clip no está disponible.
    */
 
+  html,
+  body {
+    max-width: 100%;
+
+    overflow-x: hidden;
+    overflow-x: clip;
+
+    overscroll-behavior-x: none;
+  }
+
+  #root,
   .sitio,
   .sitio > main {
     width: 100%;
@@ -28,13 +46,151 @@
     max-width: 100%;
   }
 
+  .sitio > main {
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
   /* ======================================
-     PANEL DE FILTROS DE EXPLORAR
+     INICIO: HERO
      ====================================== */
 
   /*
-   * El panel ocupa la pantalla sin crear
-   * un ancho horizontal adicional.
+   * La cuadrícula del Hero no debe calcular
+   * su ancho a partir del contenido interno.
+   */
+
+  .hero-interior {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero-texto,
+  .hero-buscador-movil,
+  .hero-movil-campo {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     INICIO: CATEGORÍAS
+     ====================================== */
+
+  .categorias,
+  .categorias-interior {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /*
+   * Las categorías se siguen deslizando
+   * horizontalmente dentro de su lista.
+   */
+
+  .categorias-chips {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ======================================
+     INICIO: EVENTOS DESTACADOS
+     ====================================== */
+
+  .seccion,
+  .seccion-interior {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .seccion-encabezado > :first-child {
+    min-width: 0;
+  }
+
+  /*
+   * El carrusel conserva sus tarjetas,
+   * pero su desplazamiento horizontal no
+   * debe arrastrar toda la página.
+   */
+
+  .seccion-lista {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .seccion-lista > li {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     DETALLE DEL EVENTO
+     ====================================== */
+
+  .detalle-evento,
+  .detalle-encabezado,
+  .detalle-encabezado__contenido,
+  .detalle-evento__secciones-extra {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /*
+   * El contenido dinámico debe poder partir
+   * palabras largas sin aumentar su ancho.
+   */
+
+  .detalle-encabezado__dato,
+  .detalle-evento__descripcion p,
+  .detalle-evento__direccion {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* ======================================
+     DETALLE: EVENTOS RELACIONADOS
+     ====================================== */
+
+  /*
+   * Mantiene el carrusel desplazable sin
+   * trasladar el gesto horizontal a la página.
+   */
+
+  .detalle-evento .detalle-relacionados__lista {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .detalle-evento .detalle-relacionados__lista > li {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     EXPLORAR: PANEL DE FILTROS
+     ====================================== */
+
+  /*
+   * Conserva las reglas responsive que
+   * teníamos para los filtros de Explorar.
    */
 
   .sitio .filtros {
@@ -50,19 +206,12 @@
     max-width: 100%;
   }
 
-  /*
-   * Permite que solo el cuerpo del panel
-   * se desplace verticalmente si los filtros
-   * superan la altura del dispositivo.
-   */
-
   .sitio .filtros-cuerpo {
     min-height: 0;
     overflow-y: auto;
+
     overscroll-behavior-y: contain;
   }
-
-  /* Encabezado adaptable a textos largos. */
 
   .sitio .filtros-titulo {
     min-width: 0;
@@ -74,15 +223,7 @@
     flex-shrink: 0;
   }
 
-  /* ======================================
-     CAMPOS DE FECHA
-     ====================================== */
-
-  /*
-   * minmax(0, 1fr) evita que el ancho
-   * mínimo de un input de fecha agrande
-   * artificialmente las columnas.
-   */
+  /* Fechas en dos columnas adaptables. */
 
   .sitio .filtros-fechas {
     display: grid;
@@ -93,43 +234,20 @@
     max-width: 100%;
   }
 
-  .sitio .filtros-fechas label {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-
+  .sitio .filtros-fechas label,
   .sitio .filtros-fechas input {
-    display: block;
-
     width: 100%;
     min-width: 0;
     max-width: 100%;
   }
 
-  /* ======================================
-     SELECTOR DE CIUDAD
-     ====================================== */
+  /* Ciudad y categorías. */
 
-  .sitio .filtros-selector {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-
+  .sitio .filtros-selector,
   .sitio .filtros-selector select {
     min-width: 0;
     max-width: 100%;
   }
-
-  /* ======================================
-     FILTROS DE CATEGORÍA
-     ====================================== */
-
-  /*
-   * Una categoría con un nombre largo
-   * podrá partirse en varias líneas.
-   */
 
   .sitio .filtros-categoria {
     min-width: 0;
@@ -139,14 +257,7 @@
     overflow-wrap: anywhere;
   }
 
-  /* ======================================
-     BOTÓN INFERIOR
-     ====================================== */
-
-  /*
-   * El pie permanece dentro de la pantalla.
-   * El contenido central es el que se desplaza.
-   */
+  /* Pie del panel y botón de resultados. */
 
   .sitio .filtros-pie {
     flex: 0 0 auto;
@@ -167,10 +278,8 @@
 
 @media (max-width: 374px) {
   /*
-   * Los controles nativos de fecha necesitan
-   * más espacio en dispositivos estrechos.
-   *
-   * Solo aquí pasan a una columna.
+   * Los campos de fecha pasan a una
+   * columna cuando falta espacio.
    */
 
   .sitio .filtros-fechas {
