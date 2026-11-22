@@ -1,20 +1,40 @@
+/**
+ * App.jsx
+ *
+ * Componente principal de Taquilla.
+ *
+ * Administra:
+ * - Navegación entre vistas.
+ * - Preferencias de idioma.
+ * - Estado de la sesión.
+ * - Búsquedas y filtros iniciales.
+ * - Panel de accesibilidad.
+ *
+ * La estructura visual compartida está
+ * separada en LayoutPrincipal.jsx.
+ */
 import { useEffect, useRef, useState } from "react";
 import { useTextos } from "./hooks/useTextos.js";
 import { leerIdiomaGuardado, guardarIdioma } from "./Utils/preferencias.js";
 import { consultarSesion, cerrarSesion } from "./Api/Sesion.js";
 import { ErrorApi } from "./Api/Cliente.js";
+import LayoutPrincipal from "./layouts/LayoutPrincipal.jsx";
 import Navbar from "./components/NavBar/Navbar.jsx";
 import Footer from "./components/Footer/Footer.jsx";
+import AccessibilityPanel from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
+import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
 import Inicio from "./Pages/Inicio.jsx";
 import Explorar from "./Pages/Explorar.jsx";
 import DetalleEvento from "./Pages/DetalleEvento.jsx";
 import Acceso from "./Pages/Acceso.jsx";
-import AccessibilityPanel from "./components/AccessibilityPanel/AccessibilityPanel.jsx";
-import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
 import "./App.css";
+import "./styles/ajustesMovil.css";
 
 const VISTAS_PUBLICAS = ["inicio", "explorar"];
-
+/**
+ * Obtiene la vista correspondiente a la URL.
+ * Conserva las rutas existentes del Sprint 2.
+ */
 function leerRutaActual() {
   const pathname = window.location.pathname;
 
@@ -45,35 +65,45 @@ function leerRutaActual() {
   };
 }
 
+/* ========================================
+   COMPONENTE PRINCIPAL
+   ======================================== */
+
 export default function App() {
-  // Preferencias generales de la aplicación.
+  // Preferencias de idioma y ruta activa.
   const [idioma, setIdioma] = useState(leerIdiomaGuardado);
   const [ruta, setRuta] = useState(leerRutaActual);
 
-  // La sesión se consulta a la API, no a localStorage.
+  // Estado de autenticación administrado en React.
   const [usuario, setUsuario] = useState(null);
   const [cerrandoSesion, setCerrandoSesion] = useState(false);
   const [errorSesion, setErrorSesion] = useState("");
 
-  // Evita que una consulta antigua sobrescriba un ingreso nuevo.
+  // Impide que una consulta antigua sobrescriba un ingreso.
   const versionSesion = useRef(0);
 
-  // Estados de accesibilidad y búsqueda.
+  // Controla el panel de accesibilidad.
   const [panelAccesibilidadAbierto, setPanelAccesibilidadAbierto] = useState(false);
 
+  // Valores utilizados para abrir Explorar con filtros.
   const [consulta, setConsulta] = useState("");
   const [ciudadFiltro, setCiudadFiltro] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
 
-  // Textos y estado de carga provenientes de la API.
+  // Recupera los textos de la API según el idioma.
   const datos = useTextos(idioma);
+
   const activo = ruta.vista;
   const esAcceso = activo === "ingresar";
 
+  /* ========================================
+     RECUPERACIÓN DE SESIÓN
+     ======================================== */
+
   /**
-   * Recupera la sesión al abrir o recargar la aplicación.
-   * La cookie httpOnly es administrada por el navegador y la API.
+   * Consulta GET /sesion al cargar la aplicación.
+   * La cookie HttpOnly depende del navegador y la API.
    */
   useEffect(() => {
     let vigente = true;
@@ -88,8 +118,8 @@ export default function App() {
         }
       } catch (error) {
         if (vigente && versionSesion.current === versionInicial) {
-          // Una respuesta 401 significa que no hay sesión activa.
           if (error instanceof ErrorApi && error.status === 401) {
+            // Una respuesta 401 indica que no hay sesión válida.
             setUsuario(null);
           } else {
             console.warn("No fue posible comprobar la sesión:", error);
@@ -105,9 +135,13 @@ export default function App() {
     };
   }, []);
 
+  /* ========================================
+     SINCRONIZACIÓN DE RUTAS
+     ======================================== */
+
   /**
-   * Sincroniza los botones Atrás y Adelante del navegador
-   * con las vistas de React.
+   * Mantiene la interfaz sincronizada con los
+   * botones Atrás y Adelante del navegador.
    */
   useEffect(() => {
     function sincronizar() {
@@ -119,7 +153,7 @@ export default function App() {
 
       setRuta(leerRutaActual());
 
-      // Los filtros de una búsqueda nueva comienzan limpios.
+      // Una navegación externa inicia sin filtros anteriores.
       setConsulta("");
       setCiudadFiltro("");
       setCategoriaFiltro("");
@@ -135,13 +169,25 @@ export default function App() {
     };
   }, []);
 
-  // Aplica y conserva el idioma seleccionado.
+  /* ========================================
+     PREFERENCIAS Y METADATOS
+     ======================================== */
+
+  /**
+   * Actualiza el idioma del documento
+   * y conserva la preferencia seleccionada.
+   */
   useEffect(() => {
     document.documentElement.lang = idioma;
     guardarIdioma(idioma);
   }, [idioma]);
 
-  // Actualiza los metadatos utilizando los textos de la API.
+  /**
+   * Actualiza el título y descripción del documento
+   * utilizando los textos recibidos de la API.
+   *
+   * El detalle administra sus propios metadatos.
+   */
   useEffect(() => {
     if (activo === "detalle") return;
 
@@ -165,13 +211,19 @@ export default function App() {
     }
   }, [activo, datos.textos]);
 
-  // Lleva al comienzo de cada nueva vista.
+  /**
+   * Lleva al inicio de la página al cambiar de ruta.
+   */
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [ruta]);
 
+  /* ========================================
+     FUNCIONES DE NAVEGACIÓN
+     ======================================== */
+
   /**
-   * Navega a Inicio o Explorar.
+   * Navega entre Inicio y Explorar.
    */
   function irAVista(vista = "inicio") {
     if (!VISTAS_PUBLICAS.includes(vista)) return;
@@ -182,7 +234,7 @@ export default function App() {
   }
 
   /**
-   * Abre la vista de inicio de sesión.
+   * Abre la página de inicio de sesión.
    */
   function irAIngreso() {
     if (window.location.pathname !== "/ingresar") {
@@ -193,7 +245,8 @@ export default function App() {
   }
 
   /**
-   * Abre el detalle del evento seleccionado.
+   * Navega al detalle del evento seleccionado.
+   * Utiliza su slug real.
    */
   function abrirEvento(evento) {
     if (!evento?.slug) return;
@@ -207,7 +260,7 @@ export default function App() {
   }
 
   /**
-   * Conserva la búsqueda y navega a Explorar.
+   * Conserva la búsqueda antes de abrir Explorar.
    */
   function buscar(valor = "", ciudad = "", categoria = "", fecha = "") {
     setConsulta(valor);
@@ -219,8 +272,7 @@ export default function App() {
   }
 
   /**
-   * Solamente el ingreso está disponible en el Sprint 2.
-   * Crear cuenta permanece visible, pero no abre otra vista.
+   * El Sprint 2 únicamente habilita el ingreso.
    */
   function abrirAuth(modo) {
     if (modo === "ingresar") {
@@ -228,12 +280,17 @@ export default function App() {
     }
   }
 
+  /* ========================================
+     AUTENTICACIÓN
+     ======================================== */
+
   /**
-   * Actualiza el usuario después de POST /sesion.
-   * No almacenamos el token que pueda devolver la API.
+   * Actualiza el estado después de POST /sesion.
+   * No almacena tokens en localStorage.
    */
   function ingresoCorrecto(nuevoUsuario) {
     versionSesion.current += 1;
+
     setUsuario(nuevoUsuario ?? null);
     setErrorSesion("");
 
@@ -241,7 +298,7 @@ export default function App() {
   }
 
   /**
-   * Cierra la sesión mediante DELETE /sesion.
+   * Solicita DELETE /sesion para cerrar la sesión.
    */
   async function manejarCerrarSesion() {
     if (cerrandoSesion) return;
@@ -253,12 +310,14 @@ export default function App() {
       await cerrarSesion();
 
       versionSesion.current += 1;
+
       setUsuario(null);
       irAVista("inicio");
     } catch (error) {
       if (error instanceof ErrorApi && error.status === 401) {
-        // Si la sesión ya venció, limpiamos igualmente la UI.
+        // La sesión ya vencida también se elimina de la UI.
         versionSesion.current += 1;
+
         setUsuario(null);
         irAVista("inicio");
       } else {
@@ -271,12 +330,14 @@ export default function App() {
     }
   }
 
-  // Accesibilidad: salta directamente al contenido principal.
-  function saltarAlContenido(evento) {
-    evento.preventDefault();
-    document.getElementById("contenido")?.focus();
-  }
+  /* ========================================
+     CONFIGURACIÓN DEL LAYOUT
+     ======================================== */
 
+  /**
+   * Conserva las clases que utilizan los estilos
+   * del detalle y del formulario de ingreso.
+   */
   const claseSitio = [
     "sitio",
     activo === "detalle" ? "sitio--detalle" : "",
@@ -286,89 +347,93 @@ export default function App() {
     .join(" ");
 
   return (
-    <div className={claseSitio}>
-      {/* Enlace accesible para saltar la navegación */}
-      <a className="saltar-contenido" href="#contenido" onClick={saltarAlContenido}>
-        {datos.textos?.general?.aria?.saltarAlContenido}
-      </a>
+    <LayoutPrincipal
+      claseSitio={claseSitio}
+      textoSaltar={datos.textos?.general?.aria?.saltarAlContenido}
 
-      {/* Navbar público */}
-      {!esAcceso && (
-        <Navbar
-          {...datos}
-          idioma={idioma}
-          cambiarIdioma={setIdioma}
-          activo={activo}
-          usuario={usuario}
-          cerrandoSesion={cerrandoSesion}
-          errorSesion={errorSesion}
-          onCerrarSesion={manejarCerrarSesion}
-          onBuscar={buscar}
-          onAbrirAccesibilidad={() => setPanelAccesibilidadAbierto(true)}
-          onAbrirAuth={abrirAuth}
-        />
-      )}
-
-      {/* Vistas del Sprint 2 */}
-      <main id="contenido" tabIndex={-1}>
-        {esAcceso ? (
-          <Acceso
-            textos={datos.textos}
+      /* Navbar compartido, excepto en Ingresar. */
+      encabezado={
+        !esAcceso ? (
+          <Navbar
+            {...datos}
             idioma={idioma}
-            onIngreso={ingresoCorrecto}
-            onInicio={() => irAVista("inicio")}
-          />
-        ) : activo === "detalle" ? (
-          <DetalleEvento
-            slug={ruta.slug}
-            textos={datos.textos}
-            idioma={idioma}
-            onVolver={irAVista}
-            onVerEvento={abrirEvento}
-          />
-        ) : activo === "explorar" ? (
-          <Explorar
-            textos={datos.textos}
-            idioma={idioma}
-            consulta={consulta}
-            ciudadInicial={ciudadFiltro}
-            categoriaInicial={categoriaFiltro}
-            fechaInicial={fechaFiltro}
-            onVerEvento={abrirEvento}
-          />
-        ) : (
-          <Inicio
-            textos={datos.textos}
-            idioma={idioma}
+            cambiarIdioma={setIdioma}
+            activo={activo}
+            usuario={usuario}
+            cerrandoSesion={cerrandoSesion}
+            errorSesion={errorSesion}
+            onCerrarSesion={manejarCerrarSesion}
             onBuscar={buscar}
-            onExplorarCategoria={(id) => buscar("", "", id)}
-            onVerEvento={abrirEvento}
+            onAbrirAccesibilidad={() => setPanelAccesibilidadAbierto(true)}
+            onAbrirAuth={abrirAuth}
           />
-        )}
-      </main>
+        ) : null
+      }
 
-      {/* Footer público */}
-      {!esAcceso && (
-        <Footer
+      /* Footer compartido, excepto en Ingresar. */
+      pie={
+        !esAcceso ? (
+          <Footer
+            textos={datos.textos}
+            onAbrirAccesibilidad={() => setPanelAccesibilidadAbierto(true)}
+            onAbrirAuth={abrirAuth}
+          />
+        ) : null
+      }
+
+      /* Elementos independientes de las vistas. */
+      adicionales={
+        <>
+          {panelAccesibilidadAbierto && (
+            <div
+              className="accesibilidad-superposicion"
+              onClick={() => setPanelAccesibilidadAbierto(false)}
+            >
+              <div onClick={(evento) => evento.stopPropagation()}>
+                <AccessibilityPanel onClose={() => setPanelAccesibilidadAbierto(false)} />
+              </div>
+            </div>
+          )}
+
+          <AvisoCookies textos={datos.textos} idioma={idioma} />
+        </>
+      }
+    >
+      {/* Contenido de la ruta activa. */}
+      {esAcceso ? (
+        <Acceso
           textos={datos.textos}
-          onAbrirAccesibilidad={() => setPanelAccesibilidadAbierto(true)}
-          onAbrirAuth={abrirAuth}
+          idioma={idioma}
+          onIngreso={ingresoCorrecto}
+          onInicio={() => irAVista("inicio")}
+        />
+      ) : activo === "detalle" ? (
+        <DetalleEvento
+          slug={ruta.slug}
+          textos={datos.textos}
+          idioma={idioma}
+          onVolver={irAVista}
+          onVerEvento={abrirEvento}
+        />
+      ) : activo === "explorar" ? (
+        <Explorar
+          textos={datos.textos}
+          idioma={idioma}
+          consulta={consulta}
+          ciudadInicial={ciudadFiltro}
+          categoriaInicial={categoriaFiltro}
+          fechaInicial={fechaFiltro}
+          onVerEvento={abrirEvento}
+        />
+      ) : (
+        <Inicio
+          textos={datos.textos}
+          idioma={idioma}
+          onBuscar={buscar}
+          onExplorarCategoria={(id) => buscar("", "", id)}
+          onVerEvento={abrirEvento}
         />
       )}
-
-      {/* Panel de accesibilidad */}
-      {panelAccesibilidadAbierto && (
-        <div
-          className="accesibilidad-superposicion"
-          onClick={() => setPanelAccesibilidadAbierto(false)}
-        >
-          <div onClick={(evento) => evento.stopPropagation()}>
-            <AccessibilityPanel onClose={() => setPanelAccesibilidadAbierto(false)} />
-          </div>
-        </div>
-      )}
-
-      <AvisoCookies textos={datos.textos} idioma={idioma} />
-    </div>
+    </LayoutPrincipal>
   );
 }

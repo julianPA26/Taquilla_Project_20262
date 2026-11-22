@@ -1,0 +1,179 @@
+/**
+ * ajustesMoviles.css
+ *
+ * Correcciones puntuales de desbordamiento
+ * para pantallas pequeñas.
+ *
+ * No modifica los tamaños de escritorio
+ * ni sustituye los estilos originales.
+ */
+
+/* ========================================
+   CONTENEDOR GENERAL
+   ======================================== */
+
+@media (max-width: 767px) {
+  /*
+   * El Layout y el main deben respetar
+   * siempre el ancho disponible.
+   *
+   * No usamos overflow-x: hidden para
+   * ocultar un problema de tamaño.
+   */
+
+  .sitio,
+  .sitio > main {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     PANEL DE FILTROS DE EXPLORAR
+     ====================================== */
+
+  /*
+   * El panel ocupa la pantalla sin crear
+   * un ancho horizontal adicional.
+   */
+
+  .sitio .filtros {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sitio .filtros-encabezado,
+  .sitio .filtros-cuerpo,
+  .sitio .filtros-grupo {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /*
+   * Permite que solo el cuerpo del panel
+   * se desplace verticalmente si los filtros
+   * superan la altura del dispositivo.
+   */
+
+  .sitio .filtros-cuerpo {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Encabezado adaptable a textos largos. */
+
+  .sitio .filtros-titulo {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .sitio .filtros-limpiar,
+  .sitio .filtros-cerrar {
+    flex-shrink: 0;
+  }
+
+  /* ======================================
+     CAMPOS DE FECHA
+     ====================================== */
+
+  /*
+   * minmax(0, 1fr) evita que el ancho
+   * mínimo de un input de fecha agrande
+   * artificialmente las columnas.
+   */
+
+  .sitio .filtros-fechas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sitio .filtros-fechas label {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sitio .filtros-fechas input {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     SELECTOR DE CIUDAD
+     ====================================== */
+
+  .sitio .filtros-selector {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sitio .filtros-selector select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     FILTROS DE CATEGORÍA
+     ====================================== */
+
+  /*
+   * Una categoría con un nombre largo
+   * podrá partirse en varias líneas.
+   */
+
+  .sitio .filtros-categoria {
+    min-width: 0;
+    max-width: 100%;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* ======================================
+     BOTÓN INFERIOR
+     ====================================== */
+
+  /*
+   * El pie permanece dentro de la pantalla.
+   * El contenido central es el que se desplaza.
+   */
+
+  .sitio .filtros-pie {
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sitio .filtros-ver {
+    max-width: 100%;
+  }
+}
+
+/* ========================================
+   MÓVILES MUY ESTRECHOS
+   ======================================== */
+
+@media (max-width: 374px) {
+  /*
+   * Los controles nativos de fecha necesitan
+   * más espacio en dispositivos estrechos.
+   *
+   * Solo aquí pasan a una columna.
+   */
+
+  .sitio .filtros-fechas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
