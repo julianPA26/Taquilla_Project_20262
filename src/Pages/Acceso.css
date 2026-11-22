@@ -265,7 +265,7 @@
 }
 
 .acceso-campo__ojo:hover:not(:disabled) {
-  background: var(--fondo-sutil);
+  background: transparent;
 }
 
 /* ========================================
