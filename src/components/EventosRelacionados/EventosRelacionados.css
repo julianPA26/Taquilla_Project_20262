@@ -1,9 +1,29 @@
+/**
+ * EventosRelacionados.css
+ *
+ * Estilos de los eventos relacionados de Taquilla.
+ *
+ * - Escritorio: cuatro tarjetas en cuadrícula.
+ * - Tablet: dos tarjetas por fila.
+ * - Móvil: carrusel horizontal con tarjetas amplias.
+ * - Evita que el carrusel aumente el ancho
+ *   del documento al abrir "Leer más".
+ */
+
+/* ========================================
+   SECCIÓN PRINCIPAL
+   ======================================== */
 
 .detalle-relacionados {
   min-width: 0;
   max-width: 100%;
   margin-top: 4px;
 }
+
+/* ========================================
+   ENCABEZADO
+   ======================================== */
+
 .detalle-relacionados__encabezado {
   min-width: 0;
   margin-bottom: 20px;
@@ -11,23 +31,26 @@
 
 .detalle-relacionados__encabezado h2 {
   margin: 0 0 6px;
+
   font-size: 24px;
   line-height: 1.2;
 }
 
 .detalle-relacionados__encabezado p {
   margin: 0;
+
   color: var(--texto-secundario);
   font-size: 14px;
 }
 
 /* ========================================
-   CUADRÍCULA DE ESCRITORIO
+   ESCRITORIO: CUATRO COLUMNAS
    ======================================== */
 
 .detalle-relacionados__lista {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+
   gap: 16px;
 
   min-width: 0;
@@ -42,57 +65,80 @@
   min-width: 0;
 }
 
+/* ========================================
+   TABLET: DOS COLUMNAS
+   ======================================== */
+
 @media (min-width: 768px) and (max-width: 900px) {
   .detalle-relacionados__lista {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-
+/* ========================================
+   MÓVIL: CARRUSEL HORIZONTAL
+   ======================================== */
 
 @media (max-width: 767px) {
- 
+  /* ======================================
+     CONTENEDOR DEL CARRUSEL
+     ====================================== */
 
-  .sitio--detalle .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados {
+  /*
+   * Conservamos el aislamiento que evitó
+   * que el documento llegara a 1119 px.
+   *
+   * El ancho disponible se calcula
+   * automáticamente entre los márgenes.
+   */
+
+  .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados {
     display: block;
 
-    width: calc(100% - 40px);
+    box-sizing: border-box;
+
+    width: auto;
     min-width: 0;
-    max-width: calc(100% - 40px);
+    max-width: 100%;
 
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 32px clamp(16px, 5.13vw, 20px) 0;
 
-    /*
-     * Evita que las tarjetas fuera del área
-     * visible amplíen el documento.
-     *
-     * El desplazamiento ocurre dentro
-     * de la lista, no en esta sección.
-     */
     overflow: hidden;
+
     contain: inline-size;
   }
 
   /* ======================================
-     CARRUSEL HORIZONTAL
+     LISTA DESPLAZABLE
      ====================================== */
 
   /*
-   * Usamos columnas automáticas con ancho
-   * limitado, en lugar de una fila flexible
-   * cuyo contenido pueda influir en el
-   * ancho del documento.
+   * Flexbox sustituye la cuadrícula móvil.
+   *
+   * Las tarjetas quedan una al lado de otra,
+   * pero no se comprimen en cuatro columnas.
+   *
+   * Utilizamos un selector específico para
+   * que no lo sobrescriban las reglas del
+   * detalle o de la cuadrícula de escritorio.
    */
 
-  .sitio--detalle .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados__lista {
-    display: grid;
+  .detalle-evento[data-detalle-abierto="true"]
+    .detalle-evento__secciones-extra
+    .detalle-relacionados
+    .detalle-relacionados__lista {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 
+    /* Elimina la distribución de CSS Grid. */
     grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, min(78vw, 280px));
+    grid-auto-flow: initial;
+    grid-auto-columns: initial;
 
     gap: 16px;
+
+    box-sizing: border-box;
 
     width: 100%;
     min-width: 0;
@@ -111,46 +157,101 @@
   }
 
   /* ======================================
-     TARJETAS RELACIONADAS
+     ANCHO DE CADA TARJETA
      ====================================== */
 
   /*
-   * Cada tarjeta ocupa una sola columna.
-   * La siguiente aparece al deslizar
-   * horizontalmente el carrusel.
+   * Cada tarjeta ocupa hasta 280 px.
+   *
+   * flex-shrink: 0, incluido en la propiedad
+   * flex, impide que se comprima para intentar
+   * mostrar las cuatro tarjetas a la vez.
    */
 
-  .sitio--detalle .detalle-relacionados__lista > li {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
+  .detalle-evento[data-detalle-abierto="true"]
+    .detalle-evento__secciones-extra
+    .detalle-relacionados
+    .detalle-relacionados__lista
+    > li {
+    flex: 0 0 min(78vw, 280px);
+
+    box-sizing: border-box;
+
+    width: min(78vw, 280px);
+    min-width: min(78vw, 280px);
+    max-width: min(78vw, 280px);
 
     scroll-snap-align: start;
   }
 
-  /* Contenido interior de cada tarjeta. */
+  /* ======================================
+     CONTENIDO DE LAS TARJETAS
+     ====================================== */
 
-  .sitio--detalle .detalle-relacionados__lista .tarjeta-evento,
-  .sitio--detalle .detalle-relacionados__lista .tarjeta-cuerpo {
+  /*
+   * El contenido ocupa el ancho de su
+   * tarjeta sin generar columnas adicionales.
+   */
+
+  .detalle-relacionados__lista .tarjeta-evento,
+  .detalle-relacionados__lista .tarjeta-cuerpo {
+    box-sizing: border-box;
+
     width: 100%;
     min-width: 0;
     max-width: 100%;
   }
 
   /*
-   * Los precios y botones pueden reorganizarse
-   * sin aumentar el ancho de la tarjeta.
+   * El título debe partirse entre palabras,
+   * no letra por letra como en la captura.
    */
 
-  .sitio--detalle .detalle-relacionados__lista .tarjeta-pie {
+  .detalle-relacionados__lista .tarjeta-titulo {
     min-width: 0;
+    max-width: 100%;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  /*
+   * Fecha y ubicación pueden ocupar varias
+   * líneas sin ensanchar la tarjeta.
+   */
+
+  .detalle-relacionados__lista .tarjeta-datos li {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .detalle-relacionados__lista .tarjeta-datos li span {
+    min-width: 0;
+    max-width: 100%;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  /* ======================================
+     PRECIO Y BOTÓN
+     ====================================== */
+
+  /*
+   * Permite que el botón pase a otra línea
+   * únicamente si el contenido lo necesita.
+   */
+
+  .detalle-relacionados__lista .tarjeta-pie {
+    min-width: 0;
+
     flex-wrap: wrap;
     gap: 8px;
   }
 
-  .sitio--detalle .detalle-relacionados__lista .tarjeta-titulo,
-  .sitio--detalle .detalle-relacionados__lista .tarjeta-datos li {
+  .detalle-relacionados__lista .tarjeta-precio {
     min-width: 0;
-    overflow-wrap: anywhere;
   }
 }
