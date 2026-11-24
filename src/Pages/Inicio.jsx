@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { useApi } from "../hooks/useApi.js";
+import { useEventos } from "../hooks/useEvento.js";
 import Hero from "../components/Hero/Hero.jsx";
 import Categorias from "../components/Categorias/Categorias.jsx";
 import SeccionEventos from "../components/SeccionEventos/SeccionEventos.jsx";
 import ListaFinDeSemana from "../components/ListaFinDeSemana/Listafindesemana.jsx";
-import { useEventos } from "../hooks/useEvento.js";
 import { filtrarEventos, limitesDePrecio } from "../Utils/filtros.js";
 import { normalizarRespuestaEventos } from "../Api/Adaptadores.js";
 import { RUTAS } from "../Api/Rutas.js";
+import "./Inicio.css";
 
+// Ciudad que se muestra inicialmente en el buscador.
 const CIUDAD_POR_DEFECTO = "Manizales";
 
-// Filtros "vacíos": sirven de base para pedir solo lo que necesitamos
+/**
+ * Filtros vacíos utilizados como base para
+ * seleccionar eventos de las diferentes secciones.
+ */
 const SIN_FILTROS = {
   q: "",
   categorias: [],
@@ -27,50 +32,79 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
   const ingles = idioma === "en";
   const textosInicio = textos?.paginas?.inicio;
 
-  // La ciudad se elige en el buscador del hero y también cambia "Próximamente en ..."
+  /* ========================================
+     ESTADOS DE LA PÁGINA
+     ======================================== */
+
+  // Ciudad utilizada por el Hero y Próximamente.
   const [ciudad, setCiudad] = useState(CIUDAD_POR_DEFECTO);
-  // Categoría elegida en los chips del móvil: filtra los destacados
+
+  // Categoría seleccionada en los chips móviles.
   const [categoria, setCategoria] = useState("todas");
 
+  /* ========================================
+     CONSULTAS A LA API
+     ======================================== */
+
+  // Eventos destacados, ciudades y categorías.
   const destacados = useApi(RUTAS.eventosDestacados, normalizarRespuestaEventos);
+
   const ciudades = useApi(RUTAS.ciudades);
   const categorias = useApi(RUTAS.categorias);
-  // Todos los eventos ordenados por fecha (para "Este fin de semana" y "Próximamente")
-  const todos = useEventos("fecha");
-  const limites = limitesDePrecio(todos.eventos);
 
+  // Todos los eventos ordenados por fecha.
+  const todos = useEventos("fecha");
+
+  const limites = limitesDePrecio(todos.eventos);
   const eventosDestacados = destacados.datos?.datos ?? [];
-  // El Hero muestra el primer evento destacado que manda la API, sin depender de un slug fijo.
-  // Si la API no manda destacados, queda undefined y el Hero simplemente no dibuja la tarjeta.
+
+  /* ========================================
+     SELECCIÓN DE EVENTOS
+     ======================================== */
+
+  // El primer destacado se utiliza en el Hero.
   const principal = eventosDestacados[0];
 
+  // Filtra los destacados según el chip seleccionado.
   const destacadosVisibles =
     categoria === "todas"
       ? eventosDestacados
       : eventosDestacados.filter((evento) => evento.categoria === categoria);
 
-  // Solo eventos que todavía no han pasado
+  // Conserva únicamente los eventos futuros.
   const ahora = Date.now();
+
   const futuros = todos.eventos.filter((evento) => new Date(evento.fecha).getTime() >= ahora);
 
-  // "Este fin de semana": máximo 3. Si ese fin de semana no tiene eventos, los 3 próximos.
+  // Muestra un máximo de tres eventos para el fin de semana.
   const delFinDeSemana = filtrarEventos(todos.eventos, { ...SIN_FILTROS, fecha: "finde" }, limites);
+
   const eventosFinDeSemana = (delFinDeSemana.length > 0 ? delFinDeSemana : futuros).slice(0, 3);
 
-  // "Próximamente en {ciudad}": los próximos 4 eventos de la ciudad elegida
+  // Próximos cuatro eventos de la ciudad seleccionada.
   const eventosProximos = filtrarEventos(futuros, { ...SIN_FILTROS, ciudad }, limites).slice(0, 4);
 
-  // Textos: la clave en la API es "proximos" (no "proximamente")
+  /* ========================================
+     TEXTOS DESDE LA API
+     ======================================== */
+
   const plantillaTitulo =
     textosInicio?.proximos?.titulo ??
     (ingles ? "Coming soon in {ciudad}" : "Próximamente en {ciudad}");
+
   const tituloProximamente = plantillaTitulo.replace("{ciudad}", ciudad);
+
   const subtituloProximamente =
     textosInicio?.proximos?.subtitulo ??
     (ingles ? "Change the city from the search bar" : "Cambia la ciudad desde el buscador");
 
+  /* ========================================
+     CONTENIDO DE INICIO
+     ======================================== */
+
   return (
-    <>
+    <div className="pagina-inicio">
+      {/* Presentación principal y buscador. */}
       <Hero
         textos={textos}
         idioma={idioma}
@@ -82,6 +116,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
         onVerEvento={onVerEvento}
       />
 
+      {/* Categorías y filtros rápidos en móvil. */}
       <Categorias
         textos={textos}
         idioma={idioma}
@@ -94,6 +129,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
         onExplorar={onExplorarCategoria}
       />
 
+      {/* Carrusel de eventos destacados. */}
       <SeccionEventos
         id="destacados"
         titulo={
@@ -117,6 +153,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
         onVerEvento={onVerEvento}
       />
 
+      {/* Tarjetas compactas exclusivas de móvil. */}
       <ListaFinDeSemana
         textos={textos}
         idioma={idioma}
@@ -126,6 +163,7 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
         onVerEvento={onVerEvento}
       />
 
+      {/* Próximos eventos: sección de escritorio. */}
       <SeccionEventos
         id="proximamente"
         titulo={tituloProximamente}
@@ -140,6 +178,6 @@ export default function Inicio({ textos, idioma, onBuscar, onExplorarCategoria, 
         onVerTodos={() => onBuscar?.("", ciudad)}
         onVerEvento={onVerEvento}
       />
-    </>
+    </div>
   );
 }
