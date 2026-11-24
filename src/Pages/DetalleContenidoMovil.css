@@ -1,30 +1,11 @@
-/**
- * DetalleContenidoMovil.css
- *
- * Controla las secciones adicionales del detalle
- * de evento cuando el usuario pulsa "Leer más".
- *
- * - Conserva la vista inicial del Figma.
- * - Evita desbordamientos horizontales.
- * - Adapta funciones y localidades a móvil.
- * - Mantiene el desplazamiento de eventos
- *   relacionados dentro de su propio carrusel.
- */
 
-/* ========================================
-   ESTRUCTURA DE ESCRITORIO
-   ======================================== */
 
-/* En escritorio, las secciones siguen
-   formando parte del flujo normal. */
-
+/* Mantiene el flujo original en escritorio. */
 .detalle-evento__secciones-extra {
   display: contents;
 }
 
-/* Las funciones y localidades adicionales
-   se reservan para la versión móvil. */
-
+/* Las secciones duplicadas son exclusivas de móvil. */
 .detalle-evento__adicionales-movil {
   display: none;
 }
@@ -34,46 +15,91 @@
    ======================================== */
 
 @media (max-width: 767px) {
-  /* CONTENEDOR PRINCIPAL */
+  
 
   /*
-   * La página nunca debe superar el ancho
-   * disponible en el dispositivo.
+   * El detalle completo no puede ampliar
+   * horizontalmente el ancho del documento.
+   *
+   * Aplicamos el límite solo a esta vista,
+   * sin afectar Inicio ni Explorar.
+   */
+
+  .sitio--detalle {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  .sitio--detalle > main {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /*
+   * La página de detalle contiene los
+   * elementos que aparecen al expandir.
    */
 
   .detalle-evento {
     width: 100%;
-    max-width: 100%;
     min-width: 0;
+    max-width: 100%;
+
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
-  /* SECCIONES OCULTAS INICIALMENTE */
+  /* ======================================
+     SECCIONES ADICIONALES
+     ====================================== */
+
+  /*
+   * Se ocultan hasta pulsar "Leer más".
+   */
 
   .detalle-evento__secciones-extra {
     display: none;
 
     width: 100%;
-    max-width: 100%;
     min-width: 0;
+    max-width: 100%;
   }
 
-  /* APERTURA DEL BOTÓN LEER MÁS */
-
   /*
-   * Cuando el usuario expande la descripción,
-   * las secciones adicionales aparecen debajo.
+   * Al expandir, se convierten en un bloque
+   * cuyo contenido no puede ensanchar
+   * la página.
    */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__secciones-extra {
     display: block;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
-  /* DESCRIPCIÓN DEL EVENTO */
-
   /*
-   * Evita que una palabra o dirección larga
-   * aumente el ancho de la pantalla.
+   * Las secciones internas deben poder
+   * reducirse al ancho disponible.
    */
+
+  .detalle-evento__secciones-extra > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     DESCRIPCIÓN
+     ====================================== */
 
   .detalle-evento__descripcion {
     min-width: 0;
@@ -81,6 +107,7 @@
   }
 
   .detalle-evento__descripcion p {
+    min-width: 0;
     max-width: 100%;
 
     white-space: pre-line;
@@ -88,7 +115,10 @@
     word-break: normal;
   }
 
-  /* Recupera el texto completo al expandir. */
+  /*
+   * Al expandir, muestra el contenido
+   * completo de la descripción.
+   */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__descripcion p {
     display: block;
@@ -99,12 +129,13 @@
     line-clamp: unset;
   }
 
-  /* CONTENEDOR DE FUNCIONES Y LOCALIDADES */
+  /* ======================================
+     FUNCIONES Y LOCALIDADES
+     ====================================== */
 
   /*
-   * Una cuadrícula de una sola columna evita
-   * que los componentes se distribuyan en
-   * columnas demasiado anchas para el móvil.
+   * En móvil se presentan en una sola
+   * columna cuando el detalle está abierto.
    */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__adicionales-movil {
@@ -120,15 +151,16 @@
     margin: 24px clamp(16px, 5.13vw, 20px) 0;
   }
 
-  /* Cada sección debe poder reducir su ancho. */
-
   .detalle-evento__adicionales-movil > * {
     width: 100%;
     min-width: 0;
     max-width: 100%;
   }
 
-  /* HABILITAR FUNCIONES Y LOCALIDADES */
+  /*
+   * Habilita los componentes que el CSS
+   * principal oculta en móvil.
+   */
 
   .detalle-evento[data-detalle-abierto="true"]
     .detalle-evento__adicionales-movil
@@ -145,14 +177,9 @@
     margin: 0;
   }
 
-  /* ========================================
+  /* ======================================
      FUNCIONES DEL EVENTO
-     ======================================== */
-
-  /*
-   * Las fechas y la disponibilidad pueden
-   * ocupar varias líneas cuando sea necesario.
-   */
+     ====================================== */
 
   .detalle-evento__adicionales-movil .detalle-funciones__lista {
     display: grid;
@@ -160,16 +187,22 @@
 
     width: 100%;
     min-width: 0;
+    max-width: 100%;
   }
+
+  /*
+   * La fecha y la disponibilidad pueden
+   * pasar a otra línea si no caben.
+   */
 
   .detalle-evento__adicionales-movil .detalle-funciones__item {
     display: flex;
     flex-wrap: wrap;
-
     align-items: flex-start;
 
     width: 100%;
     min-width: 0;
+    max-width: 100%;
 
     gap: 10px;
   }
@@ -191,15 +224,14 @@
     overflow-wrap: anywhere;
   }
 
-  /* ========================================
+  /* ======================================
      LOCALIDADES Y PRECIOS
-     ======================================== */
+     ====================================== */
 
   /*
-   * Una tarjeta por fila.
-   *
-   * El nombre y el precio pueden reorganizarse
-   * si el dispositivo es demasiado estrecho.
+   * Evita que la cuadrícula original,
+   * diseñada para escritorio, mantenga
+   * varias columnas en móvil.
    */
 
   .detalle-evento__adicionales-movil .detalle-localidades__lista {
@@ -208,6 +240,7 @@
 
     width: 100%;
     min-width: 0;
+    max-width: 100%;
 
     gap: 12px;
   }
@@ -219,25 +252,29 @@
 
     width: 100%;
     min-width: 0;
+    max-width: 100%;
 
     gap: 12px;
   }
 
-  /* Información de la localidad. */
+  /* Información de cada localidad. */
 
   .detalle-evento__adicionales-movil .detalle-localidades__item > div {
     flex: 1 1 140px;
+
     min-width: 0;
+    max-width: 100%;
   }
 
   .detalle-evento__adicionales-movil .detalle-localidades__item h3,
   .detalle-evento__adicionales-movil .detalle-localidades__stock {
+    min-width: 0;
     max-width: 100%;
 
     overflow-wrap: anywhere;
   }
 
-  /* El precio no debe forzar el ancho. */
+  /* El precio tampoco puede ampliar la tarjeta. */
 
   .detalle-evento__adicionales-movil .detalle-localidades__item strong {
     flex: 0 1 auto;
@@ -249,9 +286,9 @@
     overflow-wrap: anywhere;
   }
 
-  /* ========================================
+  /* ======================================
      UBICACIÓN DEL EVENTO
-     ======================================== */
+     ====================================== */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__ubicacion {
     display: block;
@@ -270,7 +307,10 @@
     min-height: 180px;
   }
 
-  /* Direcciones largas con saltos de línea. */
+  /*
+   * Las direcciones largas pueden ocupar
+   * varias líneas.
+   */
 
   .detalle-evento__ubicacion-panel span,
   .detalle-evento__direccion {
@@ -280,9 +320,9 @@
     overflow-wrap: anywhere;
   }
 
-  /* ========================================
+  /* ======================================
      POLÍTICAS DEL EVENTO
-     ======================================== */
+     ====================================== */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-evento__politicas {
     display: block;
@@ -298,14 +338,13 @@
     overflow-wrap: anywhere;
   }
 
-  /* ========================================
+  /* ======================================
      EVENTOS RELACIONADOS
-     ======================================== */
+     ====================================== */
 
   /*
-   * El contenedor permanece dentro de la página.
-   * Solamente la lista de tarjetas se desplaza
-   * horizontalmente.
+   * La sección ocupa únicamente el ancho
+   * disponible entre los márgenes.
    */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados {
@@ -317,7 +356,22 @@
     margin: 32px clamp(16px, 5.13vw, 20px) 0;
   }
 
-  /* CARRUSEL HORIZONTAL */
+  .detalle-evento__secciones-extra .detalle-relacionados__encabezado {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* ======================================
+     CARRUSEL DE EVENTOS RELACIONADOS
+     ====================================== */
+
+  /*
+   * Solamente este contenedor puede
+   * desplazarse horizontalmente.
+   *
+   * Las tarjetas no deben provocar que
+   * crezca el documento completo.
+   */
 
   .detalle-evento[data-detalle-abierto="true"] .detalle-relacionados__lista {
     display: flex;
@@ -339,7 +393,10 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Cada tarjeta mantiene un ancho limitado. */
+  /*
+   * Cada tarjeta tiene un ancho limitado,
+   * pero conserva el desplazamiento lateral.
+   */
 
   .detalle-evento__secciones-extra .detalle-relacionados__lista > li {
     flex: 0 0 min(78vw, 280px);
@@ -350,18 +407,25 @@
     scroll-snap-align: start;
   }
 
-  /* Ajustes internos de las tarjetas relacionadas. */
+  /* ======================================
+     CONTENIDO DE LAS TARJETAS
+     ====================================== */
 
   .detalle-evento__secciones-extra .tarjeta-evento,
   .detalle-evento__secciones-extra .tarjeta-cuerpo {
     width: 100%;
     min-width: 0;
+    max-width: 100%;
   }
 
-  /* Evita que el precio y el botón
-     provoquen un ancho mayor al de la tarjeta. */
+  /*
+   * Precio y botón pueden reorganizarse
+   * dentro de cada tarjeta.
+   */
 
   .detalle-evento__secciones-extra .tarjeta-pie {
+    min-width: 0;
+
     flex-wrap: wrap;
     gap: 8px;
   }
@@ -370,10 +434,17 @@
     min-width: 0;
   }
 
-  /* Los nombres de lugares pueden ser largos. */
+  /*
+   * Los títulos y direcciones largos
+   * no deben ampliar el carrusel.
+   */
 
+  .detalle-evento__secciones-extra .tarjeta-titulo,
   .detalle-evento__secciones-extra .tarjeta-datos li {
     min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
   }
 
   .detalle-evento__secciones-extra .tarjeta-datos li span {
