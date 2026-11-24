@@ -2,17 +2,17 @@
  * Listafindesemana.jsx
  *
  * Muestra hasta tres eventos del fin de semana
- * en tarjetas horizontales para la vista móvil.
+ * en tarjetas horizontales para móvil.
  *
- * Los eventos provienen de la API y cada tarjeta
- * permite abrir su página de detalle.
+ * - Los eventos provienen de la API.
+ * - Conserva la navegación al detalle.
+ * - Presenta los textos oficiales mientras carga.
  */
 
 import Afiche from "../Afiche/Afiche.jsx";
 import Icono from "../Icono/Icono.jsx";
-
+import EstadoCarga from "../EstadoCarga/EstadoCarga.jsx";
 import { formatearFechaCorta, formatearHora, formatearPrecio } from "../../Utils/formato.js";
-
 import "./Listafindesemana.css";
 
 export default function ListaFinDeSemana({
@@ -23,24 +23,21 @@ export default function ListaFinDeSemana({
   onVerTodos,
   onVerEvento,
 }) {
-  // Obtiene los textos de la sección desde la API.
+  // Textos de la sección recibidos desde GET /textos.
   const titulo = textos?.paginas?.inicio?.filtrosMovil?.finDeSemana;
-
   const verTodos =
     textos?.paginas?.inicio?.destacados?.enlaces?.verTodos ?? textos?.general?.acciones?.verTodos;
-
   const desde = textos?.componentes?.precio?.desde;
-
-  // La lista presenta como máximo tres eventos.
+  // Muestra como máximo tres eventos.
   const lista = (eventos ?? []).slice(0, 3);
 
-  // No dibuja la sección si no existen eventos.
+  // Conserva el comportamiento cuando no hay eventos.
   if (!cargando && lista.length === 0) {
     return null;
   }
 
   /**
-   * Abre la vista Explorar desde el enlace Ver todos.
+   * Abre Explorar desde el enlace Ver todos.
    */
   function manejarVerTodos(evento) {
     evento.preventDefault();
@@ -48,9 +45,8 @@ export default function ListaFinDeSemana({
   }
 
   /**
-   * Abre el detalle sin recargar la página.
-   * Permite que el navegador gestione los clics
-   * con Ctrl, Cmd o botón secundario normalmente.
+   * Abre el detalle sin recargar toda la página.
+   * Permite Ctrl, Cmd y clic secundario normalmente.
    */
   function manejarVerEvento(eventoClick, evento) {
     if (
@@ -72,7 +68,9 @@ export default function ListaFinDeSemana({
   return (
     <section className="finde" aria-labelledby="finde-titulo">
       <div className="finde-interior">
-        {/* ENCABEZADO */}
+        {/* ======================================
+            ENCABEZADO
+            ====================================== */}
 
         <div className="finde-encabezado">
           <h2 className="finde-titulo" id="finde-titulo">
@@ -85,7 +83,15 @@ export default function ListaFinDeSemana({
           </a>
         </div>
 
-        {/* LISTA DE TARJETAS */}
+        {/* ======================================
+            CARGA DE EVENTOS
+            ====================================== */}
+
+        {cargando && lista.length === 0 && <EstadoCarga textos={textos} />}
+
+        {/* ======================================
+            LISTA DE TARJETAS
+            ====================================== */}
 
         <ul className="finde-lista" aria-busy={cargando}>
           {lista.map((evento) => (
@@ -95,12 +101,10 @@ export default function ListaFinDeSemana({
                 href={`/eventos/${encodeURIComponent(evento.slug)}`}
                 onClick={(eventoClick) => manejarVerEvento(eventoClick, evento)}
               >
-                {/* MINIATURA */}
-
+                {/* Miniatura del evento. */}
                 <Afiche evento={evento} className="finde-miniatura" />
 
-                {/* INFORMACIÓN DEL EVENTO */}
-
+                {/* Información del evento. */}
                 <span className="finde-texto">
                   <span className="finde-nombre">{evento.titulo}</span>
 

@@ -1,14 +1,21 @@
 import Icono from "../Icono/Icono.jsx";
+import EstadoCarga from "../EstadoCarga/EstadoCarga.jsx";
 import "./Categorias.css";
 
 const CANTIDAD = 6;
 
+/**
+ * Construye el texto de cantidad de eventos
+ * utilizando las plantillas disponibles.
+ */
 function textoConteo(textos, cantidad, ingles) {
   const plantillas = textos?.paginas?.inicio?.categorias?.conteo;
+
   const plantilla =
     cantidad === 1
       ? (plantillas?.uno ?? (ingles ? "{cantidad} event" : "{cantidad} evento"))
       : (plantillas?.otro ?? (ingles ? "{cantidad} events" : "{cantidad} eventos"));
+
   return plantilla.replace("{cantidad}", cantidad);
 }
 
@@ -29,26 +36,36 @@ export default function Categorias({
   const etiquetaSeccion = ingles ? "Categories" : "Categorías";
   const etiquetaTodas = nombres?.todas ?? (ingles ? "All" : "Todas");
 
+  // Obtiene el nombre de la categoría.
   function nombreDe(categoria) {
     return nombres?.[categoria.id] ?? categoria.nombre;
   }
+
+  /* ========================================
+     ESTADO DE CARGA
+     ======================================== */
 
   if (cargando && lista.length === 0) {
     return (
       <section className="categorias" aria-label={etiquetaSeccion} aria-busy="true">
         <div className="categorias-interior">
-          <p className="categorias-estado" role="status">
-            {textos?.estados?.cargando?.indicador ?? (ingles ? "Loading…" : "Cargando…")}
-          </p>
+          {/* Textos oficiales de carga. */}
+          <EstadoCarga textos={textos} />
+
+          {/* Esqueletos de las categorías. */}
           <ul className="categorias-tarjetas" aria-hidden="true">
-            {Array.from({ length: CANTIDAD }, (_, i) => (
-              <li key={i} className="categoria-esqueleto" />
+            {Array.from({ length: CANTIDAD }, (_, indice) => (
+              <li key={indice} className="categoria-esqueleto" />
             ))}
           </ul>
         </div>
       </section>
     );
   }
+
+  /* ========================================
+     ESTADO DE ERROR
+     ======================================== */
 
   if (error && lista.length === 0) {
     return (
@@ -61,6 +78,7 @@ export default function Categorias({
                   ? "Check your connection and try again."
                   : "Revisa tu conexión e inténtalo de nuevo.")}
             </p>
+
             <button type="button" onClick={recargar}>
               {errorTextos?.botones?.reintentar ?? (ingles ? "Try again" : "Reintentar")}
             </button>
@@ -70,9 +88,14 @@ export default function Categorias({
     );
   }
 
+  /* ========================================
+     CATEGORÍAS DISPONIBLES
+     ======================================== */
+
   return (
     <section className="categorias" aria-label={etiquetaSeccion}>
       <div className="categorias-interior">
+        {/* Tarjetas de categorías para escritorio. */}
         <ul className="categorias-tarjetas">
           {lista.map((categoria) => (
             <li key={categoria.id}>
@@ -84,8 +107,10 @@ export default function Categorias({
                 <span className="categoria-icono" aria-hidden="true">
                   <Icono nombre={categoria.id} />
                 </span>
+
                 <span className="categoria-texto">
                   <span className="categoria-nombre">{nombreDe(categoria)}</span>
+
                   <span className="categoria-conteo">
                     {textoConteo(textos, categoria.eventos, ingles)}
                   </span>
@@ -95,7 +120,7 @@ export default function Categorias({
           ))}
         </ul>
 
-        {/* Móvil: chips que filtran */}
+        {/* Chips móviles para filtrar destacados. */}
         <ul className="categorias-chips">
           {[{ id: "todas", nombre: etiquetaTodas }, ...lista].map((categoria) => (
             <li key={categoria.id}>

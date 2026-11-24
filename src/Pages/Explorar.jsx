@@ -8,14 +8,19 @@ import Icono from "../components/Icono/Icono.jsx";
 import TarjetaEvento from "../components/EventCards/TarjetaEvento.jsx";
 import FiltrosExplorar from "../components/FiltrosExplorar/FiltrosExplorar.jsx";
 import Paginacion from "../components/Pagination/Paginacion.jsx";
+import EstadoCarga from "../components/EstadoCarga/EstadoCarga.jsx";
 import "./Explorar.css";
 
 const POR_PAGINA = 9;
 const CANTIDAD_ESQUELETOS = 6;
 
-// Una ciudad vacía significa "Todas las ciudades".
+/**
+ * Crea el objeto inicial de filtros.
+ * Una ciudad vacía significa todas las ciudades.
+ */
 function filtrosIniciales(consulta, ciudad, categoria, fecha) {
   const categorias = categoria ? [categoria] : [];
+
   return {
     q: consulta ?? "",
     categorias,
@@ -38,65 +43,107 @@ export default function Explorar({
   onVerEvento,
 }) {
   const ingles = idioma === "en";
+
+  // Textos correspondientes al idioma actual.
   const t = textos?.paginas?.explorar;
   const nombres = textos?.general?.categorias;
   const estados = textos?.estados;
+
+  /* ========================================
+     ESTADOS Y CONSULTAS
+     ======================================== */
+
   const [orden, setOrden] = useState("fecha");
+
   const [filtros, setFiltros] = useState(() =>
     filtrosIniciales(consulta, ciudadInicial, categoriaInicial, fechaInicial),
   );
+
   const [pagina, setPagina] = useState(1);
   const [panelAbierto, setPanelAbierto] = useState(false);
+
+  // Las peticiones se mantienen sin modificaciones.
   const todos = useEventos(orden);
   const categorias = useApi(RUTAS.categorias);
   const ciudades = useApi(RUTAS.ciudades);
 
-  // Aplica búsquedas nuevas desde el navbar o Inicio.
+  /* ========================================
+     SINCRONIZACIÓN DE FILTROS
+     ======================================== */
+
+  /**
+   * Aplica las búsquedas recibidas desde
+   * el Navbar o la página Inicio.
+   */
   useEffect(() => {
     setFiltros((actuales) => {
-      let categorias = actuales.categorias;
+      let categoriasActuales = actuales.categorias;
+
       if (categoriaInicial) {
-        categorias = [categoriaInicial];
+        categoriasActuales = [categoriaInicial];
       }
+
       return {
         ...actuales,
         q: consulta ?? "",
-        // Una búsqueda global sin ciudad explícita busca en todas las ciudades.
         ciudad: ciudadInicial ?? "",
-        categorias,
+        categorias: categoriasActuales,
         fecha: fechaInicial || actuales.fecha,
       };
     });
+
     setPagina(1);
   }, [consulta, ciudadInicial, categoriaInicial, fechaInicial]);
 
+  /* ========================================
+     RESULTADOS FILTRADOS
+     ======================================== */
+
+  // Mantiene el filtrado del lado del cliente.
   const limites = useMemo(() => limitesDePrecio(todos.eventos), [todos.eventos]);
+
   const filtrados = useMemo(
     () => filtrarEventos(todos.eventos, filtros, limites),
     [todos.eventos, filtros, limites],
   );
 
-  // Conteos de las categorías teniendo en cuenta los demás filtros.
+  /**
+   * Calcula el número de eventos por categoría
+   * teniendo en cuenta los demás filtros.
+   */
   const conteosPorCategoria = useMemo(() => {
     const sinFiltroDeCategoria = filtrarEventos(
       todos.eventos,
       { ...filtros, categorias: [] },
       limites,
     );
+
     const conteos = {};
+
     sinFiltroDeCategoria.forEach((evento) => {
       const cantidadActual = conteos[evento.categoria] ?? 0;
       conteos[evento.categoria] = cantidadActual + 1;
     });
+
     return conteos;
   }, [todos.eventos, filtros, limites]);
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
+
   const paginaActual = Math.min(pagina, totalPaginas);
+
   const visibles = filtrados.slice((paginaActual - 1) * POR_PAGINA, paginaActual * POR_PAGINA);
 
+  /* ========================================
+     ACCIONES DE FILTROS Y PAGINACIÓN
+     ======================================== */
+
   function cambiarFiltros(parcial) {
-    setFiltros((actuales) => ({ ...actuales, ...parcial }));
+    setFiltros((actuales) => ({
+      ...actuales,
+      ...parcial,
+    }));
+
     setPagina(1);
   }
 
@@ -107,10 +154,19 @@ export default function Explorar({
 
   function cambiarPagina(numero) {
     setPagina(numero);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
+  /* ========================================
+     TEXTOS DE RESULTADOS
+     ======================================== */
+
   const cantidad = filtrados.length;
+
   const textoResultados = (
     cantidad === 1
       ? (t?.resultados?.uno ??
@@ -122,55 +178,84 @@ export default function Explorar({
           ? "{cantidad} events match your filters"
           : "{cantidad} eventos coinciden con tus filtros"))
   ).replace("{cantidad}", cantidad);
+
   const textoCorto = (
     cantidad === 1
       ? (t?.resultadosCorto?.uno ?? (ingles ? "{cantidad} event" : "{cantidad} evento"))
       : (t?.resultadosCorto?.otro ?? (ingles ? "{cantidad} events" : "{cantidad} eventos"))
   ).replace("{cantidad}", cantidad);
+
   const tituloPagina =
     textos?.footer?.columnas?.explora?.enlaces?.explorar ??
     (ingles ? "Explore events" : "Explorar eventos");
+
   const migas = textos?.componentes?.migas;
+
   const etiquetaQuitar = ingles ? "Remove filter" : "Quitar filtro";
+
   const etiquetaBuscar =
     textos?.paginas?.inicio?.hero?.buscador?.placeholders?.movil ??
     (ingles ? "Event, artist or place" : "Evento, artista o lugar");
+
   const opcionesOrden = [
     ["fecha", t?.orden?.opciones?.fecha ?? (ingles ? "Closest date" : "Fecha más próxima")],
     ["precio", t?.orden?.opciones?.precio ?? (ingles ? "Lowest price" : "Precio más bajo")],
     ["popularidad", t?.orden?.opciones?.popularidad ?? (ingles ? "Most popular" : "Más populares")],
   ];
 
+  /* ========================================
+     FILTROS ACTIVOS
+     ======================================== */
+
   const chips = [];
+
   filtros.categorias.forEach((id) => {
     chips.push({
       clave: `categoria-${id}`,
       texto: nombres?.[id] ?? id,
-      quitar: () => cambiarFiltros({ categorias: filtros.categorias.filter((c) => c !== id) }),
+      quitar: () =>
+        cambiarFiltros({
+          categorias: filtros.categorias.filter((c) => c !== id),
+        }),
     });
   });
+
   if (filtros.fecha) {
     const etiquetasFecha = {
       hoy: t?.filtros?.fecha?.hoy ?? (ingles ? "Today" : "Hoy"),
       finde: t?.filtros?.fecha?.finDeSemana ?? (ingles ? "This weekend" : "Este fin de semana"),
       mes: t?.filtros?.fecha?.mes ?? (ingles ? "This month" : "Este mes"),
     };
+
     chips.push({
       clave: "fecha",
       texto:
         filtros.fecha === "elegir"
           ? `${filtros.desde || "…"} – ${filtros.hasta || "…"}`
           : etiquetasFecha[filtros.fecha],
-      quitar: () => cambiarFiltros({ fecha: "", desde: "", hasta: "" }),
+      quitar: () =>
+        cambiarFiltros({
+          fecha: "",
+          desde: "",
+          hasta: "",
+        }),
     });
   }
+
   if (filtros.precioMin !== null || filtros.precioMax !== null) {
     chips.push({
       clave: "precio",
-      texto: `${formatearPrecio(filtros.precioMin ?? limites[0])} – ${formatearPrecio(filtros.precioMax ?? limites[1])}`,
-      quitar: () => cambiarFiltros({ precioMin: null, precioMax: null }),
+      texto: `${formatearPrecio(filtros.precioMin ?? limites[0])} – ${formatearPrecio(
+        filtros.precioMax ?? limites[1],
+      )}`,
+      quitar: () =>
+        cambiarFiltros({
+          precioMin: null,
+          precioMax: null,
+        }),
     });
   }
+
   if (filtros.q) {
     chips.push({
       clave: "q",
@@ -179,39 +264,60 @@ export default function Explorar({
     });
   }
 
+  /* ========================================
+     CARGA, ERROR Y RESULTADOS
+     ======================================== */
+
   const primeraCarga = todos.cargando && todos.eventos.length === 0;
+
   const falloTotal = todos.error && todos.eventos.length === 0;
+
   let contenido;
 
   if (primeraCarga) {
+    /* ======================================
+       CARGA CON TEXTOS OFICIALES
+       ====================================== */
+
     contenido = (
       <>
-        <p className="explorar-estado-oculto" role="status">
-          {estados?.cargando?.indicador ?? (ingles ? "Loading…" : "Cargando…")}
-        </p>
+        {/* Título, texto e indicador desde la API. */}
+        <EstadoCarga textos={textos} />
+
+        {/* Se conservan los seis esqueletos. */}
         <ul className="explorar-lista" aria-hidden="true">
-          {Array.from({ length: CANTIDAD_ESQUELETOS }, (_, i) => (
-            <li key={i} className="tarjeta-esqueleto" />
+          {Array.from({ length: CANTIDAD_ESQUELETOS }, (_, indice) => (
+            <li key={indice} className="tarjeta-esqueleto" />
           ))}
         </ul>
       </>
     );
   } else if (falloTotal) {
+    /* ======================================
+       ERROR DE CONSULTA
+       ====================================== */
+
     contenido = (
       <div className="explorar-mensaje explorar-mensaje-error" role="alert">
         <h2>{estados?.error?.titulo ?? (ingles ? "Something went wrong" : "Algo salió mal")}</h2>
+
         <p>
           {estados?.error?.texto ??
             (ingles
               ? "Check your connection and try again."
               : "Revisa tu conexión e inténtalo de nuevo.")}
         </p>
+
         <button type="button" onClick={todos.recargar}>
           {estados?.error?.botones?.reintentar ?? (ingles ? "Try again" : "Reintentar")}
         </button>
       </div>
     );
   } else if (filtrados.length === 0) {
+    /* ======================================
+       SIN RESULTADOS
+       ====================================== */
+
     contenido = (
       <div className="explorar-mensaje">
         <h2>
@@ -220,18 +326,24 @@ export default function Explorar({
               ? "We found no events with those filters"
               : "No encontramos eventos con esos filtros")}
         </h2>
+
         <p>
           {t?.vacio?.texto ??
             (ingles
               ? "Try another date, another city or clear the filters."
               : "Prueba con otra fecha, otra ciudad o limpia los filtros.")}
         </p>
+
         <button type="button" onClick={limpiar}>
           {t?.vacio?.botones?.limpiar ?? (ingles ? "Clear filters" : "Limpiar filtros")}
         </button>
       </div>
     );
   } else {
+    /* ======================================
+       TARJETAS DE EVENTOS
+       ====================================== */
+
     contenido = (
       <>
         <ul className="explorar-lista">
@@ -246,6 +358,7 @@ export default function Explorar({
             </li>
           ))}
         </ul>
+
         <Paginacion
           textos={textos}
           idioma={idioma}
@@ -257,23 +370,34 @@ export default function Explorar({
     );
   }
 
+  /* ========================================
+     INTERFAZ DE EXPLORAR
+     ======================================== */
+
   return (
     <div className="explorar">
       <div className="explorar-interior">
+        {/* Migas de pan de escritorio. */}
         <nav className="explorar-migas" aria-label={ingles ? "Breadcrumb" : "Ruta de navegación"}>
           <ol>
             <li>
               <a href="#inicio">{migas?.inicio ?? (ingles ? "Home" : "Inicio")}</a>
             </li>
+
             <li aria-current="page">{migas?.explorar ?? (ingles ? "Explore" : "Explorar")}</li>
           </ol>
         </nav>
+
+        {/* Encabezado con contador de resultados. */}
         <header className="explorar-encabezado">
           <h1>{tituloPagina}</h1>
+
           <p className="explorar-conteo" aria-live="polite">
             {textoResultados}
           </p>
         </header>
+
+        {/* Buscador para la vista móvil. */}
         <form
           className="explorar-buscador"
           role="search"
@@ -281,14 +405,20 @@ export default function Explorar({
         >
           <label className="explorar-campo">
             <Icono nombre="buscar" />
+
             <input
               type="search"
               value={filtros.q}
-              onChange={(evento) => cambiarFiltros({ q: evento.target.value })}
+              onChange={(evento) =>
+                cambiarFiltros({
+                  q: evento.target.value,
+                })
+              }
               placeholder={etiquetaBuscar}
               aria-label={etiquetaBuscar}
             />
           </label>
+
           <button
             type="button"
             className="explorar-boton-filtros"
@@ -299,6 +429,8 @@ export default function Explorar({
             <Icono nombre="filtros" />
           </button>
         </form>
+
+        {/* Panel de filtros y sección de resultados. */}
         <div className="explorar-cuerpo">
           <FiltrosExplorar
             textos={textos}
@@ -314,7 +446,9 @@ export default function Explorar({
             onLimpiar={limpiar}
             onCerrar={() => setPanelAbierto(false)}
           />
+
           <section className="explorar-resultados" aria-busy={todos.cargando}>
+            {/* Barra superior: filtros activos y orden. */}
             <div className="explorar-barra">
               {chips.length > 0 && (
                 <ul className="explorar-chips">
@@ -333,12 +467,15 @@ export default function Explorar({
                   ))}
                 </ul>
               )}
+
               <div className="explorar-datos">
                 <p className="explorar-conteo-movil">{textoCorto}</p>
+
                 <label className="explorar-orden">
                   <span className="explorar-orden-etiqueta">
                     {t?.orden?.etiqueta ?? (ingles ? "Sort by:" : "Ordenar:")}
                   </span>
+
                   <span className="explorar-orden-selector">
                     <select
                       value={orden}
@@ -353,11 +490,14 @@ export default function Explorar({
                         </option>
                       ))}
                     </select>
+
                     <Icono nombre="flechaAbajo" />
                   </span>
                 </label>
               </div>
             </div>
+
+            {/* Carga, error, vacío o tarjetas. */}
             {contenido}
           </section>
         </div>

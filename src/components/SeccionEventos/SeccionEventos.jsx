@@ -1,12 +1,23 @@
+/**
+ * SeccionEventos.jsx
+ *
+ * Sección reutilizable para eventos de Inicio.
+ *
+ * - Presenta Destacados y Próximamente.
+ * - Conserva el carrusel y las tarjetas.
+ * - Muestra esqueletos mientras llegan eventos.
+ * - Obtiene los textos de carga desde la API.
+ * - Conserva los estados de error y vacío.
+ */
+
 import Icono from "../Icono/Icono.jsx";
 import TarjetaEvento from "../EventCards/TarjetaEvento.jsx";
+import EstadoCarga from "../EstadoCarga/EstadoCarga.jsx";
 import "./SeccionEventos.css";
 
 const CANTIDAD_ESQUELETOS = 4;
 const MAXIMO_TARJETAS = 6;
 
-// Sección del Inicio con una fila de tarjetas. Se usa para "Destacados de la semana"
-// y "Próximamente en {ciudad}".
 export default function SeccionEventos({
   id,
   titulo,
@@ -23,24 +34,35 @@ export default function SeccionEventos({
   onVerEvento,
 }) {
   const ingles = idioma === "en";
+
+  // Limita la cantidad de tarjetas de la sección.
   const lista = (eventos ?? []).slice(0, MAXIMO_TARJETAS);
+
   const idTitulo = `${id}-titulo`;
+
   const verTodos =
     textos?.paginas?.inicio?.destacados?.enlaces?.verTodos ??
     textos?.general?.acciones?.verTodos ??
     (ingles ? "View all" : "Ver todos");
+
   const estados = textos?.estados;
 
   let contenido;
+
+  /* ========================================
+     ESTADO DE CARGA
+     ======================================== */
+
   if (cargando && lista.length === 0) {
     contenido = (
       <>
-        <p className="seccion-estado-oculto" role="status">
-          {estados?.cargando?.indicador ?? (ingles ? "Loading…" : "Cargando…")}
-        </p>
+        {/* Textos de carga obtenidos de GET /textos. */}
+        <EstadoCarga textos={textos} />
+
+        {/* Conserva los esqueletos originales. */}
         <ul className="seccion-lista" aria-hidden="true">
-          {Array.from({ length: CANTIDAD_ESQUELETOS }, (_, i) => (
-            <li key={i}>
+          {Array.from({ length: CANTIDAD_ESQUELETOS }, (_, indice) => (
+            <li key={indice}>
               <div className="tarjeta-esqueleto" />
             </li>
           ))}
@@ -48,6 +70,10 @@ export default function SeccionEventos({
       </>
     );
   } else if (error && lista.length === 0) {
+    /* ======================================
+       ERROR DE LA API
+       ====================================== */
+
     contenido = (
       <div className="seccion-mensaje seccion-mensaje-error" role="alert">
         <p>
@@ -56,18 +82,27 @@ export default function SeccionEventos({
               ? "Check your connection and try again."
               : "Revisa tu conexión e inténtalo de nuevo.")}
         </p>
+
         <button type="button" onClick={recargar}>
           {estados?.error?.botones?.reintentar ?? (ingles ? "Try again" : "Reintentar")}
         </button>
       </div>
     );
   } else if (lista.length === 0) {
+    /* ======================================
+       SIN EVENTOS
+       ====================================== */
+
     contenido = (
       <div className="seccion-mensaje">
         <p>{estados?.vacio?.titulo ?? (ingles ? "Nothing here yet" : "No hay nada por aquí")}</p>
       </div>
     );
   } else {
+    /* ======================================
+       TARJETAS DE EVENTOS
+       ====================================== */
+
     contenido = (
       <ul className="seccion-lista">
         {lista.map((evento) => (
@@ -90,6 +125,7 @@ export default function SeccionEventos({
       aria-labelledby={idTitulo}
     >
       <div className="seccion-interior">
+        {/* Encabezado de la sección. */}
         <div className="seccion-encabezado">
           <div>
             <h2 className="seccion-titulo" id={idTitulo}>
@@ -102,6 +138,7 @@ export default function SeccionEventos({
                 titulo
               )}
             </h2>
+
             {subtitulo && <p className="seccion-subtitulo">{subtitulo}</p>}
           </div>
 
@@ -118,6 +155,7 @@ export default function SeccionEventos({
           </a>
         </div>
 
+        {/* Contenido según el estado de la consulta. */}
         {contenido}
       </div>
     </section>

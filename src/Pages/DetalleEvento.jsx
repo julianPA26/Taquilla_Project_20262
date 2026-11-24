@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import DetalleEncabezado from "../components/DetalleEncabezado/DetalleEncabezado.jsx";
@@ -5,6 +6,7 @@ import FuncionesEvento from "../components/FuncionesEvento/FuncionesEvento.jsx";
 import LocalidadesEvento from "../components/LocalidadesEvento/LocalidadesEvento.jsx";
 import EventosRelacionados from "../components/EventosRelacionados/EventosRelacionados.jsx";
 import DetalleEstado from "../components/DetalleEstado/DetalleEstado.jsx";
+import EstadoCarga from "../components/EstadoCarga/EstadoCarga.jsx";
 import Icono from "../components/Icono/Icono.jsx";
 
 import { useDetalleEvento } from "../hooks/useDetalleEvento.js";
@@ -20,12 +22,23 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
 
   const [descripcionExpandida, setDescripcionExpandida] = useState(false);
 
-  // Restablecer la vista al cambiar de evento
+  /* ========================================
+     CAMBIO DE EVENTO
+     ======================================== */
+
+  // Restablece "Leer más" cuando cambia el slug.
   useEffect(() => {
     setDescripcionExpandida(false);
   }, [slug]);
 
-  // Actualizar metadatos del documento
+  /* ========================================
+     METADATOS DEL DOCUMENTO
+     ======================================== */
+
+  /**
+   * Actualiza el título y la descripción
+   * del documento con los datos del evento.
+   */
   useEffect(() => {
     if (!evento) return;
 
@@ -38,6 +51,7 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
     if (!metaDescripcion) {
       metaDescripcion = document.createElement("meta");
       metaDescripcion.setAttribute("name", "description");
+
       document.head.appendChild(metaDescripcion);
     }
 
@@ -60,33 +74,39 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
     };
   }, [evento]);
 
-  // Estado de carga
+  /* ========================================
+     ESTADO DE CARGA
+     ======================================== */
+
   if (cargando) {
     return (
       <div className="detalle-evento detalle-evento--cargando" aria-busy="true">
-        <p className="detalle-evento__solo-lector" role="status">
-          {obtenerTexto(textos, "estados.cargando.indicador", "estados.cargando.texto")}
-        </p>
+        {/* Los textos se obtienen desde GET /textos. */}
+        <EstadoCarga textos={textos} />
 
+        {/* Esqueletos originales del detalle. */}
         <div
-          className="detalle-evento__esqueleto detalle-evento__esqueleto--afiche"
+          className={["detalle-evento__esqueleto", "detalle-evento__esqueleto--afiche"].join(" ")}
           aria-hidden="true"
         />
 
         <div
-          className="detalle-evento__esqueleto detalle-evento__esqueleto--titulo"
+          className={["detalle-evento__esqueleto", "detalle-evento__esqueleto--titulo"].join(" ")}
           aria-hidden="true"
         />
 
         <div
-          className="detalle-evento__esqueleto detalle-evento__esqueleto--texto"
+          className={["detalle-evento__esqueleto", "detalle-evento__esqueleto--texto"].join(" ")}
           aria-hidden="true"
         />
       </div>
     );
   }
 
-  // Evento no encontrado
+  /* ========================================
+     EVENTO NO ENCONTRADO
+     ======================================== */
+
   if (noEncontrado) {
     return (
       <div className="detalle-evento">
@@ -95,7 +115,10 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
     );
   }
 
-  // Error en la petición
+  /* ========================================
+     ERROR DE CONSULTA
+     ======================================== */
+
   if (error || !evento) {
     return (
       <div className="detalle-evento">
@@ -104,7 +127,10 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
     );
   }
 
-  // Textos de la API
+  /* ========================================
+     TEXTOS DE LA API
+     ======================================== */
+
   const tituloSobreEvento = etiquetaDetalle(
     textos,
     "sobreEvento",
@@ -144,8 +170,7 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
       "paginas.detalleEvento.tabs.politicas",
     ) || tituloPoliticas;
 
-  // Etiquetas del botón móvil.
-  // Se prioriza la API y se usa un respaldo si falta la clave.
+  // Etiquetas para expandir y contraer el contenido.
   const etiquetaLeerMas =
     obtenerTexto(
       textos,
@@ -166,7 +191,10 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
       "paginas.detalleEvento.verMenos",
     ) || (idioma === "en" ? "Read less" : "Leer menos");
 
-  // Información del evento
+  /* ========================================
+     DATOS DEL EVENTO
+     ======================================== */
+
   const recinto = evento.recinto;
 
   const direccion = [recinto?.direccion, recinto?.ciudad].filter(Boolean).join(", ");
@@ -185,21 +213,31 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
 
   const tieneLocalidades = Array.isArray(evento.localidades) && evento.localidades.length > 0;
 
-  const cambiarExpansion = () => {
+  /**
+   * Alterna las secciones adicionales
+   * sin modificar el ancho de la página.
+   */
+  function cambiarExpansion() {
     setDescripcionExpandida((actual) => !actual);
-  };
+  }
+
+  /* ========================================
+     DETALLE DEL EVENTO
+     ======================================== */
 
   return (
     <article className="detalle-evento" data-detalle-abierto={descripcionExpandida}>
-      {/* MIGAS DE PAN - ESCRITORIO */}
+      {/* ======================================
+          MIGAS DE PAN - ESCRITORIO
+          ====================================== */}
 
       <nav className="detalle-evento__migas">
         <ol>
           <li>
             <a
               href="/#inicio"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={(eventoClick) => {
+                eventoClick.preventDefault();
                 onVolver("inicio");
               }}
             >
@@ -215,8 +253,8 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
           <li>
             <a
               href="/#explorar"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={(eventoClick) => {
+                eventoClick.preventDefault();
                 onVolver("explorar");
               }}
             >
@@ -228,7 +266,9 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
         </ol>
       </nav>
 
-      {/* ENCABEZADO */}
+      {/* ======================================
+          ENCABEZADO
+          ====================================== */}
 
       <DetalleEncabezado
         evento={evento}
@@ -237,13 +277,15 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
         onVolver={() => onVolver("explorar")}
       />
 
-      {/* PESTAÑAS - ESCRITORIO */}
+      {/* ======================================
+          PESTAÑAS - ESCRITORIO
+          ====================================== */}
 
       <nav className="detalle-evento__pestanas">
         {pestanaDescripcion && (
           <a
             href="#detalle-descripcion"
-            className="detalle-evento__pestana detalle-evento__pestana--activa"
+            className={["detalle-evento__pestana", "detalle-evento__pestana--activa"].join(" ")}
           >
             {pestanaDescripcion}
           </a>
@@ -258,7 +300,9 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
         {pestanaPoliticas && <span className="detalle-evento__pestana">{pestanaPoliticas}</span>}
       </nav>
 
-      {/* SOBRE EL EVENTO */}
+      {/* ======================================
+          DESCRIPCIÓN DEL EVENTO
+          ====================================== */}
 
       <section
         id="detalle-descripcion"
@@ -275,8 +319,7 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
 
         <p id="detalle-evento-descripcion-texto">{evento.descripcion}</p>
 
-        {/* LEER MÁS - SIEMPRE VISIBLE EN MÓVIL */}
-
+        {/* Botón Leer más exclusivo del diseño móvil. */}
         <button
           type="button"
           className="detalle-evento__leer-mas"
@@ -288,11 +331,12 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
         </button>
       </section>
 
-      {/* SECCIONES ADICIONALES */}
+      {/* ======================================
+          SECCIONES ADICIONALES
+          ====================================== */}
 
       <div id="detalle-evento-contenido-extra" className="detalle-evento__secciones-extra">
-        {/* FUNCIONES Y LOCALIDADES EN MÓVIL */}
-
+        {/* Funciones y localidades en móvil. */}
         {(tieneFunciones || tieneLocalidades) && (
           <div className="detalle-evento__adicionales-movil">
             {tieneFunciones && (
@@ -305,7 +349,9 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
           </div>
         )}
 
-        {/* CÓMO LLEGAR */}
+        {/* ==================================
+            UBICACIÓN DEL EVENTO
+            ================================== */}
 
         {mostrarUbicacion && (
           <section
@@ -329,7 +375,9 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
           </section>
         )}
 
-        {/* POLÍTICAS */}
+        {/* ==================================
+            POLÍTICAS
+            ================================== */}
 
         {politicas && (
           <section
@@ -343,7 +391,9 @@ export default function DetalleEvento({ slug, textos, idioma, onVolver, onVerEve
           </section>
         )}
 
-        {/* EVENTOS RELACIONADOS */}
+        {/* ==================================
+            EVENTOS RELACIONADOS
+            ================================== */}
 
         <EventosRelacionados
           eventos={relacionados}

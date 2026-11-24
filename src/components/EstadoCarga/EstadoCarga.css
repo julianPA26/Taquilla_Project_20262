@@ -1,0 +1,95 @@
+/**
+ * EstadoCarga.css
+ *
+ * Presenta el título, mensaje e indicador de carga.
+ * Usa tokens.css y se adapta a pantallas móviles.
+ */
+
+/* ========================================
+   CONTENEDOR DE CARGA
+   ======================================== */
+
+.estado-carga {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 0 var(--espacio-4);
+  padding: var(--espacio-2) 0;
+  color: var(--texto-principal);
+  font-family: var(--fuente-instrument-sans);
+}
+
+/* ========================================
+   INDICADOR ANIMADO
+   ======================================== */
+
+/*
+ * El círculo es puramente visual.
+ * Su aria-label se obtiene desde la API
+ * mediante EstadoCarga.jsx.
+ */
+
+.estado-carga__indicador {
+  display: inline-block;
+  flex: 0 0 22px;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--borde-sutil);
+  border-top-color: var(--texto-principal);
+  border-radius: var(--radio-completo);
+  animation: estado-carga-giro 900ms linear infinite;
+}
+
+/* ========================================
+   TEXTOS DE LA API
+   ======================================== */
+
+.estado-carga__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.estado-carga__titulo {
+  margin: 0;
+  color: var(--texto-principal);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.estado-carga__texto {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+/* ========================================
+   ANIMACIÓN
+   ======================================== */
+
+@keyframes estado-carga-giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Respeta la preferencia de movimiento reducido. */
+
+@media (prefers-reduced-motion: reduce) {
+  .estado-carga__indicador {
+    animation: none;
+  }
+}
