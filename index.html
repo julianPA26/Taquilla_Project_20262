@@ -9,6 +9,109 @@
 
   <body>
     <div id="root"></div>
+
+    <!--
+      Diagnóstico temporal del desbordamiento móvil.
+      Solo se activa con ?diagnosticoAncho=1.
+      No afecta a quienes visitan normalmente Taquilla.
+    -->
+    <script>
+      if (new URLSearchParams(window.location.search).has("diagnosticoAncho")) {
+        document.addEventListener("DOMContentLoaded", () => {
+          const panel = document.createElement("pre");
+
+          panel.setAttribute("role", "status");
+
+          Object.assign(panel.style, {
+            position: "fixed",
+            top: "50px",
+            left: "8px",
+            zIndex: "2147483647",
+            width: "min(360px, calc(100vw - 16px))",
+            maxHeight: "210px",
+            overflow: "hidden",
+            margin: "0",
+            padding: "10px",
+            background: "#111",
+            color: "#fff",
+            font: "12px/1.4 monospace",
+            whiteSpace: "pre-wrap",
+            pointerEvents: "none",
+            borderRadius: "8px",
+            boxSizing: "border-box",
+          });
+
+          document.body.appendChild(panel);
+
+          /*
+           * Busca elementos que sobresalen del ancho
+           * visible, ignorando los carruseles que
+           * tienen desplazamiento propio.
+           */
+          function buscarDesbordes() {
+            const ancho = document.documentElement.clientWidth;
+
+            return Array.from(document.querySelectorAll(".detalle-evento *"))
+              .filter((elemento) => {
+                const estilo = getComputedStyle(elemento);
+
+                if (estilo.display === "none") return false;
+
+                const rect = elemento.getBoundingClientRect();
+
+                if (rect.width === 0) return false;
+
+                const carrusel = elemento.closest(".detalle-relacionados__lista");
+
+                if (carrusel && carrusel !== elemento) {
+                  return false;
+                }
+
+                return rect.right > ancho + 2;
+              })
+              .sort((a, b) => b.getBoundingClientRect().right - a.getBoundingClientRect().right)
+              .slice(0, 4)
+              .map((elemento) => {
+                const rect = elemento.getBoundingClientRect();
+
+                const nombre =
+                  elemento.className && typeof elemento.className === "string"
+                    ? elemento.className.split(" ")[0]
+                    : elemento.tagName.toLowerCase();
+
+                return `${nombre}: derecha ${Math.round(rect.right)}px`;
+              });
+          }
+
+          // Actualiza las medidas al abrir "Leer más".
+          function actualizar() {
+            const documento = document.documentElement;
+            const visual = window.visualViewport;
+
+            const desbordes = buscarDesbordes();
+
+            panel.textContent = [
+              "DIAGNÓSTICO DE DETALLE",
+              `Pantalla: ${window.innerWidth}px`,
+              `Documento: ${documento.scrollWidth}px`,
+              `Ancho visible: ${documento.clientWidth}px`,
+              `Escala: ${visual?.scale?.toFixed(2) ?? "N/D"}`,
+              `Vista móvil: ${matchMedia("(max-width: 767px)").matches}`,
+              `Expandido: ${document.querySelector(".detalle-evento")?.dataset.detalleAbierto ?? "N/D"}`,
+              "Elementos que sobresalen:",
+              ...(desbordes.length ? desbordes : ["Ninguno detectado"]),
+            ].join("\n");
+          }
+
+          actualizar();
+
+          // Diagnóstico temporal: solo mientras está
+          // activado el parámetro en la dirección.
+          setInterval(actualizar, 1000);
+        });
+      }
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
