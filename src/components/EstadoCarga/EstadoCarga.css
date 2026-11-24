@@ -1,83 +1,75 @@
-/**
- * EstadoCarga.css
- *
- * Presenta el título, mensaje e indicador de carga.
- * Usa tokens.css y se adapta a pantallas móviles.
- */
-
-/* ========================================
-   CONTENEDOR DE CARGA
-   ======================================== */
 
 .estado-carga {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--espacio-3);
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  min-height: 180px;
   margin: 0 0 var(--espacio-4);
-  padding: var(--espacio-2) 0;
+  padding: var(--espacio-6) var(--espacio-4);
   color: var(--texto-principal);
   font-family: var(--fuente-instrument-sans);
+  text-align: center;
 }
-
-/* ========================================
-   INDICADOR ANIMADO
-   ======================================== */
-
-/*
- * El círculo es puramente visual.
- * Su aria-label se obtiene desde la API
- * mediante EstadoCarga.jsx.
- */
 
 .estado-carga__indicador {
   display: inline-block;
-  flex: 0 0 22px;
+  flex: 0 0 auto;
   box-sizing: border-box;
-  width: 22px;
-  height: 22px;
-  border: 2px solid var(--borde-sutil);
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--borde-sutil);
   border-top-color: var(--texto-principal);
   border-radius: var(--radio-completo);
+
   animation: estado-carga-giro 900ms linear infinite;
 }
 
-/* ========================================
-   TEXTOS DE LA API
-   ======================================== */
 
 .estado-carga__contenido {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: var(--espacio-1);
-  flex: 1;
+  flex: 0 1 auto;
+  width: 100%;
   min-width: 0;
-  max-width: 100%;
+  max-width: 440px;
+  text-align: center;
 }
+
+
 
 .estado-carga__titulo {
   margin: 0;
   color: var(--texto-principal);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 600;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
+
+/* ========================================
+   MENSAJE DE APOYO
+   ======================================== */
 
 .estado-carga__texto {
   margin: 0;
   color: var(--texto-secundario);
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 22px;
   font-weight: 400;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 /* ========================================
-   ANIMACIÓN
+   ANIMACIÓN DEL INDICADOR
    ======================================== */
 
 @keyframes estado-carga-giro {
@@ -86,7 +78,33 @@
   }
 }
 
-/* Respeta la preferencia de movimiento reducido. */
+/* ========================================
+   ADAPTACIÓN A CELULARES
+   ======================================== */
+
+@media (max-width: 767px) {
+  .estado-carga {
+
+    min-height: clamp(180px, 28dvh, 240px);
+    gap: var(--espacio-3);
+    padding: var(--espacio-6) var(--espacio-4);
+  }
+
+  .estado-carga__indicador {
+    width: 26px;
+    height: 26px;
+  }
+
+  .estado-carga__titulo {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .estado-carga__texto {
+    font-size: 13px;
+    line-height: 20px;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .estado-carga__indicador {
